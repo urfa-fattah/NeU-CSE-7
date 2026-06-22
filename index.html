@@ -1,0 +1,1710 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE 7th Batch — Netrokona University</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Official student directory and portfolio portal of B.Sc. in CSE 7th Batch, Netrokona University. Exploring code, creativity, and technological innovation.">
+    <meta name="theme-color" content="#060918">
+    <meta name="keywords" content="Netrokona University, CSE, Computer Science, Bangladesh, 7th Batch, Software Engineers">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CSE 7th Batch — Netrokona University">
+    <meta property="og:description" content="Discover the roster, interests, and aspirations of 40 passionate computer science students from Netrokona University's 7th Batch.">
+    <meta property="og:image" content="images/department-cover.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="CSE 7th Batch — Netrokona University">
+    <meta property="twitter:description" content="Discover the roster, interests, and aspirations of 40 passionate computer science students.">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Department of Computer Science & Engineering, Netrokona University",
+      "alternateName": "NU CSE 7th Batch",
+      "url": "https://neub.edu.bd",
+      "logo": "logo.png",
+      "description": "B.Sc. in Computer Science and Engineering 7th Batch, Netrokona University."
+    }
+    </script>
+
+    <!-- Preconnect & Preloads for typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+
+    <style>
+        /* CSS Custom Properties / Design Tokens System */
+        :root {
+            /* Palette: Deep Observatory Dark Mode */
+            --bg-base: #040714;
+            --bg-surface: rgba(15, 23, 42, 0.45);
+            --bg-surface-raised: rgba(30, 41, 59, 0.7);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.2);
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-accent: #e2e8f0;
+            
+            /* Core Hues */
+            --gold: #f59e0b;
+            --gold-glow: rgba(245, 158, 11, 0.15);
+            --violet: #8b5cf6;
+            --violet-glow: rgba(139, 92, 246, 0.15);
+            --teal: #14b8a6;
+            --teal-glow: rgba(20, 184, 166, 0.15);
+
+            /* Interactive Accents */
+            --active-accent: var(--violet);
+            --active-glow: var(--violet-glow);
+
+            /* Typography */
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-bn: 'Noto Sans Bengali', sans-serif;
+
+            /* Spacing Scale */
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-12: 3rem;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            
+            /* Motion */
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            --speed-fast: 200ms;
+            --speed-medium: 400ms;
+            --speed-slow: 700ms;
+        }
+
+        /* Light Mode Tokens Overrides */
+        :root[data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-surface: rgba(255, 255, 255, 0.8);
+            --bg-surface-raised: #ffffff;
+            --border-subtle: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(0, 0, 0, 0.18);
+            --text-primary: #0f172a;
+            --text-muted: #475569;
+            --text-accent: #1e293b;
+
+            --gold: #d97706;
+            --gold-glow: rgba(217, 119, 6, 0.12);
+            --violet: #6d28d9;
+            --violet-glow: rgba(109, 40, 217, 0.12);
+            --teal: #0f766e;
+            --teal-glow: rgba(15, 118, 110, 0.12);
+
+            --active-accent: var(--violet);
+            --active-glow: var(--violet-glow);
+        }
+
+        /* Base & Resets */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            transition: background-color var(--speed-medium) var(--transition-smooth), color var(--speed-medium) var(--transition-smooth);
+        }
+
+        /* Screen Reader Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 20px;
+            background: var(--gold);
+            color: #040714;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            z-index: 9999;
+            transition: top 0.2s;
+            text-decoration: none;
+            font-family: var(--font-display);
+        }
+        .skip-link:focus {
+            top: 20px;
+            outline: 3px solid var(--violet);
+        }
+
+        /* GPU-Friendly Animated Background (Gradient Mesh instead of heavy blurs) */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0.65;
+            transition: opacity 1s;
+        }
+        .mesh-orb {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            will-change: transform;
+            animation: floatOrb 25s ease-in-out infinite alternate;
+        }
+        :root[data-theme="light"] .mesh-orb {
+            mix-blend-mode: multiply;
+            opacity: 0.12;
+        }
+        .orb-1 {
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--violet) 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+            animation-duration: 35s;
+        }
+        .orb-2 {
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            bottom: 10%;
+            right: -5%;
+            animation-duration: 28s;
+            animation-delay: -5s;
+        }
+        .orb-3 {
+            width: 35vw;
+            height: 35vw;
+            background: radial-gradient(circle, var(--teal) 0%, transparent 70%);
+            bottom: -15%;
+            left: 20%;
+            animation-duration: 40s;
+            animation-delay: -10s;
+        }
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(4vw, -6vh) scale(1.08); }
+            100% { transform: translate(-3vw, 4vh) scale(0.92); }
+        }
+
+        /* Reduced Motion Settings */
+        @media (prefers-reduced-motion: reduce) {
+            .mesh-orb, .hero-cover {
+                animation: none !important;
+                transform: none !important;
+            }
+            * {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Grain texture overlay */
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+
+        /* Focus Styling for Keyboard Users */
+        :focus-visible {
+            outline: 3px solid var(--violet);
+            outline-offset: 4px;
+        }
+
+        /* Navigation Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 2.5rem;
+            background: rgba(4, 7, 20, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: padding var(--speed-medium) var(--transition-smooth), background var(--speed-medium);
+        }
+        :root[data-theme="light"] header {
+            background: rgba(248, 250, 252, 0.85);
+        }
+        header.scrolled {
+            padding: 0.85rem 2.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.25);
+            background: rgba(4, 7, 20, 0.9);
+        }
+        :root[data-theme="light"] header.scrolled {
+            background: rgba(248, 250, 252, 0.95);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border-subtle);
+        }
+        .brand-text {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .brand-text span {
+            color: var(--gold);
+        }
+        .theme-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--active-accent);
+            display: inline-block;
+            margin-left: 6px;
+            box-shadow: 0 0 10px var(--active-glow);
+            transition: background var(--speed-medium), box-shadow var(--speed-medium);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+        }
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            transition: color var(--speed-fast);
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width var(--speed-fast) ease;
+        }
+        nav a:hover, nav a:focus-visible {
+            color: var(--text-primary);
+        }
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Interactive controls inside navigation */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        /* Light/Dark Toggle Switch */
+        .theme-toggle-btn {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--speed-fast);
+        }
+        .theme-toggle-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+            background: var(--bg-surface);
+        }
+
+        /* Mobile Hamburger Trigger */
+        .mobile-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--space-2);
+            z-index: 110;
+        }
+        .mobile-hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background-color: var(--text-primary);
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        /* Drawer for Mobile Navigation */
+        .mobile-nav-drawer {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-base);
+            z-index: 105;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-8);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-nav-drawer.open {
+            transform: translateX(0);
+        }
+        .mobile-nav-drawer a {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px var(--space-6) var(--space-12);
+            overflow: hidden;
+        }
+        .hero-cover {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: url('images/department-cover.jpg'), linear-gradient(135deg, #0a0f24, #040714);
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            opacity: 0.22;
+            filter: grayscale(40%) brightness(0.65);
+        }
+        :root[data-theme="light"] .hero-cover {
+            opacity: 0.08;
+            filter: grayscale(10%) brightness(0.95);
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(4, 7, 20, 0.2) 0%, var(--bg-base) 90%);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            width: 100%;
+        }
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            letter-spacing: 5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: var(--space-6);
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2.8rem, 8vw, 6.5rem);
+            line-height: 1.05;
+            letter-spacing: -2px;
+            color: var(--text-primary);
+            margin-bottom: var(--space-4);
+        }
+        .hero-bn {
+            font-family: var(--font-bn);
+            font-weight: 600;
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            color: var(--text-primary);
+            margin-bottom: var(--space-6);
+        }
+        .hero-tag {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 620px;
+            margin: 0 auto var(--space-8);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-12);
+            margin-bottom: var(--space-8);
+        }
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+        }
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: var(--space-2);
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border-radius: 40px;
+            background: linear-gradient(135deg, var(--gold), #fbbf24);
+            color: #040714;
+            font-family: var(--font-display);
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4);
+            transition: transform var(--speed-fast), box-shadow var(--speed-fast);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(245, 158, 11, 0.5);
+        }
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        /* Section Headings */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: var(--space-12) var(--space-6);
+        }
+        .section-head {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto var(--space-12);
+        }
+        .section-head h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: var(--space-4);
+        }
+        .section-head p {
+            color: var(--text-muted);
+        }
+
+        /* Search & Custom Filter Dashboard */
+        .controls-panel {
+            max-width: 1200px;
+            margin: 0 auto var(--space-8);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-6);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        .search-row {
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+        .search-box-wrapper {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .search-input {
+            width: 100%;
+            background: var(--bg-surface-raised);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 12px 16px 12px 48px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: border-color var(--speed-fast);
+        }
+        .search-input:focus {
+            border-color: var(--violet);
+            outline: none;
+        }
+        .sort-select {
+            background: var(--bg-surface-raised);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 12px var(--space-6);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* Interest tags chip filter */
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            align-items: center;
+        }
+        .chip-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-right: var(--space-2);
+        }
+        .filter-chip {
+            background: var(--bg-surface-raised);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--speed-fast);
+            font-family: var(--font-body);
+        }
+        .filter-chip:hover, .filter-chip:focus-visible {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+        .filter-chip.active {
+            background-color: var(--active-accent);
+            color: #ffffff;
+            border-color: var(--active-accent);
+            box-shadow: 0 4px 12px var(--active-glow);
+        }
+
+        .filter-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+            padding-top: var(--space-4);
+        }
+        .reset-theme-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-decoration: underline;
+        }
+
+        /* Accessible Student Cards Grid */
+        .grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        /* Semantically valid cards using Interactive Buttons */
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            text-align: left;
+            position: relative;
+            min-height: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            cursor: pointer;
+            transition: transform var(--speed-medium) var(--transition-smooth), 
+                        border-color var(--speed-medium) var(--transition-smooth), 
+                        box-shadow var(--speed-medium) var(--transition-smooth);
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+        }
+        .card:hover, .card:focus-visible {
+            transform: translateY(-6px);
+            border-color: var(--accent-color, var(--violet));
+            box-shadow: 0 20px 40px -15px var(--glow-color, var(--violet-glow));
+            outline: none;
+        }
+        .card.active-theme-host {
+            border-color: var(--accent-color, var(--violet)) !important;
+            box-shadow: 0 0 0 3px var(--accent-color, var(--violet)), 0 20px 50px -15px var(--glow-color, var(--violet-glow)) !important;
+        }
+
+        .card-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center top;
+            transition: transform var(--speed-slow) var(--transition-smooth);
+        }
+        .card:hover .card-bg, .card:focus-visible .card-bg {
+            transform: scale(1.05);
+        }
+        
+        /* Custom image inside the card block */
+        .student-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            transition: transform var(--speed-slow);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(4, 7, 20, 0.1) 0%, rgba(4, 7, 20, 0.6) 45%, rgba(4, 7, 20, 0.98) 100%);
+        }
+        :root[data-theme="light"] .card-overlay {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(4, 7, 20, 0.6) 40%, rgba(4, 7, 20, 0.98) 100%);
+        }
+
+        .roll-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 3;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(4, 7, 20, 0.85);
+            border: 1px solid var(--accent-color, var(--gold));
+            border-radius: 50%;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--accent-color, var(--gold));
+        }
+
+        .avatar-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-surface-raised);
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 3;
+            padding: var(--space-6);
+        }
+
+        .card-stats-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: var(--space-4);
+            border-left: 2px solid var(--accent-color, var(--violet));
+            padding-left: 12px;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-row b {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .stu-name {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+        .stu-name-bn {
+            font-family: var(--font-bn);
+            font-size: 1rem;
+            color: var(--accent-color, var(--gold));
+            margin-top: 2px;
+        }
+
+        .stu-bio {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: var(--space-3);
+            line-height: 1.5;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height var(--speed-medium) var(--transition-smooth), opacity var(--speed-medium);
+        }
+        /* Open bio on hover & on keyboard focus */
+        .card:hover .stu-bio, .card:focus-visible .stu-bio, .card.active-theme-host .stu-bio {
+            max-height: 80px;
+            opacity: 1;
+        }
+
+        .card-foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-4);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: var(--space-3);
+        }
+        .roll-footer {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .card-socials {
+            display: flex;
+            gap: 8px;
+        }
+        .card-socials a {
+            color: var(--text-muted);
+            text-decoration: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all var(--speed-fast);
+        }
+        .card-socials a:hover {
+            color: var(--accent-color, var(--violet));
+            border-color: var(--accent-color, var(--violet));
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-muted);
+            padding: var(--space-12) 0;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            display: none;
+        }
+
+        /* Moments & Batch Gallery Section (Highly Premium Addition) */
+        .moments-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-4);
+        }
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            cursor: zoom-in;
+            background-color: var(--bg-surface-raised);
+        }
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--speed-medium);
+        }
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.05);
+        }
+        .gallery-item-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-3) var(--space-4);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: #ffffff;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity var(--speed-fast);
+        }
+        .gallery-item:hover .gallery-item-title {
+            opacity: 1;
+        }
+
+        /* Lightbox for Gallery */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 7, 20, 0.95);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 80vh;
+        }
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: -45px;
+            right: 0;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* About Section */
+        .about-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .about-quote {
+            font-family: var(--font-bn);
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin-bottom: var(--space-6);
+            color: var(--text-primary);
+        }
+        .about-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: var(--space-12);
+        }
+
+        .counters-grid {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-12);
+            flex-wrap: wrap;
+        }
+        .counter-card {
+            min-width: 150px;
+        }
+        .counter-number {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold), var(--violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .counter-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: var(--space-2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-surface-raised);
+            border-top: 1px solid var(--border-subtle);
+            padding: var(--space-12) var(--space-8) var(--space-8);
+            text-align: center;
+        }
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: var(--space-4);
+        }
+        .footer-motto {
+            font-family: var(--font-bn);
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: var(--space-6);
+        }
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+        .footer-socials a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all var(--speed-fast);
+        }
+        .footer-socials a:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        .footer-copy {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Back to top dynamic button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--bg-surface-raised);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            transition: all var(--speed-fast);
+        }
+        .back-to-top.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .back-to-top:hover {
+            border-color: var(--violet);
+            color: var(--violet);
+        }
+
+        /* Responsiveness fixes */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 1.5rem;
+            }
+            .mobile-hamburger {
+                display: flex;
+            }
+            nav {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            .hero-stats {
+                gap: var(--space-6);
+            }
+            .controls-panel {
+                padding: var(--space-4);
+            }
+            .search-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+    <!-- Animated Lightweight Gradient Mesh Background -->
+    <div class="gradient-mesh" id="gradientMesh" aria-hidden="true">
+        <div class="mesh-orb orb-1"></div>
+        <div class="mesh-orb orb-2"></div>
+        <div class="mesh-orb orb-3"></div>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Navigation Header -->
+    <header id="siteHeader">
+        <a href="#home" class="brand" aria-label="Netrokona University CSE 7th Batch Homepage">
+            <img src="logo.png" alt="Netrokona University logo" class="logo-img" id="navLogo">
+            <div class="brand-text">Netrokona Uni. <span>· CSE 7th</span><span class="theme-dot" id="themeDot"></span></div>
+        </a>
+        <nav aria-label="Main navigation">
+            <a href="#home">Home</a>
+            <a href="#students">Students</a>
+            <a href="#moments">Moments</a>
+            <a href="#about">About</a>
+        </nav>
+        <div class="nav-actions">
+            <!-- Accessible Dark/Light Mode Toggler -->
+            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle light and dark color mode" title="Toggle Light/Dark Theme">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" id="themeSvgIcon">
+                    <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 110 8 4 4 0 010-8z"></path>
+                </svg>
+            </button>
+            <button class="mobile-hamburger" id="mobileHamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav-drawer" id="mobileDrawer" aria-hidden="true">
+        <a href="#home" class="drawer-link">Home</a>
+        <a href="#students" class="drawer-link">Students</a>
+        <a href="#moments" class="drawer-link">Moments</a>
+        <a href="#about" class="drawer-link">About</a>
+    </div>
+
+    <!-- Main Content Grid -->
+    <main id="mainContent">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-cover" aria-hidden="true"></div>
+            <div class="hero-overlay" aria-hidden="true"></div>
+            <div class="hero-content">
+                <div class="eyebrow">B.Sc. in CSE · 7th Batch · Est. 2026</div>
+                <h1>CSE 7TH BATCH</h1>
+                <div class="hero-bn">নেত্রকোনা বিশ্ববিদ্যালয়</div>
+                <p class="hero-tag">৪০ জন স্বপ্নবাজ, একটি যাত্রা। চল্লিশটি ভিন্ন গল্প, একটাই লক্ষ্য — কোডিং, সৃজনশীলতা আর উদ্ভাবনের পথে একসাথে এগিয়ে চলা।</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">40</div>
+                        <div class="stat-label">Students</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">01</div>
+                        <div class="stat-label">Department</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">∞</div>
+                        <div class="stat-label">Possibilities</div>
+                    </div>
+                </div>
+                <a href="#students" class="btn-primary">Meet the Batch</a>
+            </div>
+        </section>
+
+        <!-- Students Roster Section -->
+        <section id="students">
+            <div class="section-head">
+                <div class="eyebrow">The Roster</div>
+                <h2>Meet the Students</h2>
+                <p>প্রতিটি কার্ড একজন শিক্ষার্থীর পরিচয় বহন করে। একটি কার্ডে ক্লিক করলে পুরো ওয়েবসাইটের ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট বদলে যাবে — প্রতিটি কার্ডের নিজস্ব রঙের থিম আছে।</p>
+            </div>
+
+            <!-- Enhanced Controls and Dashboard -->
+            <div class="controls-panel">
+                <div class="search-row">
+                    <div class="search-box-wrapper">
+                        <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, roll, hometown or tag..." aria-label="Search students">
+                    </div>
+                    <select id="sortControl" class="sort-select" aria-label="Sort student list">
+                        <option value="rollAsc">Sort by Roll (Ascending)</option>
+                        <option value="rollDesc">Sort by Roll (Descending)</option>
+                        <option value="nameEn">Sort by English Name</option>
+                    </select>
+                </div>
+
+                <!-- Interactive Filters by Technical Tags -->
+                <div class="chip-container">
+                    <span class="chip-label">Filter Interests:</span>
+                    <button class="filter-chip active" data-tag="all">All</button>
+                    <button class="filter-chip" data-tag="Web Development">Web Dev</button>
+                    <button class="filter-chip" data-tag="Competitive Programming">CP</button>
+                    <button class="filter-chip" data-tag="Machine Learning">ML</button>
+                    <button class="filter-chip" data-tag="Cybersecurity">Security</button>
+                    <button class="filter-chip" data-tag="UI/UX Design">UI/UX</button>
+                    <button class="filter-chip" data-tag="App Development">Mobile Apps</button>
+                    <button class="filter-chip" data-tag="Cloud Computing">Cloud</button>
+                    <button class="filter-chip" data-tag="Data Science">Data Science</button>
+                </div>
+
+                <!-- Dynamic Search/Filter Stats with Aria-Live Notification -->
+                <div class="filter-meta">
+                    <div role="status" aria-live="polite">
+                        Showing <span id="resultCount" style="color: var(--gold); font-weight: 600;">40</span> of <span id="totalCount">40</span> students
+                    </div>
+                    <button class="reset-theme-btn" id="resetThemeBtn">Reset Page Accent Theme</button>
+                </div>
+            </div>
+
+            <!-- Student Profile Grid -->
+            <div class="grid" id="studentGrid"></div>
+            <div class="no-results" id="noResults">No student matches your search query. Please try another search.</div>
+        </section>
+
+        <!-- Premium Moments Section (Gallery) -->
+        <section id="moments">
+            <div class="section-head">
+                <div class="eyebrow">The Gallery</div>
+                <h2>Batch Moments</h2>
+                <p>ক্যাম্পাসের চিরস্মরণীয় কিছু মুহূর্ত ও আমাদের একসঙ্গে পথচলার সুন্দর কিছু ছবি।</p>
+            </div>
+            <div class="moments-container">
+                <div class="gallery-grid">
+                    <button class="gallery-item" aria-label="View larger image: Campus Tour" data-image="images/tour.jpg">
+                        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop" class="gallery-img" alt="Campus and classroom gatherings">
+                        <span class="gallery-item-title">Inaugural Classroom Gatherings</span>
+                    </button>
+                    <button class="gallery-item" aria-label="View larger image: Coding Workshop" data-image="images/workshop.jpg">
+                        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop" class="gallery-img" alt="First team hackathon group session">
+                        <span class="gallery-item-title">First Hackathon Jam Session</span>
+                    </button>
+                    <button class="gallery-item" aria-label="View larger image: Picnic Day" data-image="images/picnic.jpg">
+                        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=600&auto=format&fit=crop" class="gallery-img" alt="Annual batch orientation retreat">
+                        <span class="gallery-item-title">Batch Freshers Celebration Day</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Lightbox -->
+        <div class="lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Image Preview Lightbox">
+            <div class="lightbox-content">
+                <button class="lightbox-close" id="lightboxClose" aria-label="Close Lightbox">&times;</button>
+                <img src="" alt="" class="lightbox-img" id="lightboxTargetImage">
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="about-wrapper">
+                <div class="eyebrow">Who We Are</div>
+                <h2>About the Batch</h2>
+                <div class="about-quote">আমরা নেত্রকোনা বিশ্ববিদ্যালয়ের কম্পিউটার সায়েন্স অ্যান্ড ইঞ্জিনিয়ারিং বিভাগের ৭ম ব্যাচ।</div>
+                <p class="about-desc">From competitive programmers to web builders, from AI enthusiasts to cybersecurity hopefuls — this batch is a mix of forty distinct minds united by one department and one mission: to learn, build, and grow together through every semester ahead.</p>
+                <div class="counters-grid">
+                    <div class="counter-card">
+                        <div class="counter-number" id="numStudents">40</div>
+                        <div class="counter-label">Students</div>
+                    </div>
+                    <div class="counter-card">
+                        <div class="counter-number">01</div>
+                        <div class="counter-label">Department</div>
+                    </div>
+                    <div class="counter-card">
+                        <div class="counter-number">04</div>
+                        <div class="counter-label">Years Ahead</div>
+                    </div>
+                    <div class="counter-card">
+                        <div class="counter-number">01</div>
+                        <div class="counter-label">Dream</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">
+            <img src="logo.png" alt="Netrokona University logo icon" style="width:38px;height:38px;object-fit:contain;">
+            <div class="brand-text">Netrokona University <span>· CSE 7th Batch</span></div>
+        </div>
+        <div class="footer-motto">নতুন যাত্রার শুরু, একসাথে এগিয়ে চলা</div>
+        <div class="footer-socials">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Follow CSE 7th Batch on Facebook">FB</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Follow CSE 7th Batch on Instagram">IG</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Follow CSE 7th Batch on LinkedIn">IN</a>
+        </div>
+        <div class="footer-copy">© 2026 CSE 7th Batch, Netrokona University · Designed and developed with absolute performance and semantic fidelity</div>
+    </footer>
+
+    <!-- Back to Top Trigger -->
+    <button class="back-to-top" id="backToTop" aria-label="Scroll back to top of the page">↑</button>
+
+    <script>
+        // Comprehensive Fallback Student Data (Fully customized up to 40 complete students)
+        const BATCH_STUDENTS = [
+            { roll:"01", nameEn:"Arif Rahman", nameBn:"আরিফ রহমান", hometown:"Netrokona", interest:"Competitive Programming", subject:"Data Structures", fact:"Loves solving puzzles at 2 AM", bio:"A curious mind exploring the intersection of logic and algorithmic design.", img:"images/1.png" },
+            { roll:"02", nameEn:"Tania Akter", nameBn:"তানিয়া আক্তার", hometown:"Mymensingh", interest:"Web Development", subject:"Algorithms", fact:"Always has 30 browser tabs open", bio:"Believes every bug is just a beautiful puzzle waiting to be optimized.", img:"images/2.png" },
+            { roll:"03", nameEn:"Shakil Ahmed", nameBn:"শাকিল আহমেদ", hometown:"Kishoreganj", interest:"Machine Learning", subject:"Linear Algebra", fact:"Can explain neural nets to his grandma", bio:"Fascinated by how machine brains learn from raw, unstructured datasets.", img:"images/3.png" },
+            { roll:"04", nameEn:"Nusrat Jahan", nameBn:"নুসরাত জাহান", hometown:"Netrokona", interest:"UI/UX Design", subject:"HCI", fact:"Sketches wireframes during lectures", bio:"Where code meets human psychology — designing stunning interactive layouts.", img:"images/4.png" },
+            { roll:"05", nameEn:"Rakib Hasan", nameBn:"রাকিব হাসান", hometown:"Sylhet", interest:"Cybersecurity", subject:"Cryptography", fact:"Once found a vulnerability in a site", bio:"Building reliable, impenetrable software vaults for modern infrastructures.", img:"images/5.png" },
+            { roll:"06", nameEn:"Fatema Khatun", nameBn:"ফাতেমা খাতুন", hometown:"Dhaka", interest:"App Development", subject:"Software Engineering", fact:"Published her first app at age 19", bio:"Mobile-first programmer crafting lightweight mobile products for real problems.", img:"images/6.png" },
+            { roll:"07", nameEn:"Imran Hossain", nameBn:"ইমরান হোসেন", hometown:"Netrokona", interest:"Cloud Computing", subject:"Distributed Systems", fact:"Runs a server homelab in his room", bio:"Scaling web ideas cleanly into fully serverless microservices.", img:"images/7.png" },
+            { roll:"08", nameEn:"Sanjida Islam", nameBn:"সানজিদা ইসলাম", hometown:"Rajshahi", interest:"Data Science", subject:"Statistics", fact:"Visualizes dataset metrics for fun", bio:"Translating raw enterprise data into highly actionable strategic intelligence.", img:"images/8.png" },
+            { roll:"09", nameEn:"Nayeem Uddin", nameBn:"নাঈম উদ্দিন", hometown:"Chittagong", interest:"Competitive Programming", subject:"Graph Theory", fact:"Can type at 110 WPM on mechanical board", bio:"Algorithmic speedrunner passionate about sorting and traversal optimization.", img:"images/9.png" },
+            { roll:"10", nameEn:"Riya Sen", nameBn:"রিয়া সেন", hometown:"Mymensingh", interest:"Web Development", subject:"JavaScript Engine", fact:"Refuses to use library for basic helpers", bio:"Crafting raw vanilla interfaces that load with maximum efficiency.", img:"images/10.png" },
+            { roll:"11", nameEn:"Mahmudul Hasan", nameBn:"মাহমুদুল হাসান", hometown:"Kishoreganj", interest:"Machine Learning", subject:"Deep Learning", fact:"Trains vision models on his laptop GPU", bio:"Pioneering automated object detection modules for everyday software.", img:"images/11.png" },
+            { roll:"12", nameEn:"Fariha Kabir", nameBn:"ফারিহা কবির", hometown:"Netrokona", interest:"UI/UX Design", subject:"Design Psychology", fact:"Speaks three human languages, four dev ones", bio:"Bridging the communication barrier between engineering and graphic arts.", img:"images/12.png" },
+            { roll:"13", nameEn:"Asif Chowdhury", nameBn:"আসিফ চৌধুরী", hometown:"Sylhet", interest:"Cybersecurity", subject:"Network Security", fact:"Has a custom Kali Linux flash drive", bio:"Specializing in pentesting, threat model analysis, and vulnerability checks.", img:"images/13.png" },
+            { roll:"14", nameEn:"Mehnaz Yeasmin", nameBn:"মেহনাজ ইয়াসমিন", hometown:"Dhaka", interest:"App Development", subject:"Kotlin Development", fact:"Obsessed with structural design patterns", bio:"Crafting flawless native Android structures with state management.", img:"images/14.png" },
+            { roll:"15", nameEn:"Kazi Shamim", nameBn:"কাজী শামিম", hometown:"Barisal", interest:"Cloud Computing", subject:"Docker & Kubernetes", fact:"Dockerizes every script he creates", bio:"Containerization enthusiast and automation infrastructure designer.", img:"images/15.png" },
+            { roll:"16", nameEn:"Sultana Razi", nameBn:"সুলতানা রাজি", hometown:"Netrokona", interest:"Data Science", subject:"Database Optimization", fact:"Can write nested SQL queries on paper", bio:"Structuring unstructured query pipelines for massive scaling speeds.", img:"images/16.png" },
+            { roll:"17", nameEn:"Kamrul Hasan", nameBn:"কামরুল হাসান", hometown:"Mymensingh", interest:"Competitive Programming", subject:"Dynamic Programming", fact:"Lives on green tea and test-case sheets", bio:"Loves recursive math structures and solving complex graph theory puzzles.", img:"images/17.png" },
+            { roll:"18", nameEn:"Lamia Akter", nameBn:"লামিয়া আক্তার", hometown:"Dhaka", interest:"Web Development", subject:"CSS Architecture", fact:"Never uses inline styling under any condition", bio:"Creating accessible, semantic frontends adhering to CSS Grid & Flexbox.", img:"images/18.png" },
+            { roll:"19", nameEn:"Sabbir Rahman", nameBn:"সাব্বির রহমান", hometown:"Rajshahi", interest:"Machine Learning", subject:"Computer Vision", fact:"Wrote a smart camera algorithm for dog", bio:"Analyzing spatial visual streams through neural processing mechanics.", img:"images/19.png" },
+            { roll:"20", nameEn:"Nabila Karim", nameBn:"নাবিলা করিম", hometown:"Kishoreganj", interest:"UI/UX Design", subject:"Design Systems", fact:"Can spot a misaligned element from far away", bio:"Developing uniform, scalable layout architectures for enterprise portals.", img:"images/20.png" },
+            { roll:"21", nameEn:"Jahidul Islam", nameBn:"জাহিদুল ইসলাম", hometown:"Netrokona", interest:"Cybersecurity", subject:"Reverse Engineering", fact:"Inspects assembly instruction codes daily", bio:"Unmasking malicious payloads and binaries to secure digital perimeters.", img:"images/21.png" },
+            { roll:"22", nameEn:"Tasnim Ferdous", nameBn:"তাসনিম ফেরদৌস", hometown:"Mymensingh", interest:"App Development", subject:"SwiftUI Essentials", fact:"Prefers dark mode inside code environments", bio:"Polishing sleek and highly reactive iOS builds with fluid animations.", img:"images/22.png" },
+            { roll:"23", nameEn:"Sajid Anwar", nameBn:"সাজিদ আনোয়ার", hometown:"Chittagong", interest:"Cloud Computing", subject:"Terraform", fact:"Deploys virtual machines automatically", bio:"Declaring cloud structures safely via programmatic infrastructure templates.", img:"images/23.png" },
+            { roll:"24", nameEn:"Sadia Zaman", nameBn:"সাদিয়া জামান", hometown:"Dhaka", interest:"Data Science", subject:"Predictive Analytics", fact:"Models future trends for her budget", bio:"Constructing mathematical regressions for precise commercial projections.", img:"images/24.png" },
+            { roll:"25", nameEn:"Rezaul Karim", nameBn:"রেজাউল করিম", hometown:"Sylhet", interest:"Competitive Programming", subject:"Combinatorics", fact:"Prefers low level terminal text interfaces", bio:"Obsessed with low computational footprint scripts and sorting routines.", img:"images/25.png" },
+            { roll:"26", nameEn:"Mitu Sarkar", nameBn:"মিতু সরকার", hometown:"Netrokona", interest:"Web Development", subject:"Node.js Backend", fact:"Never loses track of asynchronous states", bio:"Devoted to building clean RESTful micro-architectures that scale.", img:"images/26.png" },
+            { roll:"27", nameEn:"Faysal Ahmed", nameBn:"ফয়সাল আহমেদ", hometown:"Kishoreganj", interest:"Machine Learning", subject:"Natural Language Processing", fact:"Building a local Bengali text generator", bio:"Analyzing linguistics and grammatical patterns using probabilistic setups.", img:"images/27.png" },
+            { roll:"28", nameEn:"Tamanna Sharmin", nameBn:"তামান্না শারমিন", hometown:"Dhaka", interest:"UI/UX Design", subject:"Interactive Layouts", fact:"Has a vast collection of design handbooks", bio:"Empowering complex features with extremely intuitive navigation schemes.", img:"images/28.png" },
+            { roll:"29", nameEn:"Abir Hasan", nameBn:"আবির হাসান", hometown:"Rajshahi", interest:"Cybersecurity", subject:"Penetration Testing", fact:"Uses hardware security keys on his logs", bio:"Assessing logical network gaps before exploits can find them.", img:"images/29.png" },
+            { roll:"30", nameEn:"Israt Jahan", nameBn:"ইশরাত জাহান", hometown:"Mymensingh", interest:"App Development", subject:"Cross-Platform Systems", fact:"Writes Flutter codes that load anywhere", bio:"Unifying codebases to ship high fidelity mobile projects instantly.", img:"images/30.png" },
+            { roll:"31", nameEn:"Rashedul Islam", nameBn:"রাশেদুল ইসলাম", hometown:"Netrokona", interest:"Cloud Computing", subject:"Server Security", fact:"Monitors his logs using terminal alerts", bio:"Configuring server parameters and isolated virtualization blocks.", img:"images/31.png" },
+            { roll:"32", nameEn:"Jannatul Ferdous", nameBn:"জান্নাতুল ফেরদৌস", hometown:"Dhaka", interest:"Data Science", subject:"Big Data Tools", fact:"Owns a small cluster of testing nodes", bio:"Managing massive datasets using clean pipeline queries and engines.", img:"images/32.png" },
+            { roll:"33", nameEn:"Mustafizur Rahman", nameBn:"মুস্তাফিজুর রহমান", hometown:"Sylhet", interest:"Competitive Programming", subject:"Heuristics", fact:"Finds DP solutions in daily life tasks", bio:"Tackling NP-hard math concepts using robust and reliable approximations.", img:"images/33.png" },
+            { roll:"34", nameEn:"Farzana Yasmin", nameBn:"ফারজানা ইয়াসমিন", hometown:"Chittagong", interest:"Web Development", subject:"API Design", fact:"Builds self-documenting code systems", bio:"Forging logical backend gateways that transfer data streams cleanly.", img:"images/34.png" },
+            { roll:"35", nameEn:"Munim Alvi", nameBn:"মুনিম আলভী", hometown:"Netrokona", interest:"Machine Learning", subject:"Reinforcement Learning", fact:"Runs self-learning game agents overnight", bio:"Creating decision matrices for virtual automation structures.", img:"images/35.png" },
+            { roll:"36", nameEn:"Tariqul Islam", nameBn:"তারিকুল ইসলাম", hometown:"Kishoreganj", interest:"UI/UX Design", subject:"Usability Metrics", fact:"Conducts real usability research surveys", bio:"Transforming design sketches into comfortable user pathways.", img:"images/36.png" },
+            { roll:"37", nameEn:"Nigar Sultana", nameBn:"নিগার সুলতানা", hometown:"Mymensingh", interest:"Cybersecurity", subject:"Ethical Hacking", fact:"Reads standard protocol reports for fun", bio:"Inspecting communication architectures against zero-day vulnerabilities.", img:"images/37.png" },
+            { roll:"38", nameEn:"Tanvir Ahmed", nameBn:"তানভীর আহমেদ", hometown:"Sylhet", interest:"App Development", subject:"Native Code Integration", fact:"Loves compiling for older OS targets", bio:"Optimizing native mobile platforms to run swiftly on basic hardware.", img:"images/38.png" },
+            { roll:"39", nameEn:"Farhana Afrin", nameBn:"ফারহানা আফরিন", hometown:"Dhaka", interest:"Cloud Computing", subject:"Container Orchestration", fact:"Can build complete pipelines automatically", bio:"Deploying safe, autoscaling continuous integration setups for teams.", img:"images/39.png" },
+            { roll:"40", nameEn:"Afsana Miya", nameBn:"আফসানা মিঞা", hometown:"Netrokona", interest:"Data Science", subject:"Information Mining", fact:"Analyzes web search trends systematically", bio:"Harvesting raw digital patterns to generate accurate visual indicators.", img:"images/40.png" }
+        ];
+
+        // Accent theme configurations for dynamic card triggers
+        const ACCENTS_REGISTRY = {
+            '#e59e0b': { b1:'#f59e0b', b2:'#fbbf24', b3:'#b45309', bg:'#0c0a05', bg2:'#161107', accent:'#e59e0b', glow:'rgba(229,158,11,0.45)' },
+            '#8b5cf6': { b1:'#8b5cf6', b2:'#a78bfa', b3:'#4c1d95', bg:'#06040b', bg2:'#100a1c', accent:'#8b5cf6', glow:'rgba(139,92,246,0.45)' },
+            '#14b8a6': { b1:'#14b8a6', b2:'#2dd4bf', b3:'#115e59', bg:'#030908', bg2:'#081614', accent:'#14b8a6', glow:'rgba(20,184,166,0.45)' },
+            '#ef4444': { b1:'#ef4444', b2:'#f87171', b3:'#7f1d1d', bg:'#0b0404', bg2:'#1c0a0a', accent:'#ef4444', glow:'rgba(239,68,68,0.45)' },
+            '#3b82f6': { b1:'#3b82f6', b2:'#60a5fa', b3:'#1d4ed8', bg:'#03060c', bg2:'#08101e', accent:'#3b82f6', glow:'rgba(59,130,246,0.45)' },
+            '#ec4899': { b1:'#ec4899', b2:'#f472b6', b3:'#9d174d', bg:'#0b0307', bg2:'#1c0812', accent:'#ec4899', glow:'rgba(236,72,153,0.45)' }
+        };
+
+        const staticColors = ['#e59e0b', '#8b5cf6', '#14b8a6', '#ef4444', '#3b82f6', '#ec4899'];
+
+        // DOM elements cache
+        const studentGrid = document.getElementById('studentGrid');
+        const searchInput = document.getElementById('searchInput');
+        const sortControl = document.getElementById('sortControl');
+        const resultCount = document.getElementById('resultCount');
+        const totalCount = document.getElementById('totalCount');
+        const noResults = document.getElementById('noResults');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeSvgIcon = document.getElementById('themeSvgIcon');
+        const resetThemeBtn = document.getElementById('resetThemeBtn');
+        const siteHeader = document.getElementById('siteHeader');
+        const backToTop = document.getElementById('backToTop');
+        const mobileHamburger = document.getElementById('mobileHamburger');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        const themeDot = document.getElementById('themeDot');
+
+        let activeTagFilter = 'all';
+        let searchQuery = '';
+        let currentTheme = 'dark';
+        let activeCardElement = null;
+
+        // Custom Safe Node Generator to completely prevent XSS
+        function createStudentCard(student, index) {
+            const chosenAccentColor = staticColors[index % staticColors.length];
+            const chosenPalette = ACCENTS_REGISTRY[chosenAccentColor];
+
+            const card = document.createElement('button');
+            card.className = 'card';
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-expanded', 'false');
+            card.style.setProperty('--accent-color', chosenAccentColor);
+            card.style.setProperty('--glow-color', chosenPalette.glow);
+            card.dataset.accent = chosenAccentColor;
+            card.dataset.name = student.nameEn.toLowerCase();
+            card.dataset.roll = student.roll;
+            card.dataset.hometown = student.hometown.toLowerCase();
+            card.dataset.interest = student.interest;
+
+            // Internal Structural setup of the Card
+            const cardBg = document.createElement('div');
+            cardBg.className = 'card-bg';
+
+            const img = document.createElement('img');
+            img.className = 'student-image';
+            img.alt = `${student.nameEn}, CSE 7th Batch, Roll ${student.roll}`;
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.src = student.img;
+            
+            // Native safe event handler for missing image assets
+            img.addEventListener('error', function() {
+                img.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.className = 'avatar-fallback';
+                fallback.textContent = student.nameEn.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+                cardBg.appendChild(fallback);
+            });
+
+            cardBg.appendChild(img);
+
+            const overlay = document.createElement('div');
+            overlay.className = 'card-overlay';
+
+            const rollBadge = document.createElement('div');
+            rollBadge.className = 'roll-badge';
+            rollBadge.textContent = student.roll;
+
+            const content = document.createElement('div');
+            content.className = 'card-content';
+
+            const statsRows = document.createElement('div');
+            statsRows.className = 'card-stats-rows';
+
+            const row1 = createStatRow('Hometown', student.hometown);
+            const row2 = createStatRow('Interest', student.interest);
+            const row3 = createStatRow('Course Focus', student.subject);
+            
+            statsRows.append(row1, row2, row3);
+
+            const nameEn = document.createElement('div');
+            nameEn.className = 'stu-name';
+            nameEn.textContent = student.nameEn;
+
+            const nameBn = document.createElement('div');
+            nameBn.className = 'stu-name-bn';
+            nameBn.textContent = student.nameBn;
+
+            const bio = document.createElement('div');
+            bio.className = 'stu-bio';
+            bio.textContent = student.bio;
+
+            const foot = document.createElement('div');
+            foot.className = 'card-foot';
+
+            const rollFooter = document.createElement('div');
+            rollFooter.className = 'roll-footer';
+            rollFooter.textContent = `ROLL // ${student.roll}`;
+
+            const socials = document.createElement('div');
+            socials.className = 'card-socials';
+            
+            const fbLink = document.createElement('a');
+            fbLink.href = 'https://facebook.com';
+            fbLink.target = '_blank';
+            fbLink.rel = 'noopener noreferrer';
+            fbLink.ariaLabel = `Visit ${student.nameEn}'s Facebook profile`;
+            fbLink.textContent = 'fb';
+
+            const igLink = document.createElement('a');
+            igLink.href = 'https://instagram.com';
+            igLink.target = '_blank';
+            igLink.rel = 'noopener noreferrer';
+            igLink.ariaLabel = `Visit ${student.nameEn}'s Instagram profile`;
+            igLink.textContent = 'ig';
+
+            socials.append(fbLink, igLink);
+            foot.append(rollFooter, socials);
+
+            content.append(statsRows, nameEn, nameBn, bio, foot);
+            card.append(cardBg, overlay, rollBadge, content);
+
+            // Bind click and interactive operations cleanly
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.card-socials')) return;
+                toggleCardTheme(card, chosenAccentColor);
+            });
+
+            return card;
+        }
+
+        function createStatRow(label, value) {
+            const row = document.createElement('div');
+            row.className = 'stat-row';
+            
+            const labelSpan = document.createElement('span');
+            labelSpan.textContent = label;
+
+            const valB = document.createElement('b');
+            valB.textContent = value;
+
+            row.append(labelSpan, valB);
+            return row;
+        }
+
+        // Apply Custom Accent Theme derived from Active Student Card
+        function toggleCardTheme(cardElement, accentColor) {
+            if (activeCardElement === cardElement) {
+                resetTheme();
+                return;
+            }
+
+            if (activeCardElement) {
+                activeCardElement.classList.remove('active-theme-host');
+                activeCardElement.setAttribute('aria-expanded', 'false');
+            }
+
+            activeCardElement = cardElement;
+            cardElement.classList.add('active-theme-host');
+            cardElement.setAttribute('aria-expanded', 'true');
+
+            const palette = ACCENTS_REGISTRY[accentColor];
+            if (palette) {
+                document.documentElement.style.setProperty('--active-accent', palette.accent);
+                document.documentElement.style.setProperty('--active-glow', palette.glow);
+                
+                // Animate background mesh nodes
+                document.documentElement.style.setProperty('--violet', palette.b1);
+                document.documentElement.style.setProperty('--gold', palette.b2);
+                document.documentElement.style.setProperty('--teal', palette.b3);
+
+                // Update the state indicators
+                themeDot.style.background = palette.accent;
+                themeDot.style.boxShadow = `0 0 14px ${palette.glow}`;
+            }
+        }
+
+        // Reset Page level accent configuration back to normal
+        function resetTheme() {
+            if (activeCardElement) {
+                activeCardElement.classList.remove('active-theme-host');
+                activeCardElement.setAttribute('aria-expanded', 'false');
+                activeCardElement = null;
+            }
+            
+            // Standard Obsidian observatory color tokens
+            document.documentElement.style.setProperty('--active-accent', 'var(--violet)');
+            document.documentElement.style.setProperty('--active-glow', 'var(--violet-glow)');
+            document.documentElement.style.setProperty('--violet', '#8b5cf6');
+            document.documentElement.style.setProperty('--gold', '#f59e0b');
+            document.documentElement.style.setProperty('--teal', '#14b8a6');
+
+            themeDot.style.background = 'var(--active-accent)';
+            themeDot.style.boxShadow = `0 0 10px var(--active-glow)`;
+        }
+
+        // Render functions implementing standard optimization structures
+        function renderRoster() {
+            studentGrid.innerHTML = '';
+            
+            // Apply filtering
+            let filtered = BATCH_STUDENTS.filter(s => {
+                const matchesSearch = s.nameEn.toLowerCase().includes(searchQuery) || 
+                                      s.roll.includes(searchQuery) || 
+                                      s.hometown.toLowerCase().includes(searchQuery) ||
+                                      s.interest.toLowerCase().includes(searchQuery);
+                
+                const matchesTag = (activeTagFilter === 'all') || (s.interest === activeTagFilter);
+                
+                return matchesSearch && matchesTag;
+            });
+
+            // Apply sorting algorithms
+            const sortMode = sortControl.value;
+            if (sortMode === 'rollAsc') {
+                filtered.sort((a, b) => parseInt(a.roll) - parseInt(b.roll));
+            } else if (sortMode === 'rollDesc') {
+                filtered.sort((a, b) => parseInt(b.roll) - parseInt(a.roll));
+            } else if (sortMode === 'nameEn') {
+                filtered.sort((a, b) => a.nameEn.localeCompare(b.nameEn));
+            }
+
+            // Draw fragment to avoid layout recalculation thrashing
+            const fragment = document.createDocumentFragment();
+            filtered.forEach((student, index) => {
+                const card = createStudentCard(student, index);
+                fragment.appendChild(card);
+            });
+
+            studentGrid.appendChild(fragment);
+
+            // Update stats counter safely
+            resultCount.textContent = filtered.length;
+            totalCount.textContent = BATCH_STUDENTS.length;
+            
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Dark and Light Mode Toggling Mechanics
+        themeToggleBtn.addEventListener('click', () => {
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                currentTheme = 'light';
+                themeSvgIcon.innerHTML = `<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>`;
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                currentTheme = 'dark';
+                themeSvgIcon.innerHTML = `<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 110 8 4 4 0 010-8z"></path>`;
+            }
+            resetTheme();
+        });
+
+        // Event binding configurations with debounced optimization
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = e.target.value.trim().toLowerCase();
+                renderRoster();
+            }, 100);
+        });
+
+        sortControl.addEventListener('change', renderRoster);
+
+        // Bind interactive interest chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                activeTagFilter = chip.dataset.tag;
+                renderRoster();
+            });
+        });
+
+        // Lightbox mechanisms for Moments
+        const lightbox = document.getElementById('galleryLightbox');
+        const lightboxImg = document.getElementById('lightboxTargetImage');
+        
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const src = item.querySelector('.gallery-img').getAttribute('src');
+                lightboxImg.src = src;
+                lightboxImg.alt = item.getAttribute('aria-label');
+                lightbox.classList.add('active');
+            });
+        });
+
+        document.getElementById('lightboxClose').addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) lightbox.classList.remove('active');
+        });
+
+        // Sticky navigation and scroll listener handling
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                siteHeader.classList.add('scrolled');
+            } else {
+                siteHeader.classList.remove('scrolled');
+            }
+
+            if (window.scrollY > 600) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        resetThemeBtn.addEventListener('click', resetTheme);
+
+        // Responsive Hamburger Drawer activation
+        mobileHamburger.addEventListener('click', () => {
+            const opened = mobileDrawer.classList.toggle('open');
+            mobileHamburger.setAttribute('aria-expanded', opened);
+            mobileDrawer.setAttribute('aria-hidden', !opened);
+        });
+
+        document.querySelectorAll('.drawer-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileDrawer.classList.remove('open');
+                mobileHamburger.setAttribute('aria-expanded', 'false');
+                mobileDrawer.setAttribute('aria-hidden', 'true');
+            });
+        });
+
+        // Pause decorative layout animation if mesh offscreen
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const orbs = document.querySelectorAll('.mesh-orb');
+                orbs.forEach(orb => {
+                    orb.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+                });
+            });
+        }, { threshold: 0.1 });
+        observer.observe(document.getElementById('students'));
+
+        // Initialize application
+        window.onload = function() {
+            renderRoster();
+        }
+    </script>
+</body>
+</html>
