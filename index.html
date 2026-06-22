@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1301,49 +1300,23 @@
     <button class="back-to-top" id="backToTop" aria-label="Scroll back to top of the page">↑</button>
 
     <script>
-        // Comprehensive Fallback Student Data (Fully customized up to 40 complete students)
-        const BATCH_STUDENTS = [
-            { roll:"01", nameEn:"Arif Rahman", nameBn:"আরিফ রহমান", hometown:"Netrokona", interest:"Competitive Programming", subject:"Data Structures", fact:"Loves solving puzzles at 2 AM", bio:"A curious mind exploring the intersection of logic and algorithmic design.", img:"images/1.png" },
-            { roll:"02", nameEn:"Tania Akter", nameBn:"তানিয়া আক্তার", hometown:"Mymensingh", interest:"Web Development", subject:"Algorithms", fact:"Always has 30 browser tabs open", bio:"Believes every bug is just a beautiful puzzle waiting to be optimized.", img:"images/2.png" },
-            { roll:"03", nameEn:"Shakil Ahmed", nameBn:"শাকিল আহমেদ", hometown:"Kishoreganj", interest:"Machine Learning", subject:"Linear Algebra", fact:"Can explain neural nets to his grandma", bio:"Fascinated by how machine brains learn from raw, unstructured datasets.", img:"images/3.png" },
-            { roll:"04", nameEn:"Nusrat Jahan", nameBn:"নুসরাত জাহান", hometown:"Netrokona", interest:"UI/UX Design", subject:"HCI", fact:"Sketches wireframes during lectures", bio:"Where code meets human psychology — designing stunning interactive layouts.", img:"images/4.png" },
-            { roll:"05", nameEn:"Rakib Hasan", nameBn:"রাকিব হাসান", hometown:"Sylhet", interest:"Cybersecurity", subject:"Cryptography", fact:"Once found a vulnerability in a site", bio:"Building reliable, impenetrable software vaults for modern infrastructures.", img:"images/5.png" },
-            { roll:"06", nameEn:"Fatema Khatun", nameBn:"ফাতেমা খাতুন", hometown:"Dhaka", interest:"App Development", subject:"Software Engineering", fact:"Published her first app at age 19", bio:"Mobile-first programmer crafting lightweight mobile products for real problems.", img:"images/6.png" },
-            { roll:"07", nameEn:"Imran Hossain", nameBn:"ইমরান হোসেন", hometown:"Netrokona", interest:"Cloud Computing", subject:"Distributed Systems", fact:"Runs a server homelab in his room", bio:"Scaling web ideas cleanly into fully serverless microservices.", img:"images/7.png" },
-            { roll:"08", nameEn:"Sanjida Islam", nameBn:"সানজিদা ইসলাম", hometown:"Rajshahi", interest:"Data Science", subject:"Statistics", fact:"Visualizes dataset metrics for fun", bio:"Translating raw enterprise data into highly actionable strategic intelligence.", img:"images/8.png" },
-            { roll:"09", nameEn:"Nayeem Uddin", nameBn:"নাঈম উদ্দিন", hometown:"Chittagong", interest:"Competitive Programming", subject:"Graph Theory", fact:"Can type at 110 WPM on mechanical board", bio:"Algorithmic speedrunner passionate about sorting and traversal optimization.", img:"images/9.png" },
-            { roll:"10", nameEn:"Riya Sen", nameBn:"রিয়া সেন", hometown:"Mymensingh", interest:"Web Development", subject:"JavaScript Engine", fact:"Refuses to use library for basic helpers", bio:"Crafting raw vanilla interfaces that load with maximum efficiency.", img:"images/10.png" },
-            { roll:"11", nameEn:"Mahmudul Hasan", nameBn:"মাহমুদুল হাসান", hometown:"Kishoreganj", interest:"Machine Learning", subject:"Deep Learning", fact:"Trains vision models on his laptop GPU", bio:"Pioneering automated object detection modules for everyday software.", img:"images/11.png" },
-            { roll:"12", nameEn:"Fariha Kabir", nameBn:"ফারিহা কবির", hometown:"Netrokona", interest:"UI/UX Design", subject:"Design Psychology", fact:"Speaks three human languages, four dev ones", bio:"Bridging the communication barrier between engineering and graphic arts.", img:"images/12.png" },
-            { roll:"13", nameEn:"Asif Chowdhury", nameBn:"আসিফ চৌধুরী", hometown:"Sylhet", interest:"Cybersecurity", subject:"Network Security", fact:"Has a custom Kali Linux flash drive", bio:"Specializing in pentesting, threat model analysis, and vulnerability checks.", img:"images/13.png" },
-            { roll:"14", nameEn:"Mehnaz Yeasmin", nameBn:"মেহনাজ ইয়াসমিন", hometown:"Dhaka", interest:"App Development", subject:"Kotlin Development", fact:"Obsessed with structural design patterns", bio:"Crafting flawless native Android structures with state management.", img:"images/14.png" },
-            { roll:"15", nameEn:"Kazi Shamim", nameBn:"কাজী শামিম", hometown:"Barisal", interest:"Cloud Computing", subject:"Docker & Kubernetes", fact:"Dockerizes every script he creates", bio:"Containerization enthusiast and automation infrastructure designer.", img:"images/15.png" },
-            { roll:"16", nameEn:"Sultana Razi", nameBn:"সুলতানা রাজি", hometown:"Netrokona", interest:"Data Science", subject:"Database Optimization", fact:"Can write nested SQL queries on paper", bio:"Structuring unstructured query pipelines for massive scaling speeds.", img:"images/16.png" },
-            { roll:"17", nameEn:"Kamrul Hasan", nameBn:"কামরুল হাসান", hometown:"Mymensingh", interest:"Competitive Programming", subject:"Dynamic Programming", fact:"Lives on green tea and test-case sheets", bio:"Loves recursive math structures and solving complex graph theory puzzles.", img:"images/17.png" },
-            { roll:"18", nameEn:"Lamia Akter", nameBn:"লামিয়া আক্তার", hometown:"Dhaka", interest:"Web Development", subject:"CSS Architecture", fact:"Never uses inline styling under any condition", bio:"Creating accessible, semantic frontends adhering to CSS Grid & Flexbox.", img:"images/18.png" },
-            { roll:"19", nameEn:"Sabbir Rahman", nameBn:"সাব্বির রহমান", hometown:"Rajshahi", interest:"Machine Learning", subject:"Computer Vision", fact:"Wrote a smart camera algorithm for dog", bio:"Analyzing spatial visual streams through neural processing mechanics.", img:"images/19.png" },
-            { roll:"20", nameEn:"Nabila Karim", nameBn:"নাবিলা করিম", hometown:"Kishoreganj", interest:"UI/UX Design", subject:"Design Systems", fact:"Can spot a misaligned element from far away", bio:"Developing uniform, scalable layout architectures for enterprise portals.", img:"images/20.png" },
-            { roll:"21", nameEn:"Jahidul Islam", nameBn:"জাহিদুল ইসলাম", hometown:"Netrokona", interest:"Cybersecurity", subject:"Reverse Engineering", fact:"Inspects assembly instruction codes daily", bio:"Unmasking malicious payloads and binaries to secure digital perimeters.", img:"images/21.png" },
-            { roll:"22", nameEn:"Tasnim Ferdous", nameBn:"তাসনিম ফেরদৌস", hometown:"Mymensingh", interest:"App Development", subject:"SwiftUI Essentials", fact:"Prefers dark mode inside code environments", bio:"Polishing sleek and highly reactive iOS builds with fluid animations.", img:"images/22.png" },
-            { roll:"23", nameEn:"Sajid Anwar", nameBn:"সাজিদ আনোয়ার", hometown:"Chittagong", interest:"Cloud Computing", subject:"Terraform", fact:"Deploys virtual machines automatically", bio:"Declaring cloud structures safely via programmatic infrastructure templates.", img:"images/23.png" },
-            { roll:"24", nameEn:"Sadia Zaman", nameBn:"সাদিয়া জামান", hometown:"Dhaka", interest:"Data Science", subject:"Predictive Analytics", fact:"Models future trends for her budget", bio:"Constructing mathematical regressions for precise commercial projections.", img:"images/24.png" },
-            { roll:"25", nameEn:"Rezaul Karim", nameBn:"রেজাউল করিম", hometown:"Sylhet", interest:"Competitive Programming", subject:"Combinatorics", fact:"Prefers low level terminal text interfaces", bio:"Obsessed with low computational footprint scripts and sorting routines.", img:"images/25.png" },
-            { roll:"26", nameEn:"Mitu Sarkar", nameBn:"মিতু সরকার", hometown:"Netrokona", interest:"Web Development", subject:"Node.js Backend", fact:"Never loses track of asynchronous states", bio:"Devoted to building clean RESTful micro-architectures that scale.", img:"images/26.png" },
-            { roll:"27", nameEn:"Faysal Ahmed", nameBn:"ফয়সাল আহমেদ", hometown:"Kishoreganj", interest:"Machine Learning", subject:"Natural Language Processing", fact:"Building a local Bengali text generator", bio:"Analyzing linguistics and grammatical patterns using probabilistic setups.", img:"images/27.png" },
-            { roll:"28", nameEn:"Tamanna Sharmin", nameBn:"তামান্না শারমিন", hometown:"Dhaka", interest:"UI/UX Design", subject:"Interactive Layouts", fact:"Has a vast collection of design handbooks", bio:"Empowering complex features with extremely intuitive navigation schemes.", img:"images/28.png" },
-            { roll:"29", nameEn:"Abir Hasan", nameBn:"আবির হাসান", hometown:"Rajshahi", interest:"Cybersecurity", subject:"Penetration Testing", fact:"Uses hardware security keys on his logs", bio:"Assessing logical network gaps before exploits can find them.", img:"images/29.png" },
-            { roll:"30", nameEn:"Israt Jahan", nameBn:"ইশরাত জাহান", hometown:"Mymensingh", interest:"App Development", subject:"Cross-Platform Systems", fact:"Writes Flutter codes that load anywhere", bio:"Unifying codebases to ship high fidelity mobile projects instantly.", img:"images/30.png" },
-            { roll:"31", nameEn:"Rashedul Islam", nameBn:"রাশেদুল ইসলাম", hometown:"Netrokona", interest:"Cloud Computing", subject:"Server Security", fact:"Monitors his logs using terminal alerts", bio:"Configuring server parameters and isolated virtualization blocks.", img:"images/31.png" },
-            { roll:"32", nameEn:"Jannatul Ferdous", nameBn:"জান্নাতুল ফেরদৌস", hometown:"Dhaka", interest:"Data Science", subject:"Big Data Tools", fact:"Owns a small cluster of testing nodes", bio:"Managing massive datasets using clean pipeline queries and engines.", img:"images/32.png" },
-            { roll:"33", nameEn:"Mustafizur Rahman", nameBn:"মুস্তাফিজুর রহমান", hometown:"Sylhet", interest:"Competitive Programming", subject:"Heuristics", fact:"Finds DP solutions in daily life tasks", bio:"Tackling NP-hard math concepts using robust and reliable approximations.", img:"images/33.png" },
-            { roll:"34", nameEn:"Farzana Yasmin", nameBn:"ফারজানা ইয়াসমিন", hometown:"Chittagong", interest:"Web Development", subject:"API Design", fact:"Builds self-documenting code systems", bio:"Forging logical backend gateways that transfer data streams cleanly.", img:"images/34.png" },
-            { roll:"35", nameEn:"Munim Alvi", nameBn:"মুনিম আলভী", hometown:"Netrokona", interest:"Machine Learning", subject:"Reinforcement Learning", fact:"Runs self-learning game agents overnight", bio:"Creating decision matrices for virtual automation structures.", img:"images/35.png" },
-            { roll:"36", nameEn:"Tariqul Islam", nameBn:"তারিকুল ইসলাম", hometown:"Kishoreganj", interest:"UI/UX Design", subject:"Usability Metrics", fact:"Conducts real usability research surveys", bio:"Transforming design sketches into comfortable user pathways.", img:"images/36.png" },
-            { roll:"37", nameEn:"Nigar Sultana", nameBn:"নিগার সুলতানা", hometown:"Mymensingh", interest:"Cybersecurity", subject:"Ethical Hacking", fact:"Reads standard protocol reports for fun", bio:"Inspecting communication architectures against zero-day vulnerabilities.", img:"images/37.png" },
-            { roll:"38", nameEn:"Tanvir Ahmed", nameBn:"তানভীর আহমেদ", hometown:"Sylhet", interest:"App Development", subject:"Native Code Integration", fact:"Loves compiling for older OS targets", bio:"Optimizing native mobile platforms to run swiftly on basic hardware.", img:"images/38.png" },
-            { roll:"39", nameEn:"Farhana Afrin", nameBn:"ফারহানা আফরিন", hometown:"Dhaka", interest:"Cloud Computing", subject:"Container Orchestration", fact:"Can build complete pipelines automatically", bio:"Deploying safe, autoscaling continuous integration setups for teams.", img:"images/39.png" },
-            { roll:"40", nameEn:"Afsana Miya", nameBn:"আফসানা মিঞা", hometown:"Netrokona", interest:"Data Science", subject:"Information Mining", fact:"Analyzes web search trends systematically", bio:"Harvesting raw digital patterns to generate accurate visual indicators.", img:"images/40.png" }
-        ];
+        // Student data will be loaded from students.json
+        let BATCH_STUDENTS = [];
+
+        // Fetch student data from students.json and then render the roster
+        fetch('students.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load student data');
+                return response.json();
+            })
+            .then(data => {
+                BATCH_STUDENTS = data;
+                renderRoster();
+            })
+            .catch(error => {
+                console.error(error);
+                // If fetch fails, grid stays empty – you can add a fallback message if needed
+            });
 
         // Accent theme configurations for dynamic card triggers
         const ACCENTS_REGISTRY = {
@@ -1554,6 +1527,8 @@
 
         // Render functions implementing standard optimization structures
         function renderRoster() {
+            if (!BATCH_STUDENTS.length) return;  // Wait until data is loaded
+
             studentGrid.innerHTML = '';
             
             // Apply filtering
@@ -1700,11 +1675,6 @@
             });
         }, { threshold: 0.1 });
         observer.observe(document.getElementById('students'));
-
-        // Initialize application
-        window.onload = function() {
-            renderRoster();
-        }
     </script>
 </body>
 </html>
