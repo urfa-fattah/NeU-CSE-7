@@ -1,6 +1,17 @@
 [
   {
     "roll": "01",
+    "nameEn": "Maharun Maysha",
+    "nameBn": "মেহেরুন মায়শা",
+    "hometown": "Netrokona",
+    "interest": "Software Development",
+    "subject": "CSE",
+    "fact": "Future Software Engineer",
+    "bio": "Aspiring software engineer who enjoys building software and solving real-world problems through code.",
+    "img": "images/1.png"
+  },
+  {
+    "roll": "02",
     "nameEn": "Urfa Hasan Fattah",
     "nameBn": "উরফা হাসান ফাত্তাহ্",
     "hometown": "Netrokona",
@@ -8,39 +19,28 @@
     "subject": "CSE",
     "fact": "Coffee-powered coder",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/1.png"
-  },
-  {
-    "roll": "02",
-    "nameEn": "Student 02",
-    "nameBn": "শিক্ষার্থী ০২",
-    "hometown": "Barishal",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
     "img": "images/2.png"
   },
   {
     "roll": "03",
-    "nameEn": "Student 03",
-    "nameBn": "শিক্ষার্থী ০৩",
-    "hometown": "Jamalpur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
+    "nameEn": "Md Alfaj Rahman",
+    "nameBn": "মো আলফাজ রহমান",
+    "hometown": "Bogura",
+    "interest": "Data Science",
+    "subject": "CSE",
+    "fact": "Data is the new oil, but Data Scientists are the ones who refine it. 💡",
+    "bio": "Passionate about Data, AI, Machine Learning & Technology Innovation.\nLearning today to build intelligent solutions for tomorrow. 🚀",
     "img": "images/3.png"
   },
   {
     "roll": "04",
-    "nameEn": "Student 04",
-    "nameBn": "শিক্ষার্থী ০৪",
-    "hometown": "Tangail",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
+    "nameEn": "Foysal Mahmud",
+    "nameBn": "ফয়সাল মাহমুদ",
+    "hometown": "Jhenaidah",
+    "interest": "Data Science/AI/Coding/Technology",
+    "subject": "CSE",
+    "fact": "Future Data Scientist in progress",
+    "bio": "CSE Student. Aspiring Data Scientist. Passionate about AI & Problem Solving",
     "img": "images/4.png"
   },
   {
