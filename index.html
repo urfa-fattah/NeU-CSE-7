@@ -14,12 +14,16 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="CSE 7th Batch — Netrokona University">
     <meta property="og:description" content="Discover the roster, interests, and aspirations of 40 passionate computer science students from Netrokona University's 7th Batch.">
-    <meta property="og:image" content="images/department-cover.jpg">
+    <meta property="og:image" content="logo.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="CSE 7th Batch — Netrokona University">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="CSE 7th Batch — Netrokona University">
     <meta property="twitter:description" content="Discover the roster, interests, and aspirations of 40 passionate computer science students.">
+    <meta property="twitter:image" content="logo.png">
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -41,8 +45,8 @@
     <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link rel="preconnect" href="https://unpkg.com">
 
-    <!-- Lucide Icons (lightweight, tree-shakeable SVG icon lib) -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+    <!-- Lucide Icons — async so it never blocks first render -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" async></script>
 
     <!-- Fonts: exact weights only -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Bengali:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -123,6 +127,9 @@
             font-family: var(--font-body);
             overflow-x: hidden;
             line-height: 1.6;
+        }
+        /* Only transition theme changes — never on first load */
+        body.theme-ready {
             transition: background-color var(--speed-medium) var(--transition-smooth), color var(--speed-medium) var(--transition-smooth);
         }
 
@@ -440,6 +447,27 @@
         .btn-ghost svg { width: 16px; height: 16px; stroke-width: 2; }
         .btn-ghost:hover { background: var(--bg-surface); border-color: var(--violet); color: var(--violet); }
 
+        /* ─── Hero Language Icons Background ────────────────────────────── */
+        .hero-lang-icons {
+            position: absolute; inset: 0; z-index: 1;
+            pointer-events: none; overflow: hidden;
+        }
+        .lang-icon {
+            position: absolute;
+            opacity: var(--max-opacity, 0.35);
+            animation: langFloat var(--dur, 18s) ease-in-out var(--delay, 0s) infinite;
+            will-change: transform;
+            filter: drop-shadow(0 0 14px var(--icon-glow, rgba(139,92,246,0.5)));
+        }
+        .lang-icon svg { display: block; }
+        @keyframes langFloat {
+            0%   { transform: translate(0, 0) rotate(var(--rot-start, -8deg)) scale(1); }
+            50%  { transform: translate(var(--drift-x, 12px), var(--drift-y, -18px)) rotate(var(--rot-end, 8deg)) scale(1.07); }
+            100% { transform: translate(0, 0) rotate(var(--rot-start, -8deg)) scale(1); }
+        }
+        @media (prefers-reduced-motion: reduce) { .lang-icon { animation: none !important; } }
+        @media (max-width: 768px) { .lang-icon { opacity: calc(var(--max-opacity, 0.35) * 0.6); } }
+
         /* Scroll hint animation */
         .scroll-hint {
             position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
@@ -456,6 +484,11 @@
 
         /* ─── Section Base ───────────────────────────────────────────────── */
         section { position: relative; z-index: 2; padding: 5rem var(--space-6); }
+        /* Defer rendering of below-fold sections — big FCP win */
+        #students, #moments, #about {
+            content-visibility: auto;
+            contain-intrinsic-size: 0 800px;
+        }
         .section-head { text-align: center; max-width: 680px; margin: 0 auto var(--space-12); }
         .section-head h2 {
             font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem);
@@ -496,6 +529,58 @@
             transition: border-color var(--speed-fast);
         }
         .sort-select:focus { border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-glow); }
+
+        /* ─── Quick Suggestions Dropdown ──────────────────────────────────── */
+        .search-suggestions {
+            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-hover);
+            border-radius: var(--radius-md); z-index: 300; overflow: hidden;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.55);
+            max-height: 300px; overflow-y: auto;
+            opacity: 0; transform: translateY(-6px); pointer-events: none;
+            transition: opacity var(--speed-fast) var(--transition-smooth),
+                        transform var(--speed-fast) var(--transition-smooth);
+        }
+        .search-suggestions.visible {
+            opacity: 1; transform: translateY(0); pointer-events: auto;
+        }
+        .suggestion-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; cursor: pointer;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background var(--speed-fast);
+            text-align: left; width: 100%; background: none; border-left: none; border-right: none; border-top: none;
+            color: var(--text-primary);
+        }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover, .suggestion-item:focus-visible {
+            background: rgba(255,255,255,0.06); outline: none;
+        }
+        :root[data-theme="light"] .suggestion-item:hover { background: rgba(0,0,0,0.04); }
+        .suggestion-roll {
+            font-family: var(--font-mono); font-size: 0.68rem;
+            color: var(--text-muted); flex-shrink: 0;
+            background: var(--bg-surface); border: 1px solid var(--border-subtle);
+            padding: 2px 7px; border-radius: 4px;
+        }
+        .suggestion-name { flex: 1; font-size: 0.875rem; color: var(--text-primary); }
+        .suggestion-name mark {
+            background: none; color: var(--violet); font-weight: 700;
+        }
+        .suggestion-tag {
+            font-family: var(--font-mono); font-size: 0.62rem;
+            color: var(--gold); background: var(--gold-glow);
+            padding: 2px 8px; border-radius: 20px; flex-shrink: 0;
+        }
+        .suggestion-no-results {
+            padding: 16px 14px; font-family: var(--font-mono);
+            font-size: 0.8rem; color: var(--text-muted); text-align: center;
+        }
+        .suggestions-header {
+            padding: 7px 14px; font-family: var(--font-mono); font-size: 0.65rem;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-subtle); background: var(--bg-surface);
+        }
 
         .chip-container { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
         .chip-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-right: var(--space-2); }
@@ -602,6 +687,46 @@
             color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
         }
 
+        /* ─── Card Interest Logo ─────────────────────────────────────────── */
+        .card-interest-logo {
+            position: absolute; z-index: 3;
+            /* Sits in the top 30% — visually centred in that band */
+            top: 22%; transform: translateY(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            opacity: 0.82;
+            /* Glassmorphic pill behind the icon */
+            background: rgba(4, 7, 20, 0.55);
+            backdrop-filter: blur(10px) saturate(140%);
+            -webkit-backdrop-filter: blur(10px) saturate(140%);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 10px 8px 6px;
+            transition: opacity var(--speed-medium) var(--transition-smooth),
+                        transform var(--speed-medium) var(--transition-smooth),
+                        border-color var(--speed-medium),
+                        box-shadow var(--speed-medium);
+            pointer-events: none;
+        }
+        .card-interest-logo.logo-left  { left: 14px; }
+        .card-interest-logo.logo-right { right: 14px; }
+        .card:hover .card-interest-logo,
+        .card:focus-visible .card-interest-logo,
+        .card.active-theme-host .card-interest-logo {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.08);
+            border-color: var(--accent-color, var(--violet));
+            box-shadow: 0 0 20px -4px var(--accent-color, var(--violet));
+        }
+        .card-interest-logo svg { display: block; }
+        .card-interest-logo .logo-label {
+            font-family: var(--font-mono); font-size: 0.52rem;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: var(--accent-color, var(--gold));
+            writing-mode: vertical-rl; text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+        .card-interest-logo.logo-right .logo-label { transform: rotate(0deg); }
+
         .avatar-fallback {
             position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
             background-color: var(--bg-surface-raised);
@@ -630,21 +755,29 @@
         }
         .card:hover .stu-bio, .card:focus-visible .stu-bio, .card.active-theme-host .stu-bio { max-height: 80px; opacity: 1; }
         .card-foot {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: var(--space-4); border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: center; align-items: center;
+            margin-top: var(--space-4); border-top: 1px solid rgba(255,255,255,0.08);
             padding-top: var(--space-3);
         }
-        .roll-footer { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
-        .card-socials { display: flex; gap: 6px; }
+        .card-socials { display: flex; gap: 8px; align-items: center; }
         .card-socials a {
             color: var(--text-muted); text-decoration: none;
-            width: 28px; height: 28px; border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.1);
+            width: 30px; height: 30px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.12);
             display: flex; align-items: center; justify-content: center;
-            transition: all var(--speed-fast);
+            transition: color var(--speed-fast), border-color var(--speed-fast),
+                        background var(--speed-fast), transform var(--speed-fast),
+                        box-shadow var(--speed-fast);
+            background: rgba(255,255,255,0.03);
         }
-        .card-socials a svg { width: 13px; height: 13px; }
-        .card-socials a:hover { color: var(--accent-color, var(--violet)); border-color: var(--accent-color, var(--violet)); background: rgba(255,255,255,0.05); }
+        .card-socials a svg { width: 14px; height: 14px; flex-shrink: 0; }
+        .card-socials a:hover {
+            color: var(--accent-color, var(--violet));
+            border-color: var(--accent-color, var(--violet));
+            background: rgba(255,255,255,0.07);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px -2px var(--glow-color, var(--violet-glow));
+        }
 
         .no-results {
             text-align: center; color: var(--text-muted);
@@ -811,26 +944,29 @@
 
         <nav aria-label="Main navigation" id="mainNav">
             <a href="#home" class="nav-link" data-section="home">
-                <i data-lucide="home"></i> Home
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home
             </a>
             <a href="#students" class="nav-link" data-section="students">
-                <i data-lucide="users"></i> Students
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Students
             </a>
             <a href="#moments" class="nav-link" data-section="moments">
-                <i data-lucide="image"></i> Moments
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Moments
             </a>
             <a href="#about" class="nav-link" data-section="about">
-                <i data-lucide="info"></i> About
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About
+            </a>
+            <a href="journey.html" class="nav-link" data-section="journey">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg> Our Journey
             </a>
         </nav>
 
         <div class="nav-actions">
             <div class="nav-divider" aria-hidden="true"></div>
             <button class="icon-btn" id="searchToggleBtn" aria-label="Toggle search" title="Quick Search">
-                <i data-lucide="search"></i>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </button>
             <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle light and dark mode" title="Toggle Theme">
-                <i data-lucide="sun" id="themeSvgIcon"></i>
+                <svg id="themeSvgIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             </button>
             <button class="mobile-hamburger" id="mobileHamburger" aria-label="Toggle mobile menu" aria-expanded="false">
                 <span></span><span></span><span></span>
@@ -841,12 +977,13 @@
     <!-- Mobile Drawer -->
     <div class="mobile-nav-drawer" id="mobileDrawer" aria-hidden="true" role="dialog" aria-label="Mobile navigation">
         <button class="drawer-close" id="drawerClose" aria-label="Close navigation">
-            <i data-lucide="x"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
-        <a href="#home" class="drawer-link"><i data-lucide="home"></i> Home</a>
-        <a href="#students" class="drawer-link"><i data-lucide="users"></i> Students</a>
-        <a href="#moments" class="drawer-link"><i data-lucide="image"></i> Moments</a>
-        <a href="#about" class="drawer-link"><i data-lucide="info"></i> About</a>
+        <a href="#home" class="drawer-link"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home</a>
+        <a href="#students" class="drawer-link"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Students</a>
+        <a href="#moments" class="drawer-link"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Moments</a>
+        <a href="#about" class="drawer-link"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About</a>
+        <a href="journey.html" class="drawer-link"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg> Our Journey</a>
     </div>
 
     <!-- Toast container -->
@@ -861,6 +998,66 @@
                 <img src="images/department-cover.jpg" alt="" class="hero-cover-img" fetchpriority="high" width="1920" height="1080" decoding="async">
             </div>
             <div class="hero-overlay" aria-hidden="true"></div>
+
+            <!-- Programming Language Icons Background -->
+            <div class="hero-lang-icons" aria-hidden="true">
+
+                <!-- Python — top-left -->
+                <div class="lang-icon" style="top:12%;left:6%;--dur:20s;--delay:0s;--drift-x:14px;--drift-y:-20px;--rot-start:-10deg;--rot-end:6deg;--max-opacity:0.42;--icon-glow:rgba(55,118,171,0.6);">
+                    <svg width="80" height="80" viewBox="0 0 128 128"><path fill="#3776ab" d="M63.4 3C36.7 3 38.3 14.9 38.3 14.9l0 12.3h25.6v3.7H27.7S3 28.1 3 55.2s21.7 26.1 21.7 26.1h13v-12.6s-.7-21.7 21.3-21.7H84s20.6.3 20.6-19.9V22.3S107.9 3 63.4 3z"/><circle fill="#ffd43b" cx="52.1" cy="18.5" r="4.4"/><path fill="#ffd43b" d="M64.6 125c26.7 0 25.1-11.9 25.1-11.9l0-12.3H64.1v-3.7h36.2S125 99.9 125 72.8s-21.7-26.1-21.7-26.1h-13v12.6s.7 21.7-21.3 21.7H44s-20.6-.3-20.6 19.9v19.4S21.1 125 64.6 125z"/><circle fill="#3776ab" cx="75.9" cy="109.5" r="4.4"/></svg>
+                </div>
+
+                <!-- JavaScript — top-right -->
+                <div class="lang-icon" style="top:10%;right:7%;--dur:22s;--delay:-3s;--drift-x:-10px;--drift-y:-24px;--rot-start:8deg;--rot-end:-6deg;--max-opacity:0.40;--icon-glow:rgba(247,223,30,0.6);">
+                    <svg width="76" height="76" viewBox="0 0 128 128"><rect fill="#f7df1e" width="128" height="128" rx="6"/><path fill="#323330" d="M69.8 98.7c2.3 3.7 5.2 6.4 10.4 6.4 4.4 0 7.1-2.2 7.1-5.2 0-3.6-2.9-4.9-7.7-7l-2.6-1.1c-7.7-3.3-12.8-7.4-12.8-16.1 0-8 6.1-14.1 15.6-14.1 6.8 0 11.6 2.3 15.1 8.4l-8.3 5.3c-1.8-3.2-3.7-4.5-6.8-4.5-3.1 0-5.1 2-5.1 4.5 0 3.1 2 4.4 6.5 6.3l2.6 1.1c9 3.9 14.2 7.8 14.2 16.7 0 9.6-7.5 14.9-17.6 14.9-9.9 0-16.2-4.7-19.3-10.9l8.7-5.7zM34.3 99.8c1.7 3 3.2 5.5 6.8 5.5 3.5 0 5.7-1.4 5.7-6.6V62.2h10.8v36.7c0 10.9-6.4 15.8-15.7 15.8-8.4 0-13.3-4.4-15.8-9.6l8.2-5.3z"/></svg>
+                </div>
+
+                <!-- C++ — mid-left -->
+                <div class="lang-icon" style="top:40%;left:4%;--dur:25s;--delay:-7s;--drift-x:18px;--drift-y:-14px;--rot-start:-5deg;--rot-end:12deg;--max-opacity:0.38;--icon-glow:rgba(0,89,156,0.6);">
+                    <svg width="74" height="74" viewBox="0 0 128 128"><path fill="#00599c" d="M64 2L6.4 35v66L64 134l57.6-33V35L64 2z"/><path fill="#004482" d="M64 2v132l57.6-33V35L64 2z"/><path fill="#fff" d="M89.6 83.3l-3.4-2c-.4 1.3-1 2.5-1.7 3.5C82.2 88 77.5 90 72 90c-8.7 0-15.7-7-15.7-15.7 0-8.7 7-15.7 15.7-15.7 5.7 0 10.6 3.1 13.3 7.7l3.5-2c-3.3-5.7-9.4-9.5-16.8-9.5C60.3 54.8 50 65.1 50 77.8c0 12.7 10.3 23 23 23 7.8 0 14.6-4.1 18.4-10.2l-1.8-7.3zM95.9 67h4v4h-4v4h-4v-4h-4v-4h4v-4h4v4zM110 67h4v4h-4v4h-4v-4h-4v-4h4v-4h4v4z"/></svg>
+                </div>
+
+                <!-- Java — mid-right -->
+                <div class="lang-icon" style="top:36%;right:5%;--dur:19s;--delay:-11s;--drift-x:-16px;--drift-y:-10px;--rot-start:12deg;--rot-end:-5deg;--max-opacity:0.36;--icon-glow:rgba(248,152,29,0.6);">
+                    <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#0074bd" d="M47.6 99.4s-4.3 2.5 3 3.3c8.7 1 13.2.9 22.8-.9 0 0 2.5 1.6 6.1 2.9-21.7 9.3-49.1-.5-31.9-5.3zM44.7 85.7s-4.8 3.5 2.5 4.3c9.4 1 16.8 1 29.6-1.4 0 0 1.8 1.8 4.6 2.8-26.2 7.6-55.4.7-36.7-5.7z"/><path fill="#ea2d2e" d="M69.3 59.8c5.3 6.1-1.4 11.6-1.4 11.6s13.5-7 7.3-15.7c-5.8-8.2-10.2-12.2 13.7-26.2 0 0-37.5 9.3-19.6 30.3z"/><path fill="#0074bd" d="M95.7 109.4s3.2 2.6-3.5 4.6c-12.6 3.8-52.4 5-63.4.1-4-1.7 3.5-4.1 5.8-4.6 2.5-.5 3.8-.4 3.8-.4-4.4-3.1-28.3 6.1-12.1 8.7 43.9 7.1 80.1-3.2 69.4-8.4zM49.8 71.9s-20.1 4.8-7.1 6.5c5.5.7 16.4.5 26.6-.3 8.3-.7 16.6-2.1 16.6-2.1s-2.9 1.3-5 2.7c-20.1 5.3-58.9 2.8-47.7-2.6 9.4-4.7 16.6-4.2 16.6-4.2zM86 93.1c20.5-10.6 11-20.8 4.4-19.5-1.6.3-2.4.6-2.4.6s.6-1 1.8-1.4c13.4-4.7 23.7 13.9-4.2 21.3 0 0 .3-.3.4-1z"/><path fill="#ea2d2e" d="M73.6 2s11.5 11.5-10.9 29.2c-18 14.2-4.1 22.3 0 31.5-10.5-9.5-18.1-17.8-12.9-25.6 7.5-11.2 28.2-16.6 23.8-35.1z"/><path fill="#0074bd" d="M52.1 126.2c19.7 1.3 49.9-.7 50.6-10.1 0 0-1.4 3.5-16.3 6.3-16.7 3.1-37.3 2.8-49.5.8 0 .1 2.5 2.1 15.2 3z"/></svg>
+                </div>
+
+                <!-- HTML5 — lower-left -->
+                <div class="lang-icon" style="top:63%;left:6%;--dur:23s;--delay:-15s;--drift-x:10px;--drift-y:-22px;--rot-start:6deg;--rot-end:-10deg;--max-opacity:0.40;--icon-glow:rgba(227,79,38,0.6);">
+                    <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#e34f26" d="M9.4 2l10.8 121 43.8 12.2 43.8-12.2L118.6 2z"/><path fill="#ef652a" d="M64 120.9l35.5-9.8 9.2-103.5H64z"/><path fill="#fff" d="M64 52.4H45.1l-1.2-14.2H64V24.4H29.7l3.4 38.3H64zm0 35.5l-.1.1-16.9-4.6-1.1-12.4H31.7l2.2 24.2 30.1 8.4.1-.1z"/><path fill="#ebebeb" d="M63.9 52.4v13.8H81.3L79.7 87.8l-15.8 4.3v14.4l30.1-8.3.2-2.5 3.4-38.5.4-4.3H63.9zm0-28v13.8h34.4l.3-3.6.7-7.7.3-2.5H63.9z"/></svg>
+                </div>
+
+                <!-- CSS3 — lower-right -->
+                <div class="lang-icon" style="top:62%;right:6%;--dur:21s;--delay:-9s;--drift-x:-12px;--drift-y:-18px;--rot-start:-7deg;--rot-end:9deg;--max-opacity:0.38;--icon-glow:rgba(21,114,182,0.6);">
+                    <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#1572b6" d="M9.4 2l10.8 121 43.8 12.2 43.8-12.2L118.6 2z"/><path fill="#33a9dc" d="M64 120.9l35.5-9.8 9.2-103.5H64z"/><path fill="#fff" d="M64 52.4H29.7l1.2 13.8H64zm0-28H29.7l1.3 13.8H64zm0 66.6l-.1.1-16.9-4.6-1.1-12.4H31.7l2.2 24.2L64 116.8z"/><path fill="#ebebeb" d="M63.9 91l16-4.3 1.6-18H63.9V55.4h18.2l.4-4.1 1-10.9.3-2.4H63.9V24.4h35.7l-.3 2.5-.7 7.7-.3 3.6H63.9zm0-66.6v13.8h34.5l.3-2.5.7-7.7.3-3.6H63.9z"/></svg>
+                </div>
+
+                <!-- Git — top-center-ish -->
+                <div class="lang-icon" style="top:8%;left:30%;--dur:27s;--delay:-5s;--drift-x:8px;--drift-y:-15px;--rot-start:4deg;--rot-end:-8deg;--max-opacity:0.34;--icon-glow:rgba(240,80,51,0.6);">
+                    <svg width="68" height="68" viewBox="0 0 128 128"><path fill="#f05133" d="M124.737 58.378L69.621 3.264c-3.172-3.174-8.32-3.174-11.497 0L46.68 14.71l14.518 14.518c3.375-1.139 7.243-.375 9.932 2.314 2.703 2.706 3.461 6.607 2.294 9.993l13.992 13.993c3.385-1.167 7.292-.413 9.994 2.295 3.78 3.777 3.78 9.9 0 13.679a9.667 9.667 0 01-13.683 0 9.677 9.677 0 01-2.105-10.521L68.574 47.933l-.001 32.527a9.708 9.708 0 012.559 1.828c3.778 3.777 3.778 9.9 0 13.679-3.779 3.778-9.904 3.778-13.679 0-3.778-3.779-3.778-9.902 0-13.679a9.665 9.665 0 013.167-2.11V47.333a9.609 9.609 0 01-3.167-2.11c-2.718-2.715-3.468-6.644-2.266-10.044L41.661 21.66 3.264 60.056c-3.172 3.173-3.172 8.32 0 11.497l55.115 55.118c3.174 3.174 8.32 3.174 11.499 0l54.858-54.858c3.174-3.176 3.174-8.327.001-11.435z"/></svg>
+                </div>
+
+                <!-- Terminal — bottom-center -->
+                <div class="lang-icon" style="top:74%;left:44%;--dur:24s;--delay:-18s;--drift-x:-8px;--drift-y:-16px;--rot-start:-4deg;--rot-end:7deg;--max-opacity:0.32;--icon-glow:rgba(148,163,184,0.5);">
+                    <svg width="68" height="68" viewBox="0 0 128 128" fill="none" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="18" width="112" height="80" rx="8"/><polyline points="24,46 46,58 24,70"/><line x1="54" y1="70" x2="84" y2="70"/><line x1="32" y1="112" x2="96" y2="112"/><line x1="64" y1="98" x2="64" y2="112"/></svg>
+                </div>
+
+                <!-- React — upper-left area -->
+                <div class="lang-icon" style="top:24%;left:16%;--dur:30s;--delay:-22s;--drift-x:12px;--drift-y:-18px;--rot-start:5deg;--rot-end:-10deg;--max-opacity:0.36;--icon-glow:rgba(97,218,251,0.6);">
+                    <svg width="70" height="70" viewBox="0 0 128 128"><circle cx="64" cy="64" r="11.4" fill="#61dafb"/><g fill="none" stroke="#61dafb" stroke-width="5"><ellipse rx="46" ry="18" cx="64" cy="64"/><ellipse rx="46" ry="18" cx="64" cy="64" transform="rotate(60 64 64)"/><ellipse rx="46" ry="18" cx="64" cy="64" transform="rotate(120 64 64)"/></g></svg>
+                </div>
+
+                <!-- Database/SQL — mid-far-right -->
+                <div class="lang-icon" style="top:50%;right:3%;--dur:26s;--delay:-13s;--drift-x:-14px;--drift-y:-12px;--rot-start:-9deg;--rot-end:5deg;--max-opacity:0.34;--icon-glow:rgba(0,117,143,0.6);">
+                    <svg width="68" height="68" viewBox="0 0 128 128" fill="none" stroke="#00758f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="64" cy="32" rx="44" ry="16"/><path d="M20 32v64c0 8.8 19.7 16 44 16s44-7.2 44-16V32"/><path d="M20 64c0 8.8 19.7 16 44 16s44-7.2 44-16"/></svg>
+                </div>
+
+                <!-- Python again — bottom-right, smaller -->
+                <div class="lang-icon" style="top:79%;right:13%;--dur:22s;--delay:-6s;--drift-x:-10px;--drift-y:-20px;--rot-start:10deg;--rot-end:-6deg;--max-opacity:0.28;--icon-glow:rgba(55,118,171,0.5);">
+                    <svg width="56" height="56" viewBox="0 0 128 128"><path fill="#3776ab" d="M63.4 3C36.7 3 38.3 14.9 38.3 14.9l0 12.3h25.6v3.7H27.7S3 28.1 3 55.2s21.7 26.1 21.7 26.1h13v-12.6s-.7-21.7 21.3-21.7H84s20.6.3 20.6-19.9V22.3S107.9 3 63.4 3z"/><circle fill="#ffd43b" cx="52.1" cy="18.5" r="4.4"/><path fill="#ffd43b" d="M64.6 125c26.7 0 25.1-11.9 25.1-11.9l0-12.3H64.1v-3.7h36.2S125 99.9 125 72.8s-21.7-26.1-21.7-26.1h-13v12.6s.7 21.7-21.3 21.7H44s-20.6-.3-20.6 19.9v19.4S21.1 125 64.6 125z"/><circle fill="#3776ab" cx="75.9" cy="109.5" r="4.4"/></svg>
+                </div>
+
+            </div>
             <div class="hero-content">
                 <div class="eyebrow">B.Sc. in CSE · 7th Batch · Est. 2026</div>
                 <h1>CSE 7TH BATCH</h1>
@@ -882,16 +1079,16 @@
                 </div>
                 <div class="hero-cta">
                     <a href="#students" class="btn-primary">
-                        <i data-lucide="users"></i> Meet the Batch
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Meet the Batch
                     </a>
                     <a href="#about" class="btn-ghost">
-                        <i data-lucide="info"></i> About Us
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About Us
                     </a>
                 </div>
             </div>
             <div class="scroll-hint" aria-hidden="true">
                 <span>Scroll</span>
-                <i data-lucide="chevron-down"></i>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
         </section>
 
@@ -906,8 +1103,10 @@
             <div class="controls-panel reveal">
                 <div class="search-row">
                     <div class="search-box-wrapper">
-                        <i data-lucide="search" class="search-icon"></i>
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, roll, hometown or tag..." aria-label="Search students">
+                        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, roll, hometown or interest..." aria-label="Search students" autocomplete="off">
+                        <!-- Quick Suggestions Dropdown -->
+                        <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
                     </div>
                     <select id="sortControl" class="sort-select" aria-label="Sort student list">
                         <option value="rollAsc">↑ Sort by Roll</option>
@@ -916,17 +1115,9 @@
                     </select>
                 </div>
 
-                <div class="chip-container">
+                <div class="chip-container" id="filterChipContainer">
                     <span class="chip-label">Filter:</span>
-                    <button class="filter-chip active" data-tag="all"><i data-lucide="layout-grid"></i> All</button>
-                    <button class="filter-chip" data-tag="Web Development"><i data-lucide="globe"></i> Web Dev</button>
-                    <button class="filter-chip" data-tag="Competitive Programming"><i data-lucide="trophy"></i> CP</button>
-                    <button class="filter-chip" data-tag="Machine Learning"><i data-lucide="brain"></i> ML</button>
-                    <button class="filter-chip" data-tag="Cybersecurity"><i data-lucide="shield"></i> Security</button>
-                    <button class="filter-chip" data-tag="UI/UX Design"><i data-lucide="pen-tool"></i> UI/UX</button>
-                    <button class="filter-chip" data-tag="App Development"><i data-lucide="smartphone"></i> Mobile</button>
-                    <button class="filter-chip" data-tag="Cloud Computing"><i data-lucide="cloud"></i> Cloud</button>
-                    <button class="filter-chip" data-tag="Data Science"><i data-lucide="bar-chart-2"></i> Data Science</button>
+                    <!-- Filter chips are built dynamically from students.json after fetch -->
                 </div>
 
                 <div class="filter-meta">
@@ -934,7 +1125,7 @@
                         Showing <span id="resultCount" style="color: var(--gold); font-weight: 600;">40</span> of <span id="totalCount">40</span> students
                     </div>
                     <button class="reset-theme-btn" id="resetThemeBtn">
-                        <i data-lucide="rotate-ccw"></i> Reset Accent
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Reset Accent
                     </button>
                 </div>
             </div>
@@ -950,7 +1141,7 @@
                 <div class="skeleton-card" aria-hidden="true"></div>
             </div>
             <div class="no-results" id="noResults">
-                <i data-lucide="search-x"></i>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
                 No student matches your search. Try a different query.
             </div>
         </section>
@@ -972,7 +1163,7 @@
                                      https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=900&auto=format&fit=crop 900w"
                              sizes="(max-width: 600px) 100vw, 280px"
                              class="gallery-img" alt="Campus and classroom gatherings">
-                        <span class="gallery-item-title"><i data-lucide="zoom-in"></i> Inaugural Classroom Gatherings</span>
+                        <span class="gallery-item-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Inaugural Classroom Gatherings</span>
                     </button>
                     <button class="gallery-item" aria-label="View larger image: Coding Workshop">
                         <img loading="lazy" decoding="async" width="600" height="450"
@@ -982,7 +1173,7 @@
                                      https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=900&auto=format&fit=crop 900w"
                              sizes="(max-width: 600px) 100vw, 280px"
                              class="gallery-img" alt="First team hackathon group session">
-                        <span class="gallery-item-title"><i data-lucide="zoom-in"></i> First Hackathon Jam Session</span>
+                        <span class="gallery-item-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> First Hackathon Jam Session</span>
                     </button>
                     <button class="gallery-item" aria-label="View larger image: Picnic Day">
                         <img loading="lazy" decoding="async" width="600" height="450"
@@ -992,7 +1183,7 @@
                                      https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=900&auto=format&fit=crop 900w"
                              sizes="(max-width: 600px) 100vw, 280px"
                              class="gallery-img" alt="Annual batch orientation retreat">
-                        <span class="gallery-item-title"><i data-lucide="zoom-in"></i> Batch Freshers Celebration Day</span>
+                        <span class="gallery-item-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Batch Freshers Celebration Day</span>
                     </button>
                 </div>
             </div>
@@ -1002,7 +1193,7 @@
         <div class="lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Image Preview">
             <div class="lightbox-content">
                 <button class="lightbox-close" id="lightboxClose" aria-label="Close image preview">
-                    <i data-lucide="x"></i>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
                 <img src="" alt="" class="lightbox-img" id="lightboxTargetImage">
             </div>
@@ -1056,10 +1247,11 @@
             </a>
         </div>
         <div class="footer-links">
-            <a href="#home"><i data-lucide="home"></i> Home</a>
-            <a href="#students"><i data-lucide="users"></i> Students</a>
-            <a href="#moments"><i data-lucide="image"></i> Moments</a>
-            <a href="#about"><i data-lucide="info"></i> About</a>
+            <a href="#home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home</a>
+            <a href="#students"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Students</a>
+            <a href="#moments"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Moments</a>
+            <a href="#about"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About</a>
+            <a href="journey.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg> Our Journey</a>
         </div>
         <div class="footer-divider"></div>
         <div class="footer-copy">© 2026 CSE 7th Batch, Netrokona University · Designed &amp; developed by <a href="https://urfa-hasan-fattah.vercel.app" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(245,158,11,0.35);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(245,158,11,0.35)'">Urfa Hasan Fattah</a></div>
@@ -1067,23 +1259,39 @@
 
     <!-- Back to Top -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i data-lucide="arrow-up"></i>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
     </button>
 
     <script>
         // ─── Lucide Icons Init ───────────────────────────────────────────
-        // Lucide auto-replaces <i data-lucide="..."> tags after DOM ready
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) lucide.createIcons();
-        });
+        // Because Lucide loads async, init whenever it's ready.
+        function initLucide() { if (window.lucide) lucide.createIcons(); }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLucide);
+        } else {
+            // DOM already parsed (script is at bottom); just wait for Lucide itself
+            if (window.lucide) initLucide();
+            else {
+                const lucideScript = document.querySelector('script[src*="lucide"]');
+                if (lucideScript) lucideScript.addEventListener('load', initLucide);
+            }
+        }
 
         // ─── Student Data ────────────────────────────────────────────────
         let BATCH_STUDENTS = [];
 
         fetch('students.json')
-            .then(r => { if (!r.ok) throw new Error('Failed'); return r.json(); })
-            .then(data => { BATCH_STUDENTS = data; renderRoster(); })
-            .catch(err => console.error(err));
+            .then(r => { if (!r.ok) throw new Error('Failed to load students.json'); return r.json(); })
+            .then(data => {
+                BATCH_STUDENTS = data;
+                buildFilterChips();   // build chips from real interest values
+                renderRoster();
+            })
+            .catch(err => {
+                console.error('students.json load error:', err);
+                // Show error state in grid
+                studentGrid.innerHTML = `<p style="color:var(--text-muted);font-family:var(--font-mono);grid-column:1/-1;text-align:center;padding:3rem 0;">⚠️ Could not load students.json — make sure the file is in the same directory.</p>`;
+            });
 
         // ─── Accent Registry ─────────────────────────────────────────────
         const ACCENTS_REGISTRY = {
@@ -1115,18 +1323,23 @@
         const scrollBar     = document.getElementById('scrollProgressBar');
         const toastContainer= document.getElementById('toastContainer');
 
+        // Activate transitions AFTER first paint — eliminates load-flash
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            document.body.classList.add('theme-ready');
+        }));
+
         let activeTagFilter = 'all';
         let searchQuery = '';
         let currentTheme = 'dark';
         let activeCardElement = null;
 
         // ─── Toast Helper ────────────────────────────────────────────────
-        function showToast(message, iconName = 'check-circle') {
+        const TOAST_ICON = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+        function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.innerHTML = `<i data-lucide="${iconName}"></i> ${message}`;
+            toast.innerHTML = `${TOAST_ICON} ${message}`;
             toastContainer.appendChild(toast);
-            if (window.lucide) lucide.createIcons({ nodes: [toast] });
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => toast.classList.add('show'));
             });
@@ -1135,6 +1348,276 @@
                 setTimeout(() => toast.remove(), 400);
             }, 2500);
         }
+
+        // ─── Interest Logo Map ───────────────────────────────────────────
+        // SVG logos keyed by interest value from JSON. Side: 'left' or 'right'.
+        const INTEREST_LOGOS = {
+            'AI / ML': {
+                side: 'right',
+                label: 'AI · ML',
+                color: '#a78bfa',
+                glow: 'rgba(167,139,250,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Brain halves -->
+                  <path d="M64 18c-8 0-14 3-18 7-3-1-7 0-9 2-4 3-5 8-3 13-4 3-6 8-4 13 1 5 5 9 9 10 0 6 2 11 7 15 4 3 9 5 14 5h2c5 0 10-2 14-5 5-4 7-9 7-15 4-1 8-5 9-10 2-5 0-10-4-13 2-5 1-10-3-13-2-2-6-3-9-2-4-4-10-7-18-7z" stroke="#a78bfa" stroke-width="4.5" fill="rgba(167,139,250,0.07)"/>
+                  <!-- Center divide -->
+                  <line x1="64" y1="20" x2="64" y2="83" stroke="#a78bfa" stroke-width="2.5" stroke-dasharray="5 3" opacity="0.5"/>
+                  <!-- Neural nodes -->
+                  <circle cx="48" cy="50" r="5.5" fill="#a78bfa"/>
+                  <circle cx="80" cy="50" r="5.5" fill="#a78bfa"/>
+                  <circle cx="40" cy="66" r="4.5" fill="#a78bfa" opacity="0.75"/>
+                  <circle cx="88" cy="66" r="4.5" fill="#a78bfa" opacity="0.75"/>
+                  <circle cx="64" cy="70" r="5.5" fill="#c4b5fd"/>
+                  <!-- Connections -->
+                  <line x1="48" y1="50" x2="80" y2="50" stroke="#a78bfa" stroke-width="2" opacity="0.5"/>
+                  <line x1="48" y1="50" x2="40" y2="66" stroke="#a78bfa" stroke-width="2" opacity="0.5"/>
+                  <line x1="80" y1="50" x2="88" y2="66" stroke="#a78bfa" stroke-width="2" opacity="0.5"/>
+                  <line x1="48" y1="50" x2="64" y2="70" stroke="#c4b5fd" stroke-width="2.5" opacity="0.7"/>
+                  <line x1="80" y1="50" x2="64" y2="70" stroke="#c4b5fd" stroke-width="2.5" opacity="0.7"/>
+                  <!-- Pulse rings -->
+                  <circle cx="64" cy="70" r="11" stroke="#a78bfa" stroke-width="1.5" opacity="0.3"/>
+                  <circle cx="64" cy="70" r="17" stroke="#a78bfa" stroke-width="1" opacity="0.15"/>
+                </svg>`
+            },
+            'Cybersecurity': {
+                side: 'left',
+                label: 'Security',
+                color: '#34d399',
+                glow: 'rgba(52,211,153,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Shield body with gradient fill -->
+                  <path d="M64 10L18 28v36c0 26 20 49 46 55 26-6 46-29 46-55V28L64 10z" stroke="#34d399" stroke-width="4.5" stroke-linejoin="round" fill="rgba(52,211,153,0.09)"/>
+                  <!-- Inner shield accent -->
+                  <path d="M64 22L30 36v26c0 18 14 34 34 39 20-5 34-21 34-39V36L64 22z" stroke="#34d399" stroke-width="2" opacity="0.3" fill="none"/>
+                  <!-- Lock body -->
+                  <rect x="50" y="64" width="28" height="22" rx="5" stroke="#34d399" stroke-width="4" fill="rgba(52,211,153,0.12)"/>
+                  <!-- Lock shackle -->
+                  <path d="M56 64v-9a8 8 0 0116 0v9" stroke="#34d399" stroke-width="4" stroke-linecap="round"/>
+                  <!-- Keyhole -->
+                  <circle cx="64" cy="74" r="4" fill="#34d399"/>
+                  <line x1="64" y1="78" x2="64" y2="83" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
+                  <!-- Corner check marks -->
+                  <polyline points="36,56 42,62 54,48" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                </svg>`
+            },
+            'Open Source': {
+                side: 'right',
+                label: 'Open Src',
+                color: '#fb923c',
+                glow: 'rgba(251,146,60,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Outer circle (open source ring) -->
+                  <circle cx="64" cy="64" r="44" stroke="#fb923c" stroke-width="4.5" fill="rgba(251,146,60,0.06)"/>
+                  <!-- Git branch: main node -->
+                  <circle cx="64" cy="56" r="7" fill="#fb923c"/>
+                  <!-- Branch left -->
+                  <circle cx="40" cy="80" r="6" fill="#fb923c" opacity="0.8"/>
+                  <path d="M64 63 Q50 72 40 74" stroke="#fb923c" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                  <!-- Branch right -->
+                  <circle cx="88" cy="80" r="6" fill="#fb923c" opacity="0.8"/>
+                  <path d="M64 63 Q78 72 88 74" stroke="#fb923c" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                  <!-- Stem up to fork -->
+                  <line x1="64" y1="56" x2="64" y2="36" stroke="#fb923c" stroke-width="3.5" stroke-linecap="round"/>
+                  <circle cx="64" cy="34" r="5.5" fill="#fb923c" opacity="0.7"/>
+                  <!-- Merge lines down -->
+                  <path d="M40 86 Q40 96 56 100" stroke="#fb923c" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+                  <path d="M88 86 Q88 96 72 100" stroke="#fb923c" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+                </svg>`
+            },
+            'Web Development': {
+                side: 'left',
+                label: 'Web Dev',
+                color: '#f59e0b',
+                glow: 'rgba(245,158,11,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Browser frame -->
+                  <rect x="8" y="20" width="112" height="88" rx="9" stroke="#f59e0b" stroke-width="4.5" fill="rgba(245,158,11,0.06)"/>
+                  <!-- Title bar -->
+                  <line x1="8" y1="42" x2="120" y2="42" stroke="#f59e0b" stroke-width="3.5" opacity="0.55"/>
+                  <!-- Window buttons -->
+                  <circle cx="24" cy="31" r="4.5" fill="#ef4444" opacity="0.8"/>
+                  <circle cx="38" cy="31" r="4.5" fill="#f59e0b" opacity="0.8"/>
+                  <circle cx="52" cy="31" r="4.5" fill="#22c55e" opacity="0.8"/>
+                  <!-- URL bar -->
+                  <rect x="62" y="24" width="48" height="14" rx="4" stroke="#f59e0b" stroke-width="2" opacity="0.35"/>
+                  <!-- Code lines in body -->
+                  <polyline points="24,66 38,76 24,86" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <line x1="46" y1="86" x2="72" y2="86" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+                  <line x1="46" y1="76" x2="88" y2="76" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+                  <line x1="46" y1="66" x2="76" y2="66" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+                </svg>`
+            },
+            'Data Science': {
+                side: 'right',
+                label: 'Data Sci',
+                color: '#22d3ee',
+                glow: 'rgba(34,211,238,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Axes -->
+                  <line x1="18" y1="108" x2="18" y2="20" stroke="#22d3ee" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
+                  <line x1="18" y1="108" x2="112" y2="108" stroke="#22d3ee" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
+                  <!-- Axis arrows -->
+                  <polyline points="12,28 18,18 24,28" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                  <polyline points="104,114 112,108 104,102" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                  <!-- Bars -->
+                  <rect x="28" y="82" width="14" height="26" rx="3" fill="#22d3ee" opacity="0.65"/>
+                  <rect x="50" y="62" width="14" height="46" rx="3" fill="#22d3ee" opacity="0.75"/>
+                  <rect x="72" y="44" width="14" height="64" rx="3" fill="#22d3ee" opacity="0.85"/>
+                  <rect x="94" y="30" width="14" height="78" rx="3" fill="#22d3ee"/>
+                  <!-- Trend line -->
+                  <polyline points="35,80 57,60 79,42 101,28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+                  <!-- Trend dots -->
+                  <circle cx="35" cy="80" r="4" fill="#fff" opacity="0.8"/>
+                  <circle cx="57" cy="60" r="4" fill="#fff" opacity="0.8"/>
+                  <circle cx="79" cy="42" r="4" fill="#fff" opacity="0.8"/>
+                  <circle cx="101" cy="28" r="4" fill="#fff" opacity="0.8"/>
+                </svg>`
+            },
+            'App Development': {
+                side: 'left',
+                label: 'Mobile',
+                color: '#4ade80',
+                glow: 'rgba(74,222,128,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Phone body -->
+                  <rect x="34" y="8" width="60" height="112" rx="12" stroke="#4ade80" stroke-width="4.5" fill="rgba(74,222,128,0.07)"/>
+                  <!-- Top bar -->
+                  <line x1="34" y1="28" x2="94" y2="28" stroke="#4ade80" stroke-width="3" opacity="0.4"/>
+                  <!-- Bottom bar -->
+                  <line x1="34" y1="100" x2="94" y2="100" stroke="#4ade80" stroke-width="3" opacity="0.4"/>
+                  <!-- Home button -->
+                  <rect x="52" y="106" width="24" height="8" rx="4" stroke="#4ade80" stroke-width="2.5" opacity="0.6"/>
+                  <!-- Screen notch -->
+                  <rect x="52" y="14" width="24" height="8" rx="4" fill="#4ade80" opacity="0.3"/>
+                  <!-- App screen content -->
+                  <rect x="44" y="36" width="40" height="28" rx="5" fill="rgba(74,222,128,0.18)" stroke="#4ade80" stroke-width="2.5"/>
+                  <!-- App grid icons -->
+                  <rect x="44" y="72" width="10" height="10" rx="3" fill="#4ade80" opacity="0.7"/>
+                  <rect x="59" y="72" width="10" height="10" rx="3" fill="#4ade80" opacity="0.5"/>
+                  <rect x="74" y="72" width="10" height="10" rx="3" fill="#4ade80" opacity="0.7"/>
+                  <!-- Screen UI lines -->
+                  <line x1="48" y1="44" x2="80" y2="44" stroke="#4ade80" stroke-width="2" opacity="0.5"/>
+                  <line x1="48" y1="52" x2="74" y2="52" stroke="#4ade80" stroke-width="2" opacity="0.35"/>
+                </svg>`
+            },
+            'Cloud Computing': {
+                side: 'right',
+                label: 'Cloud',
+                color: '#60a5fa',
+                glow: 'rgba(96,165,250,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Cloud shape -->
+                  <path d="M98 82H36a26 26 0 010-52h2a34 34 0 0164 8 22 22 0 01-4 44z" stroke="#60a5fa" stroke-width="4.5" fill="rgba(96,165,250,0.1)" stroke-linejoin="round"/>
+                  <!-- Upload arrow -->
+                  <line x1="64" y1="92" x2="64" y2="112" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/>
+                  <polyline points="52,100 64,88 76,100" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+                  <!-- Server nodes inside cloud -->
+                  <circle cx="44" cy="60" r="5" fill="#60a5fa" opacity="0.7"/>
+                  <circle cx="64" cy="54" r="6" fill="#60a5fa" opacity="0.9"/>
+                  <circle cx="84" cy="60" r="5" fill="#60a5fa" opacity="0.7"/>
+                  <!-- Connection lines -->
+                  <line x1="49" y1="60" x2="58" y2="56" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+                  <line x1="70" y1="56" x2="79" y2="60" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+                  <!-- Wifi-like rings -->
+                  <path d="M56 74 a10 10 0 0116 0" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+                  <path d="M50 80 a16 16 0 0128 0" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+                </svg>`
+            },
+            'Competitive Programming': {
+                side: 'left',
+                label: 'Comp. Prog',
+                color: '#f472b6',
+                glow: 'rgba(244,114,182,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Terminal frame -->
+                  <rect x="10" y="16" width="108" height="96" rx="9" stroke="#f472b6" stroke-width="4.5" fill="rgba(244,114,182,0.07)"/>
+                  <!-- Title bar -->
+                  <line x1="10" y1="36" x2="118" y2="36" stroke="#f472b6" stroke-width="3" opacity="0.4"/>
+                  <!-- Window dots -->
+                  <circle cx="26" cy="26" r="4" fill="#ef4444" opacity="0.7"/>
+                  <circle cx="40" cy="26" r="4" fill="#f59e0b" opacity="0.7"/>
+                  <circle cx="54" cy="26" r="4" fill="#22c55e" opacity="0.7"/>
+                  <!-- Prompt line -->
+                  <text x="22" y="60" font-family="monospace" font-size="14" fill="#f472b6" opacity="0.9">$_</text>
+                  <!-- Code lines -->
+                  <line x1="22" y1="74" x2="76" y2="74" stroke="#f472b6" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+                  <line x1="22" y1="86" x2="96" y2="86" stroke="#f472b6" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+                  <line x1="22" y1="98" x2="60" y2="98" stroke="#f472b6" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+                  <!-- Trophy icon top-right -->
+                  <path d="M88 44 v8 a12 12 0 0024 0 v-8z" stroke="#f472b6" stroke-width="3" fill="rgba(244,114,182,0.15)" stroke-linecap="round"/>
+                  <line x1="100" y1="64" x2="100" y2="72" stroke="#f472b6" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="92" y1="72" x2="108" y2="72" stroke="#f472b6" stroke-width="3" stroke-linecap="round"/>
+                </svg>`
+            },
+            'Machine Learning': {
+                side: 'right',
+                label: 'ML',
+                color: '#a78bfa',
+                glow: 'rgba(167,139,250,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Neural network layers -->
+                  <!-- Input layer -->
+                  <circle cx="22" cy="38" r="7" stroke="#a78bfa" stroke-width="3" fill="rgba(167,139,250,0.2)"/>
+                  <circle cx="22" cy="64" r="7" stroke="#a78bfa" stroke-width="3" fill="rgba(167,139,250,0.2)"/>
+                  <circle cx="22" cy="90" r="7" stroke="#a78bfa" stroke-width="3" fill="rgba(167,139,250,0.2)"/>
+                  <!-- Hidden layer -->
+                  <circle cx="64" cy="28" r="7" fill="#a78bfa"/>
+                  <circle cx="64" cy="52" r="7" fill="#a78bfa"/>
+                  <circle cx="64" cy="76" r="7" fill="#a78bfa"/>
+                  <circle cx="64" cy="100" r="7" fill="#a78bfa"/>
+                  <!-- Output layer -->
+                  <circle cx="106" cy="44" r="7" stroke="#c4b5fd" stroke-width="3.5" fill="rgba(196,181,253,0.25)"/>
+                  <circle cx="106" cy="84" r="7" stroke="#c4b5fd" stroke-width="3.5" fill="rgba(196,181,253,0.25)"/>
+                  <!-- Connections input->hidden -->
+                  <line x1="29" y1="38" x2="57" y2="28" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
+                  <line x1="29" y1="38" x2="57" y2="52" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
+                  <line x1="29" y1="64" x2="57" y2="52" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
+                  <line x1="29" y1="64" x2="57" y2="76" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
+                  <line x1="29" y1="90" x2="57" y2="76" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
+                  <line x1="29" y1="90" x2="57" y2="100" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
+                  <!-- Connections hidden->output -->
+                  <line x1="71" y1="28" x2="99" y2="44" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
+                  <line x1="71" y1="52" x2="99" y2="44" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
+                  <line x1="71" y1="76" x2="99" y2="84" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
+                  <line x1="71" y1="100" x2="99" y2="84" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
+                </svg>`
+            },
+            'UI/UX Design': {
+                side: 'right',
+                label: 'UI/UX',
+                color: '#e879f9',
+                glow: 'rgba(232,121,249,0.4)',
+                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+                  <!-- Pen tool body -->
+                  <path d="M70 26 L102 58 L64 96 L26 96 L26 58 Z" stroke="#e879f9" stroke-width="4" stroke-linejoin="round" fill="rgba(232,121,249,0.08)"/>
+                  <!-- Pen nib -->
+                  <path d="M102 58 L116 72 L64 96" stroke="#e879f9" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
+                  <!-- Center bezier handle dot -->
+                  <circle cx="64" cy="62" r="7" fill="#e879f9"/>
+                  <!-- Handle lines -->
+                  <line x1="38" y1="62" x2="90" y2="62" stroke="#e879f9" stroke-width="2.5" stroke-dasharray="4 3" opacity="0.6"/>
+                  <circle cx="38" cy="62" r="5" stroke="#e879f9" stroke-width="3" fill="rgba(232,121,249,0.2)"/>
+                  <circle cx="90" cy="62" r="5" stroke="#e879f9" stroke-width="3" fill="rgba(232,121,249,0.2)"/>
+                  <!-- Grid guides -->
+                  <line x1="26" y1="44" x2="102" y2="44" stroke="#e879f9" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.2"/>
+                  <line x1="64" y1="24" x2="64" y2="98" stroke="#e879f9" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.2"/>
+                </svg>`
+            }
+        };
+
+        // Default fallback logo for unknown interests
+        const DEFAULT_LOGO = {
+            side: 'right',
+            label: 'CSE',
+            color: '#94a3b8',
+            glow: 'rgba(148,163,184,0.3)',
+            svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+              <!-- Code brackets -->
+              <polyline points="42,44 18,64 42,84" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="86,44 110,64 86,84" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="56" y1="36" x2="72" y2="92" stroke="#94a3b8" stroke-width="5.5" stroke-linecap="round"/>
+            </svg>`
+        };
 
         // ─── Card Builder ────────────────────────────────────────────────
         function createStudentCard(student, index) {
@@ -1213,33 +1696,58 @@
             const foot = document.createElement('div');
             foot.className = 'card-foot';
 
-            const rollFooter = document.createElement('div');
-            rollFooter.className = 'roll-footer';
-            rollFooter.textContent = `ROLL // ${student.roll}`;
-
             const socials = document.createElement('div');
             socials.className = 'card-socials';
 
-            // Facebook link with inline SVG
+            // Facebook link
             const fbLink = document.createElement('a');
-            fbLink.href = 'https://facebook.com';
+            fbLink.href = student.facebook || 'https://facebook.com';
             fbLink.target = '_blank';
             fbLink.rel = 'noopener noreferrer';
             fbLink.setAttribute('aria-label', `${student.nameEn}'s Facebook`);
-            fbLink.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>';
+            fbLink.title = 'Facebook';
+            fbLink.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>`;
 
-            // Instagram link with inline SVG
-            const igLink = document.createElement('a');
-            igLink.href = 'https://instagram.com';
-            igLink.target = '_blank';
-            igLink.rel = 'noopener noreferrer';
-            igLink.setAttribute('aria-label', `${student.nameEn}'s Instagram`);
-            igLink.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>';
+            // GitHub link
+            const ghLink = document.createElement('a');
+            ghLink.href = student.github || 'https://github.com';
+            ghLink.target = '_blank';
+            ghLink.rel = 'noopener noreferrer';
+            ghLink.setAttribute('aria-label', `${student.nameEn}'s GitHub`);
+            ghLink.title = 'GitHub';
+            ghLink.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>`;
 
-            socials.append(fbLink, igLink);
-            foot.append(rollFooter, socials);
+            // LinkedIn link
+            const liLink = document.createElement('a');
+            liLink.href = student.linkedin || 'https://linkedin.com';
+            liLink.target = '_blank';
+            liLink.rel = 'noopener noreferrer';
+            liLink.setAttribute('aria-label', `${student.nameEn}'s LinkedIn`);
+            liLink.title = 'LinkedIn';
+            liLink.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>`;
+
+            socials.append(fbLink, ghLink, liLink);
+            foot.append(socials);
             content.append(statsRows, nameEn, nameBn, bio, foot);
-            card.append(cardBg, overlay, rollBadge, interestBadge, content);
+
+            // ─── Interest Logo ──────────────────────────────────────────
+            const logoData = INTEREST_LOGOS[student.interest] || DEFAULT_LOGO;
+            const interestLogo = document.createElement('div');
+            interestLogo.className = `card-interest-logo logo-${logoData.side}`;
+            interestLogo.style.setProperty('color', logoData.color);
+            interestLogo.style.setProperty('filter', `drop-shadow(0 0 10px ${logoData.glow})`);
+            interestLogo.innerHTML = logoData.svg +
+                `<span class="logo-label">${logoData.label}</span>`;
+
+            card.append(cardBg, overlay, rollBadge, interestBadge, interestLogo, content);
 
             card.addEventListener('click', (e) => {
                 if (e.target.closest('.card-socials')) return;
@@ -1299,7 +1807,7 @@
             document.documentElement.style.setProperty('--teal', '#14b8a6');
             themeDot.style.background = 'var(--active-accent)';
             themeDot.style.boxShadow = `0 0 10px var(--active-glow)`;
-            showToast('Accent theme reset', 'rotate-ccw');
+            showToast('Accent theme reset');
         }
 
         // ─── Render Roster ───────────────────────────────────────────────
@@ -1331,31 +1839,179 @@
             noResults.style.display = filtered.length === 0 ? 'block' : 'none';
         }
 
+        // ─── Build Filter Chips from JSON data ────────────────────────────
+        const CHIP_ICON_MAP = {
+            'Web Development':        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+            'Competitive Programming':`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 9 2 12 5 15"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/></svg>`,
+            'Machine Learning':       `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.4 2.1-1.1 2.8C17.3 10 20 13.1 20 17H4c0-3.9 2.7-7 6.1-8.2A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/></svg>`,
+            'Cybersecurity':          `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+            'UI/UX Design':           `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>`,
+            'App Development':        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`,
+            'Cloud Computing':        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>`,
+            'Data Science':           `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+            'AI / ML':                `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a13 13 0 0 0 0 17M20.5 3.5a13 13 0 0 1 0 17"/></svg>`,
+            'Open Source':            `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M8 3v3M16 3v3M8 18v3M16 18v3M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>`,
+        };
+        // Short display label for each tag
+        const CHIP_LABEL_MAP = {
+            'Web Development': 'Web Dev', 'Competitive Programming': 'CP',
+            'Machine Learning': 'ML', 'Cybersecurity': 'Security',
+            'UI/UX Design': 'UI/UX', 'App Development': 'Mobile',
+            'Cloud Computing': 'Cloud', 'Data Science': 'Data Science',
+            'AI / ML': 'AI / ML', 'Open Source': 'Open Source',
+        };
+        const GENERIC_CHIP_ICON = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+
+        function buildFilterChips() {
+            const container = document.getElementById('filterChipContainer');
+            // Collect unique interests in order of appearance
+            const seen = new Set();
+            const tags = [];
+            BATCH_STUDENTS.forEach(s => {
+                if (s.interest && !seen.has(s.interest)) {
+                    seen.add(s.interest);
+                    tags.push(s.interest);
+                }
+            });
+
+            // Clear any previous content (keeps the label span)
+            container.innerHTML = '<span class="chip-label">Filter:</span>';
+
+            // "All" chip always first
+            const allChip = document.createElement('button');
+            allChip.className = 'filter-chip active';
+            allChip.dataset.tag = 'all';
+            allChip.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> All`;
+            container.appendChild(allChip);
+
+            // One chip per unique interest found in the JSON
+            tags.forEach(tag => {
+                const chip = document.createElement('button');
+                chip.className = 'filter-chip';
+                chip.dataset.tag = tag;
+                const icon = CHIP_ICON_MAP[tag] || GENERIC_CHIP_ICON;
+                const label = CHIP_LABEL_MAP[tag] || tag;
+                chip.innerHTML = `${icon} ${label}`;
+                container.appendChild(chip);
+            });
+
+            // Re-attach click listeners on the fresh chips
+            container.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    container.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    activeTagFilter = chip.dataset.tag;
+                    renderRoster();
+                });
+            });
+        }
+
+        // ─── Quick Suggestions ────────────────────────────────────────────
+        const suggestionsBox = document.getElementById('searchSuggestions');
+        const MAX_SUGGESTIONS = 6;
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        function highlightMatch(text, query) {
+            if (!query) return text;
+            const re = new RegExp(`(${escapeRegex(query)})`, 'gi');
+            return text.replace(re, '<mark>$1</mark>');
+        }
+        function showSuggestions(query) {
+            const q = query.trim().toLowerCase();
+            if (!q || !BATCH_STUDENTS.length) {
+                hideSuggestions();
+                return;
+            }
+            const matches = BATCH_STUDENTS.filter(s =>
+                s.nameEn.toLowerCase().includes(q) ||
+                s.roll.includes(q) ||
+                s.hometown.toLowerCase().includes(q) ||
+                s.interest.toLowerCase().includes(q)
+            ).slice(0, MAX_SUGGESTIONS);
+
+            if (!matches.length) {
+                suggestionsBox.innerHTML = `<div class="suggestion-no-results">No matches for "<strong>${query}</strong>"</div>`;
+                suggestionsBox.classList.add('visible');
+                return;
+            }
+
+            const header = `<div class="suggestions-header">Quick suggestions — ${matches.length} result${matches.length > 1 ? 's' : ''}</div>`;
+            const items = matches.map(s => {
+                const nameParts = highlightMatch(s.nameEn, q);
+                return `<button class="suggestion-item" data-roll="${s.roll}" role="option" aria-selected="false">
+                    <span class="suggestion-roll">${s.roll}</span>
+                    <span class="suggestion-name">${nameParts}</span>
+                    <span class="suggestion-tag">${s.interest}</span>
+                </button>`;
+            }).join('');
+
+            suggestionsBox.innerHTML = header + items;
+
+            // Click on a suggestion: fill search, close dropdown, render
+            suggestionsBox.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('mousedown', e => {
+                    e.preventDefault(); // prevent blur firing first
+                    const roll = item.dataset.roll;
+                    const student = BATCH_STUDENTS.find(s => s.roll === roll);
+                    if (student) {
+                        searchInput.value = student.nameEn;
+                        searchQuery = student.nameEn.toLowerCase();
+                        hideSuggestions();
+                        renderRoster();
+                    }
+                });
+            });
+
+            suggestionsBox.classList.add('visible');
+        }
+        function hideSuggestions() {
+            suggestionsBox.classList.remove('visible');
+        }
+
         // ─── Theme Toggle ─────────────────────────────────────────────────
+        // Inline SVG paths — no Lucide needed
+        const SVG_SUN = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+        const SVG_MOON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
         themeToggleBtn.addEventListener('click', () => {
             if (currentTheme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'light');
                 currentTheme = 'light';
-                themeSvgIcon.setAttribute('data-lucide', 'moon');
-                showToast('Light mode on', 'sun');
+                themeSvgIcon.innerHTML = SVG_MOON;
+                showToast('Light mode on');
             } else {
                 document.documentElement.removeAttribute('data-theme');
                 currentTheme = 'dark';
-                themeSvgIcon.setAttribute('data-lucide', 'sun');
-                showToast('Dark mode on', 'moon');
+                themeSvgIcon.innerHTML = SVG_SUN;
+                showToast('Dark mode on');
             }
-            if (window.lucide) lucide.createIcons({ nodes: [themeToggleBtn] });
             resetTheme();
         });
 
-        // ─── Search (debounced) ───────────────────────────────────────────
+        // ─── Search (debounced) + Quick Suggestions ───────────────────────
         let searchTimeout;
         searchInput.addEventListener('input', e => {
+            const val = e.target.value;
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
-                searchQuery = e.target.value.trim().toLowerCase();
+                searchQuery = val.trim().toLowerCase();
                 renderRoster();
+                showSuggestions(val);
             }, 120);
+        });
+
+        // Hide suggestions when focus leaves the search area
+        searchInput.addEventListener('blur', () => {
+            // small delay so mousedown on a suggestion fires first
+            setTimeout(hideSuggestions, 180);
+        });
+        searchInput.addEventListener('focus', e => {
+            if (e.target.value.trim().length > 0) showSuggestions(e.target.value);
+        });
+        // Hide on Escape
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Escape') { hideSuggestions(); searchInput.blur(); }
         });
 
         sortControl.addEventListener('change', renderRoster);
@@ -1366,14 +2022,15 @@
             setTimeout(() => searchInput.focus(), 600);
         });
 
-        // ─── Filter Chips ─────────────────────────────────────────────────
-        document.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                activeTagFilter = chip.dataset.tag;
-                renderRoster();
-            });
+        // ─── Filter Chips ─── (built dynamically by buildFilterChips() after fetch)
+        // Static "All" chip listener as fallback (dynamic chips get listeners inside buildFilterChips)
+        document.getElementById('filterChipContainer').addEventListener('click', e => {
+            const chip = e.target.closest('.filter-chip');
+            if (!chip) return;
+            document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeTagFilter = chip.dataset.tag;
+            renderRoster();
         });
 
         // ─── Lightbox ─────────────────────────────────────────────────────
