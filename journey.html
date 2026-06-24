@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Journey — CSE 7th Batch · Netrokona University</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="The complete university life journey of CSE 7th Batch, Netrokona University — from orientation day to graduation, every milestone, memory, and milestone captured.">
+    <meta name="theme-color" content="#060918">
+    <meta name="keywords" content="Netrokona University, CSE 7th Batch, University Journey, Student Life, Bangladesh, Computer Science">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Our Journey — CSE 7th Batch · Netrokona University">
+    <meta property="og:description" content="Every chapter of our university life, documented — orientation to graduation.">
+    <meta property="og:image" content="logo.png">
+
+    <!-- Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="preconnect" href="https://unpkg.com">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" async></script>
+
+    <!-- Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Bengali:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Bengali:wght@400;600&display=swap" rel="stylesheet"></noscript>
+
+    <style>
+        /* ════════════════════════════════════════════════════════════════════
+           DESIGN TOKENS — Identical to index.html for visual consistency
+        ════════════════════════════════════════════════════════════════════ */
+        :root {
+            --bg-base: #040714;
+            --bg-surface: rgba(15, 23, 42, 0.45);
+            --bg-surface-raised: rgba(30, 41, 59, 0.7);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.2);
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-accent: #e2e8f0;
+
+            --gold:        #f59e0b;
+            --gold-glow:   rgba(245, 158, 11, 0.15);
+            --violet:      #8b5cf6;
+            --violet-glow: rgba(139, 92, 246, 0.15);
+            --teal:        #14b8a6;
+            --teal-glow:   rgba(20, 184, 166, 0.15);
+            --rose:        #f43f5e;
+            --rose-glow:   rgba(244, 63, 94, 0.15);
+
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body:    'Inter', sans-serif;
+            --font-mono:    'JetBrains Mono', monospace;
+            --font-bn:      'Noto Sans Bengali', sans-serif;
+
+            --space-2:  0.5rem;
+            --space-3:  0.75rem;
+            --space-4:  1rem;
+            --space-6:  1.5rem;
+            --space-8:  2rem;
+            --space-12: 3rem;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            --speed-fast:   200ms;
+            --speed-medium: 400ms;
+            --speed-slow:   700ms;
+            --nav-h: 68px;
+        }
+
+        :root[data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-surface: rgba(255,255,255,0.8);
+            --bg-surface-raised: #ffffff;
+            --border-subtle: rgba(0,0,0,0.08);
+            --border-hover: rgba(0,0,0,0.18);
+            --text-primary: #0f172a;
+            --text-muted: #475569;
+            --text-accent: #1e293b;
+            --gold: #d97706;
+            --gold-glow: rgba(217,119,6,0.12);
+            --violet: #6d28d9;
+            --violet-glow: rgba(109,40,217,0.12);
+            --teal: #0f766e;
+            --teal-glow: rgba(15,118,110,0.12);
+            --rose: #e11d48;
+            --rose-glow: rgba(225,29,72,0.12);
+        }
+
+        /* ─── Reset ──────────────────────────────────────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: var(--nav-h); }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        body.theme-ready {
+            transition: background-color var(--speed-medium) var(--transition-smooth),
+                        color var(--speed-medium) var(--transition-smooth);
+        }
+        :focus-visible { outline: 3px solid var(--violet); outline-offset: 4px; }
+
+        /* ─── Skip Link ──────────────────────────────────────────────────── */
+        .skip-link {
+            position: absolute; top: -100px; left: 20px;
+            background: var(--gold); color: #040714;
+            padding: var(--space-3) var(--space-6); border-radius: var(--radius-sm);
+            font-weight: 600; z-index: 9999; transition: top 0.2s;
+            text-decoration: none; font-family: var(--font-display);
+        }
+        .skip-link:focus { top: 20px; }
+
+        /* ─── Gradient Mesh Background ───────────────────────────────────── */
+        .gradient-mesh {
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; overflow: hidden; opacity: 0.55;
+        }
+        .mesh-orb {
+            position: absolute; border-radius: 50%;
+            mix-blend-mode: screen; will-change: transform;
+            animation: floatOrb 30s ease-in-out infinite alternate;
+        }
+        :root[data-theme="light"] .mesh-orb { mix-blend-mode: multiply; opacity: 0.10; }
+        .orb-1 { width:55vw; height:55vw; background:radial-gradient(circle,var(--violet) 0%,transparent 70%); top:-15%; left:-12%; animation-duration:38s; }
+        .orb-2 { width:40vw; height:40vw; background:radial-gradient(circle,var(--gold) 0%,transparent 70%);   bottom:5%;  right:-8%; animation-duration:30s; animation-delay:-6s; }
+        .orb-3 { width:30vw; height:30vw; background:radial-gradient(circle,var(--teal) 0%,transparent 70%);   bottom:-10%; left:25%; animation-duration:45s; animation-delay:-12s; }
+        @keyframes floatOrb {
+            0%   { transform: translate(0,0) scale(1); }
+            50%  { transform: translate(4vw,-5vh) scale(1.08); }
+            100% { transform: translate(-3vw,4vh) scale(0.93); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .mesh-orb { animation: none !important; }
+            * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+        @media (max-width: 768px) { .mesh-orb { animation-play-state: paused; } }
+
+        .grain {
+            position: fixed; inset: 0; z-index: 1; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+
+        /* ─── Scroll Progress Bar ────────────────────────────────────────── */
+        .scroll-progress { position: fixed; top: 0; left: 0; right: 0; z-index: 101; height: 3px; pointer-events: none; }
+        .scroll-progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold), var(--violet), var(--teal)); width: 0%; transition: width 0.1s linear; border-radius: 0 2px 2px 0; }
+
+        /* ════════════════════════════════════════════════════════════════════
+           NAVBAR
+        ════════════════════════════════════════════════════════════════════ */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2.5rem; height: var(--nav-h);
+            background: rgba(4,7,20,0.72);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: height var(--speed-medium) var(--transition-smooth),
+                        background var(--speed-medium), box-shadow var(--speed-medium);
+        }
+        :root[data-theme="light"] header { background: rgba(248,250,252,0.88); }
+        header.scrolled { --nav-h: 58px; box-shadow: 0 8px 32px -8px rgba(0,0,0,0.35); background: rgba(4,7,20,0.92); border-bottom-color: rgba(255,255,255,0.05); }
+        :root[data-theme="light"] header.scrolled { background: rgba(248,250,252,0.97); }
+
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); flex-shrink: 0; }
+        .logo-img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-subtle); transition: border-color var(--speed-fast); }
+        .brand:hover .logo-img { border-color: var(--gold); }
+        .brand-text { font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.4px; }
+        .brand-text .brand-accent { color: var(--gold); }
+        .theme-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--violet); margin-left: 6px; vertical-align: middle; box-shadow: 0 0 10px var(--violet-glow); }
+
+        nav { display: flex; align-items: center; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
+        nav a { display: flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; padding: 6px 14px; border-radius: 6px; transition: color var(--speed-fast), background var(--speed-fast); white-space: nowrap; }
+        nav a svg { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 2; }
+        nav a:hover, nav a.active { color: var(--text-primary); background: rgba(255,255,255,0.07); }
+        :root[data-theme="light"] nav a:hover, :root[data-theme="light"] nav a.active { background: rgba(0,0,0,0.06); }
+
+        .nav-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .nav-divider { width: 1px; height: 20px; background: var(--border-subtle); margin: 0 4px; }
+        .icon-btn { background: none; border: 1px solid var(--border-subtle); color: var(--text-muted); cursor: pointer; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: all var(--speed-fast); position: relative; }
+        .icon-btn svg { width: 16px; height: 16px; stroke-width: 2; }
+        .icon-btn:hover { color: var(--text-primary); border-color: var(--border-hover); background: var(--bg-surface); }
+
+        /* Mobile hamburger */
+        .mobile-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: var(--space-2); z-index: 110; }
+        .mobile-hamburger span { display: block; width: 22px; height: 2px; background-color: var(--text-primary); transition: transform 0.3s, opacity 0.3s; border-radius: 2px; }
+        .mobile-hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .mobile-hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+        .mobile-hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .mobile-nav-drawer { position: fixed; inset: 0; background-color: var(--bg-base); z-index: 105; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--space-6); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .mobile-nav-drawer.open { transform: translateX(0); }
+        .mobile-nav-drawer a { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--text-primary); text-decoration: none; transition: color var(--speed-fast); }
+        .mobile-nav-drawer a:hover { color: var(--gold); }
+        .drawer-close { position: absolute; top: 24px; right: 24px; background: none; border: 1px solid var(--border-subtle); color: var(--text-muted); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--speed-fast); }
+        .drawer-close:hover { color: var(--text-primary); border-color: var(--border-hover); }
+
+        /* Back to top */
+        .back-to-top { position: fixed; bottom: 2rem; right: 2rem; z-index: 50; background: var(--bg-surface-raised); border: 1px solid var(--border-subtle); color: var(--text-muted); width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(12px); transition: all var(--speed-medium) var(--transition-smooth); pointer-events: none; backdrop-filter: blur(12px); }
+        .back-to-top.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+        .back-to-top:hover { color: var(--gold); border-color: var(--gold); }
+        .back-to-top svg { width: 16px; height: 16px; stroke-width: 2; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); z-index: 200; background: var(--bg-surface-raised); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 10px 20px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.78rem; opacity: 0; transition: all var(--speed-medium) var(--transition-smooth); pointer-events: none; white-space: nowrap; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ════════════════════════════════════════════════════════════════════
+           HERO — Journey Page
+        ════════════════════════════════════════════════════════════════════ */
+        .hero {
+            position: relative; z-index: 2; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: var(--space-12) var(--space-6);
+            padding-top: calc(var(--nav-h) + 4rem);
+            overflow: hidden;
+        }
+        .hero-cover { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+        .hero-cover-img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; opacity: 0.18; filter: grayscale(30%) brightness(0.6); display: block; }
+        :root[data-theme="light"] .hero-cover-img { opacity: 0.07; }
+        .hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(4,7,20,0.15) 0%, var(--bg-base) 92%); }
+        .hero-content { position: relative; z-index: 2; max-width: 860px; width: 100%; }
+
+        /* Animated year counter strip */
+        .year-strip {
+            display: flex; justify-content: center; gap: 2rem;
+            margin-bottom: 2.5rem; flex-wrap: wrap;
+        }
+        .year-pill {
+            font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 3px;
+            color: var(--text-muted); text-transform: uppercase;
+            border: 1px solid var(--border-subtle); border-radius: 40px;
+            padding: 5px 16px; background: var(--bg-surface);
+            backdrop-filter: blur(8px);
+        }
+        .year-pill.active { color: var(--gold); border-color: var(--gold); background: var(--gold-glow); }
+
+        .eyebrow { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 5px; color: var(--gold); text-transform: uppercase; margin-bottom: var(--space-6); display: inline-flex; align-items: center; gap: 10px; }
+        .eyebrow::before, .eyebrow::after { content: ''; display: inline-block; width: 30px; height: 1px; background: var(--gold); opacity: 0.5; }
+
+        .hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(3rem, 9vw, 7rem); line-height: 1.0; letter-spacing: -3px; color: var(--text-primary); margin-bottom: var(--space-4); }
+        .hero h1 em { font-style: normal; color: var(--gold); }
+        .hero-sub { font-family: var(--font-bn); font-weight: 600; font-size: clamp(1.2rem,3vw,1.9rem); color: var(--text-muted); margin-bottom: var(--space-6); }
+        .hero-desc { color: var(--text-muted); font-size: 1.1rem; line-height: 1.75; max-width: 640px; margin: 0 auto var(--space-8); }
+
+        .hero-cta { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+        .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 0.9rem 2.2rem; border-radius: 40px; background: linear-gradient(135deg, var(--gold), #fbbf24); color: #040714; font-family: var(--font-display); font-weight: 700; text-decoration: none; letter-spacing: 0.5px; cursor: pointer; border: none; box-shadow: 0 10px 25px -5px rgba(245,158,11,0.4); transition: transform var(--speed-fast), box-shadow var(--speed-fast); }
+        .btn-primary svg { width: 16px; height: 16px; stroke-width: 2.5; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(245,158,11,0.5); }
+        .btn-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 0.9rem 2.2rem; border-radius: 40px; background: transparent; border: 1px solid var(--border-hover); color: var(--text-primary); font-family: var(--font-display); font-weight: 700; text-decoration: none; letter-spacing: 0.5px; cursor: pointer; transition: all var(--speed-fast); }
+        .btn-ghost svg { width: 16px; height: 16px; stroke-width: 2; }
+        .btn-ghost:hover { background: var(--bg-surface); border-color: var(--violet); color: var(--violet); }
+
+        .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.45; animation: scrollBounce 2.2s ease-in-out infinite; }
+        .scroll-hint span { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; }
+        .scroll-hint svg { color: var(--text-muted); width: 18px; height: 18px; }
+        @keyframes scrollBounce { 0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)} }
+
+        /* ════════════════════════════════════════════════════════════════════
+           SHARED SECTION STYLES
+        ════════════════════════════════════════════════════════════════════ */
+        section { position: relative; z-index: 2; padding: 5rem var(--space-6); }
+        .section-head { text-align: center; max-width: 680px; margin: 0 auto var(--space-12); }
+        .section-head h2 { font-family: var(--font-display); font-size: clamp(2rem,5vw,3.2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: var(--space-4); }
+        .section-head p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; }
+        .section-tag { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 0.75rem; display: block; }
+
+        /* Reveal animation */
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity var(--speed-slow) var(--transition-smooth), transform var(--speed-slow) var(--transition-smooth); }
+        .reveal.revealed { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 100ms; }
+        .reveal-delay-2 { transition-delay: 220ms; }
+        .reveal-delay-3 { transition-delay: 340ms; }
+        .reveal-delay-4 { transition-delay: 460ms; }
+
+        /* Divider */
+        .section-divider { width: 100%; max-width: 1200px; margin: 0 auto; height: 1px; background: var(--border-subtle); }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ① CHAPTER OVERVIEW — Quick-jump cards for each year
+           HOW TO EDIT: Add/remove .chapter-card items in #overview section
+        ════════════════════════════════════════════════════════════════════ */
+        #overview { padding-top: 4rem; padding-bottom: 4rem; }
+        .chapter-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem; max-width: 1100px; margin: 0 auto;
+        }
+        .chapter-card {
+            background: var(--bg-surface); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md); padding: 1.75rem 1.5rem;
+            text-decoration: none; color: var(--text-primary);
+            display: flex; flex-direction: column; gap: 0.75rem;
+            backdrop-filter: blur(12px);
+            transition: border-color var(--speed-fast), transform var(--speed-fast), background var(--speed-fast);
+            cursor: pointer;
+        }
+        .chapter-card:hover { border-color: var(--border-hover); transform: translateY(-4px); background: var(--bg-surface-raised); }
+        .chapter-card .chapter-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .chapter-card .chapter-icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+        .chapter-card .chapter-year { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; }
+        .chapter-card .chapter-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+        .chapter-card .chapter-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        .chapter-card .chapter-count { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-top: auto; }
+
+        /* Colour variants per chapter */
+        .chapter-gold  .chapter-icon { background: var(--gold-glow); color: var(--gold); }
+        .chapter-gold  .chapter-year { color: var(--gold); }
+        .chapter-gold:hover { border-color: var(--gold); box-shadow: 0 0 30px -8px var(--gold-glow); }
+
+        .chapter-violet .chapter-icon { background: var(--violet-glow); color: var(--violet); }
+        .chapter-violet .chapter-year { color: var(--violet); }
+        .chapter-violet:hover { border-color: var(--violet); box-shadow: 0 0 30px -8px var(--violet-glow); }
+
+        .chapter-teal  .chapter-icon { background: var(--teal-glow); color: var(--teal); }
+        .chapter-teal  .chapter-year { color: var(--teal); }
+        .chapter-teal:hover { border-color: var(--teal); box-shadow: 0 0 30px -8px var(--teal-glow); }
+
+        .chapter-rose  .chapter-icon { background: var(--rose-glow); color: var(--rose); }
+        .chapter-rose  .chapter-year { color: var(--rose); }
+        .chapter-rose:hover { border-color: var(--rose); box-shadow: 0 0 30px -8px var(--rose-glow); }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ② VERTICAL TIMELINE
+           HOW TO EDIT: Each .tl-item is one event. Change icon, title, body,
+           date, and optional media. Add/remove items freely.
+        ════════════════════════════════════════════════════════════════════ */
+        #timeline { padding-top: 5rem; }
+        .timeline-container { max-width: 860px; margin: 0 auto; position: relative; }
+
+        /* Year heading inside timeline */
+        .tl-year {
+            font-family: var(--font-display); font-size: clamp(3rem,8vw,6rem);
+            font-weight: 700; letter-spacing: -3px;
+            color: transparent; -webkit-text-stroke: 1px var(--border-hover);
+            text-align: center; margin: 4rem 0 2rem; user-select: none;
+            position: relative; z-index: 1;
+        }
+        .tl-year span { color: var(--gold); -webkit-text-stroke: 0; }
+
+        /* Centre spine */
+        .tl-spine {
+            position: absolute; left: 50%; top: 0; bottom: 0;
+            width: 1px; background: var(--border-subtle);
+            transform: translateX(-50%); z-index: 0;
+        }
+        @media (max-width: 640px) { .tl-spine { left: 28px; } }
+
+        .tl-item {
+            display: grid; grid-template-columns: 1fr 56px 1fr;
+            gap: 0; margin-bottom: 3.5rem; position: relative; z-index: 1;
+        }
+        /* Alternate left/right */
+        .tl-item:nth-child(odd)  .tl-content { grid-column: 1; text-align: right; padding-right: 2rem; }
+        .tl-item:nth-child(odd)  .tl-dot     { grid-column: 2; }
+        .tl-item:nth-child(odd)  .tl-empty   { grid-column: 3; }
+        .tl-item:nth-child(even) .tl-empty   { grid-column: 1; }
+        .tl-item:nth-child(even) .tl-dot     { grid-column: 2; }
+        .tl-item:nth-child(even) .tl-content { grid-column: 3; text-align: left; padding-left: 2rem; }
+
+        .tl-dot {
+            display: flex; align-items: flex-start; justify-content: center;
+            padding-top: 0.2rem;
+        }
+        .tl-dot-inner {
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--border-subtle);
+            background: var(--bg-base); flex-shrink: 0;
+            transition: border-color var(--speed-fast), box-shadow var(--speed-fast);
+        }
+        .tl-dot-inner svg { width: 18px; height: 18px; stroke-width: 1.8; }
+        .tl-item:hover .tl-dot-inner { border-color: var(--gold); box-shadow: 0 0 20px -4px var(--gold-glow); color: var(--gold); }
+
+        .tl-content { padding-bottom: 0.5rem; }
+        .tl-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; flex-wrap: wrap; }
+        .tl-item:nth-child(odd) .tl-meta { justify-content: flex-end; }
+        .tl-item:nth-child(even) .tl-meta { justify-content: flex-start; }
+        .tl-date { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+        .tl-tag  { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+        .tag-academic  { background: var(--violet-glow); color: var(--violet); }
+        .tag-social    { background: var(--teal-glow);   color: var(--teal); }
+        .tag-milestone { background: var(--gold-glow);   color: var(--gold); }
+        .tag-fest      { background: var(--rose-glow);   color: var(--rose); }
+        .tag-project   { background: rgba(139,92,246,0.1); color: var(--violet); }
+
+        .tl-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .tl-body  { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 0.9rem; }
+
+        /* Media card inside timeline (photo or video) */
+        .tl-media { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-subtle); position: relative; background: var(--bg-surface); }
+        .tl-media img { width: 100%; height: 180px; object-fit: cover; display: block; opacity: 0.85; transition: opacity var(--speed-fast), transform var(--speed-medium); }
+        .tl-media:hover img { opacity: 1; transform: scale(1.03); }
+        .tl-media-caption { padding: 8px 12px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 1px; }
+
+        /* Video embed inside timeline */
+        .tl-video { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-subtle); aspect-ratio: 16/9; position: relative; background: var(--bg-surface); }
+        .tl-video iframe { width: 100%; height: 100%; border: none; display: block; }
+        .tl-video-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; }
+        .tl-video-placeholder svg { width: 48px; height: 48px; color: var(--gold); opacity: 0.8; }
+        .tl-video-placeholder span { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Link chip */
+        .tl-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--teal); text-decoration: none; padding: 4px 10px; border: 1px solid var(--teal-glow); border-radius: 20px; background: var(--teal-glow); transition: all var(--speed-fast); }
+        .tl-link:hover { border-color: var(--teal); }
+        .tl-link svg { width: 12px; height: 12px; stroke-width: 2; }
+
+        /* Mobile timeline — single column */
+        @media (max-width: 640px) {
+            .tl-item { grid-template-columns: 56px 1fr; }
+            .tl-item:nth-child(odd)  .tl-content,
+            .tl-item:nth-child(even) .tl-content { grid-column: 2; text-align: left; padding-right: 0; padding-left: 1.25rem; }
+            .tl-item:nth-child(odd)  .tl-dot,
+            .tl-item:nth-child(even) .tl-dot { grid-column: 1; }
+            .tl-item:nth-child(odd)  .tl-empty,
+            .tl-item:nth-child(even) .tl-empty { display: none; }
+            .tl-item:nth-child(odd)  .tl-meta,
+            .tl-item:nth-child(even) .tl-meta { justify-content: flex-start; }
+        }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ③ PHOTO GALLERY MOSAIC
+           HOW TO EDIT: Add/remove .gallery-item divs. Each has a bg-image,
+           a category badge, and a caption overlay.
+        ════════════════════════════════════════════════════════════════════ */
+        #gallery { padding: 5rem var(--space-6); }
+        .gallery-filters { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2.5rem; }
+        .gallery-filter-btn { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-muted); cursor: pointer; transition: all var(--speed-fast); }
+        .gallery-filter-btn:hover, .gallery-filter-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+
+        .gallery-mosaic {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: 120px;
+            gap: 12px;
+            max-width: 1200px; margin: 0 auto;
+        }
+        /* Mosaic layout assignments — vary span sizes for visual interest */
+        .g-item-1  { grid-column: span 5; grid-row: span 3; }
+        .g-item-2  { grid-column: span 4; grid-row: span 2; }
+        .g-item-3  { grid-column: span 3; grid-row: span 2; }
+        .g-item-4  { grid-column: span 4; grid-row: span 2; }
+        .g-item-5  { grid-column: span 3; grid-row: span 3; }
+        .g-item-6  { grid-column: span 4; grid-row: span 2; }
+        .g-item-7  { grid-column: span 5; grid-row: span 2; }
+        .g-item-8  { grid-column: span 3; grid-row: span 2; }
+        .g-item-9  { grid-column: span 4; grid-row: span 3; }
+        .g-item-10 { grid-column: span 5; grid-row: span 2; }
+        .g-item-11 { grid-column: span 3; grid-row: span 2; }
+        .g-item-12 { grid-column: span 4; grid-row: span 2; }
+
+        .gallery-item {
+            border-radius: var(--radius-md); overflow: hidden;
+            position: relative; cursor: pointer;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+        }
+        .gallery-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.80; transition: opacity var(--speed-medium) var(--transition-smooth), transform 0.6s var(--transition-smooth); }
+        .gallery-item:hover .gallery-img { opacity: 1; transform: scale(1.06); }
+        .gallery-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(4,7,20,0.85) 0%, transparent 55%); display: flex; flex-direction: column; justify-content: flex-end; padding: 1rem; opacity: 0; transition: opacity var(--speed-medium); }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-badge { position: absolute; top: 10px; left: 10px; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+        .badge-academic  { background: var(--violet-glow); color: var(--violet); border: 1px solid rgba(139,92,246,0.3); }
+        .badge-social    { background: var(--teal-glow);   color: var(--teal);   border: 1px solid rgba(20,184,166,0.3); }
+        .badge-fest      { background: var(--rose-glow);   color: var(--rose);   border: 1px solid rgba(244,63,94,0.3); }
+        .badge-trip      { background: var(--gold-glow);   color: var(--gold);   border: 1px solid rgba(245,158,11,0.3); }
+        .gallery-caption-title { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: #fff; }
+        .gallery-caption-sub   { font-family: var(--font-mono); font-size: 0.65rem; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+        /* Lightbox */
+        .lightbox { position: fixed; inset: 0; z-index: 300; background: rgba(4,7,20,0.95); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity var(--speed-medium); backdrop-filter: blur(12px); }
+        .lightbox.active { opacity: 1; pointer-events: all; }
+        .lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); }
+        .lightbox-close { position: absolute; top: 1.5rem; right: 1.5rem; background: var(--bg-surface-raised); border: 1px solid var(--border-subtle); color: var(--text-muted); width: 42px; height: 42px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--speed-fast); }
+        .lightbox-close:hover { color: var(--text-primary); border-color: var(--border-hover); }
+        .lightbox-close svg { width: 18px; height: 18px; stroke-width: 2; }
+
+        @media (max-width: 768px) {
+            .gallery-mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+            .g-item-1,.g-item-2,.g-item-3,.g-item-4,.g-item-5,.g-item-6,
+            .g-item-7,.g-item-8,.g-item-9,.g-item-10,.g-item-11,.g-item-12 { grid-column: span 1; grid-row: span 1; }
+        }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ④ VIDEO REEL SECTION
+           HOW TO EDIT: Swap YouTube/Vimeo IDs in the src of each iframe,
+           or replace .video-thumb with a real thumbnail + play button.
+        ════════════════════════════════════════════════════════════════════ */
+        #videos { padding: 5rem var(--space-6); }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+        .video-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; backdrop-filter: blur(10px); transition: border-color var(--speed-fast), transform var(--speed-fast); }
+        .video-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+        .video-thumb { position: relative; aspect-ratio: 16/9; background: var(--bg-surface-raised); overflow: hidden; }
+        .video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.7; transition: opacity var(--speed-medium); }
+        .video-card:hover .video-thumb img { opacity: 0.9; }
+        .play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+        .play-btn-inner { width: 56px; height: 56px; border-radius: 50%; background: rgba(245,158,11,0.9); display: flex; align-items: center; justify-content: center; transition: transform var(--speed-fast), background var(--speed-fast); }
+        .play-btn-inner svg { width: 22px; height: 22px; color: #040714; margin-left: 3px; }
+        .video-card:hover .play-btn-inner { transform: scale(1.12); background: var(--gold); }
+        .video-info { padding: 1.25rem 1.5rem; }
+        .video-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+        .video-label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+        .video-duration { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); }
+        .video-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .video-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; }
+        .video-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--teal); text-decoration: none; margin-top: 0.75rem; transition: color var(--speed-fast); }
+        .video-link:hover { color: var(--text-primary); }
+        .video-link svg { width: 12px; height: 12px; stroke-width: 2; }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ⑤ ACHIEVEMENT CARDS
+           HOW TO EDIT: Each .ach-card is one achievement. Change icon,
+           title, description, and year. Reorder freely.
+        ════════════════════════════════════════════════════════════════════ */
+        #achievements { padding: 5rem var(--space-6); }
+        .ach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; max-width: 1100px; margin: 0 auto; }
+        .ach-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.75rem; backdrop-filter: blur(10px); transition: border-color var(--speed-fast), transform var(--speed-fast); position: relative; overflow: hidden; }
+        .ach-card::before { content: ''; position: absolute; inset: 0; background: var(--card-glow, transparent); opacity: 0; transition: opacity var(--speed-medium); pointer-events: none; }
+        .ach-card:hover { border-color: var(--card-accent, var(--border-hover)); transform: translateY(-3px); }
+        .ach-card:hover::before { opacity: 1; }
+        .ach-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .ach-icon svg { width: 24px; height: 24px; stroke-width: 1.8; }
+        .ach-year { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 0.4rem; }
+        .ach-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .ach-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+        /* Achievement colour variants */
+        .ach-gold   { --card-accent: var(--gold);   --card-glow: var(--gold-glow);   }
+        .ach-gold   .ach-icon  { background: var(--gold-glow);   color: var(--gold);   }
+        .ach-gold   .ach-year  { color: var(--gold); }
+        .ach-violet { --card-accent: var(--violet); --card-glow: var(--violet-glow); }
+        .ach-violet .ach-icon  { background: var(--violet-glow); color: var(--violet); }
+        .ach-violet .ach-year  { color: var(--violet); }
+        .ach-teal   { --card-accent: var(--teal);   --card-glow: var(--teal-glow);   }
+        .ach-teal   .ach-icon  { background: var(--teal-glow);   color: var(--teal);   }
+        .ach-teal   .ach-year  { color: var(--teal); }
+        .ach-rose   { --card-accent: var(--rose);   --card-glow: var(--rose-glow);   }
+        .ach-rose   .ach-icon  { background: var(--rose-glow);   color: var(--rose);   }
+        .ach-rose   .ach-year  { color: var(--rose); }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ⑥ QUOTES / MEMORIES CAROUSEL
+           HOW TO EDIT: Add/remove .quote-slide items. Each has a quote,
+           author name, and optional avatar.
+        ════════════════════════════════════════════════════════════════════ */
+        #memories { padding: 5rem var(--space-6); }
+        .quote-carousel { max-width: 780px; margin: 0 auto; position: relative; }
+        .quote-track { overflow: hidden; border-radius: var(--radius-lg); }
+        .quote-slides { display: flex; transition: transform 0.55s var(--transition-smooth); }
+        .quote-slide { flex: 0 0 100%; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 3rem; text-align: center; backdrop-filter: blur(12px); }
+        .quote-mark { font-family: var(--font-display); font-size: 5rem; line-height: 0.5; color: var(--gold); opacity: 0.4; margin-bottom: 1.5rem; display: block; }
+        .quote-text { font-family: var(--font-display); font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 600; line-height: 1.5; color: var(--text-primary); margin-bottom: 2rem; }
+        .quote-bn   { font-family: var(--font-bn); font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+        .quote-author { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .quote-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-subtle); }
+        .quote-avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--bg-surface-raised); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0; }
+        .quote-avatar-placeholder svg { width: 20px; height: 20px; stroke-width: 1.5; }
+        .quote-name { font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; }
+        .quote-role { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 1.5px; }
+
+        .carousel-controls { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+        .carousel-btn { background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-muted); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--speed-fast); }
+        .carousel-btn:hover { color: var(--gold); border-color: var(--gold); background: var(--gold-glow); }
+        .carousel-btn svg { width: 16px; height: 16px; stroke-width: 2; }
+        .carousel-dots { display: flex; gap: 6px; }
+        .carousel-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-subtle); cursor: pointer; transition: background var(--speed-fast), transform var(--speed-fast); border: none; }
+        .carousel-dot.active { background: var(--gold); transform: scale(1.3); }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ⑦ BATCH STATS BAR
+           HOW TO EDIT: Change the numbers, labels, and icons in #stats.
+        ════════════════════════════════════════════════════════════════════ */
+        #stats { padding: 4rem var(--space-6); }
+        .stats-bar { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-subtle); }
+        .stat-cell { background: var(--bg-surface); padding: 2rem 1.5rem; text-align: center; backdrop-filter: blur(10px); transition: background var(--speed-fast); }
+        .stat-cell:hover { background: var(--bg-surface-raised); }
+        .stat-cell-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; }
+        .stat-cell-icon svg { width: 18px; height: 18px; stroke-width: 1.8; }
+        .stat-number { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; color: var(--gold); line-height: 1; }
+        .stat-label  { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-top: 0.4rem; }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ⑧ BLOG / ARTICLE CARDS
+           HOW TO EDIT: Each .blog-card is one article or write-up.
+           Change title, excerpt, date, author, and image.
+        ════════════════════════════════════════════════════════════════════ */
+        #articles { padding: 5rem var(--space-6); }
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+        .blog-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; backdrop-filter: blur(10px); transition: border-color var(--speed-fast), transform var(--speed-fast); display: flex; flex-direction: column; }
+        .blog-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+        .blog-thumb { width: 100%; height: 200px; object-fit: cover; display: block; opacity: 0.8; transition: opacity var(--speed-medium); }
+        .blog-card:hover .blog-thumb { opacity: 1; }
+        .blog-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+        .blog-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
+        .blog-date { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; }
+        .blog-cat  { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+        .blog-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .blog-excerpt { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; flex: 1; }
+        .blog-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); }
+        .blog-author { display: flex; align-items: center; gap: 8px; }
+        .blog-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--bg-surface-raised); }
+        .blog-author-name { font-size: 0.8rem; font-weight: 500; }
+        .blog-read-more { font-family: var(--font-mono); font-size: 0.68rem; color: var(--teal); text-decoration: none; display: flex; align-items: center; gap: 4px; transition: color var(--speed-fast); }
+        .blog-read-more:hover { color: var(--text-primary); }
+        .blog-read-more svg { width: 12px; height: 12px; stroke-width: 2; }
+
+        /* ════════════════════════════════════════════════════════════════════
+           ⑨ COUNTDOWN / UPCOMING EVENTS
+           HOW TO EDIT: Change date string in data-date attribute and labels.
+        ════════════════════════════════════════════════════════════════════ */
+        #upcoming { padding: 4rem var(--space-6); }
+        .upcoming-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; max-width: 1100px; margin: 0 auto; }
+        .event-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.75rem; backdrop-filter: blur(10px); transition: border-color var(--speed-fast), transform var(--speed-fast); }
+        .event-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+        .event-date-badge { display: inline-flex; flex-direction: column; align-items: center; background: var(--gold-glow); border: 1px solid rgba(245,158,11,0.25); border-radius: 10px; padding: 8px 14px; margin-bottom: 1rem; }
+        .event-day   { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
+        .event-month { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
+        .event-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .event-desc  { font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1rem; }
+        .event-countdown { font-family: var(--font-mono); font-size: 0.72rem; color: var(--teal); letter-spacing: 1.5px; }
+
+        /* ════════════════════════════════════════════════════════════════════
+           FOOTER
+        ════════════════════════════════════════════════════════════════════ */
+        footer { position: relative; z-index: 2; padding: 4rem var(--space-6) 2.5rem; border-top: 1px solid var(--border-subtle); text-align: center; }
+        .footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .footer-logo span { color: var(--gold); }
+        .footer-tagline { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color var(--speed-fast); }
+        .footer-links a:hover { color: var(--text-primary); }
+        .footer-copy { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 1px; }
+
+        /* ─── Responsive ─────────────────────────────────────────────────── */
+        @media (max-width: 900px) { nav { display: none; } .mobile-hamburger { display: flex; } }
+        @media (max-width: 600px) { header { padding: 0 1.25rem; } section { padding: 3.5rem 1.25rem; } .tl-year { font-size: 3rem; letter-spacing: -2px; } }
+    </style>
+</head>
+<body>
+    <a href="#timeline" class="skip-link">Skip to timeline</a>
+
+    <!-- ─── Background ────────────────────────────────────────────────────── -->
+    <div class="gradient-mesh" aria-hidden="true">
+        <div class="mesh-orb orb-1"></div>
+        <div class="mesh-orb orb-2"></div>
+        <div class="mesh-orb orb-3"></div>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress-bar" id="scrollBar"></div></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         NAVBAR
+    ════════════════════════════════════════════════════════════════════ -->
+    <header id="siteHeader">
+        <a href="index.html" class="brand" aria-label="CSE 7th Batch – Home">
+            <!-- REPLACE src with your actual logo path -->
+            <img src="logo.png" alt="NU CSE Logo" class="logo-img" onerror="this.style.display='none'">
+            <span class="brand-text">CSE<span class="brand-accent"> 7th</span><span class="theme-dot" aria-hidden="true"></span></span>
+        </a>
+
+        <!-- Desktop nav -->
+        <nav aria-label="Page sections">
+            <a href="index.html" class="nav-link" data-section="home">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/></svg>
+                Home
+            </a>
+            <a href="#overview"      class="nav-link" data-section="overview">Overview</a>
+            <a href="#timeline"      class="nav-link" data-section="timeline">Timeline</a>
+            <a href="#gallery"       class="nav-link" data-section="gallery">Gallery</a>
+            <a href="#videos"        class="nav-link" data-section="videos">Videos</a>
+            <a href="#achievements"  class="nav-link" data-section="achievements">Achievements</a>
+            <a href="#memories"      class="nav-link" data-section="memories">Memories</a>
+        </nav>
+
+        <div class="nav-actions">
+            <div class="nav-divider" aria-hidden="true"></div>
+            <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" title="Toggle theme">
+                <svg id="themeSvgIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
+            <button class="mobile-hamburger" id="mobileHamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav-drawer" id="mobileDrawer" aria-hidden="true">
+        <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <a href="index.html" class="drawer-link">Home</a>
+        <a href="#overview"     class="drawer-link">Overview</a>
+        <a href="#timeline"     class="drawer-link">Timeline</a>
+        <a href="#gallery"      class="drawer-link">Gallery</a>
+        <a href="#videos"       class="drawer-link">Videos</a>
+        <a href="#achievements" class="drawer-link">Achievements</a>
+        <a href="#memories"     class="drawer-link">Memories</a>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         HERO
+    ════════════════════════════════════════════════════════════════════ -->
+    <section class="hero" id="home" aria-labelledby="heroTitle">
+        <div class="hero-cover" aria-hidden="true">
+            <!-- REPLACE with your actual hero/group photo -->
+            <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&auto=format&fit=crop" alt="" class="hero-cover-img" loading="eager" fetchpriority="high">
+        </div>
+        <div class="hero-overlay" aria-hidden="true"></div>
+
+        <div class="hero-content">
+            <!-- Year pills — add/remove years as needed -->
+            <div class="year-strip" aria-hidden="true">
+                <span class="year-pill">2020</span>
+                <span class="year-pill">2021</span>
+                <span class="year-pill">2022</span>
+                <span class="year-pill active">2023</span>
+                <span class="year-pill">2024</span>
+            </div>
+
+            <p class="eyebrow">CSE 7th Batch · Netrokona University</p>
+            <h1 id="heroTitle">Our <em>Journey</em></h1>
+            <p class="hero-sub">আমাদের বিশ্ববিদ্যালয় জীবনের গল্প</p>
+            <p class="hero-desc">
+                From the first nervous day of orientation to the final chapter of graduation — every lecture,
+                late night, laugh, project, trip, and triumph, documented here for us and for everyone who
+                comes after.
+            </p>
+            <div class="hero-cta">
+                <a href="#timeline" class="btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Start the Timeline
+                </a>
+                <a href="#gallery" class="btn-ghost">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    View Gallery
+                </a>
+            </div>
+        </div>
+
+        <div class="scroll-hint" aria-hidden="true">
+            <span>scroll</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ① CHAPTER OVERVIEW
+         HOW TO EDIT: Add/remove .chapter-card blocks. Change icons, year
+         labels, titles, and descriptions to match your actual chapters.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="overview" aria-labelledby="overviewTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">The Chapters</span>
+            <h2 id="overviewTitle">Four Years, One Story</h2>
+            <p>Each year brought its own flavour — new faces, harder subjects, bolder adventures. Jump to any chapter.</p>
+        </div>
+
+        <div class="chapter-grid">
+            <!-- CHAPTER 1 — edit title, desc, count freely -->
+            <a href="#year-2020" class="chapter-card chapter-gold reveal reveal-delay-1">
+                <div class="chapter-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <span class="chapter-year">1st Year · 2020</span>
+                <h3 class="chapter-title">The Beginning</h3>
+                <p class="chapter-desc">Orientation, first lectures, making friends, and discovering university life in the middle of a pandemic.</p>
+                <span class="chapter-count">↳ 12 events · 38 photos</span>
+            </a>
+
+            <!-- CHAPTER 2 -->
+            <a href="#year-2021" class="chapter-card chapter-violet reveal reveal-delay-2">
+                <div class="chapter-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <span class="chapter-year">2nd Year · 2021</span>
+                <h3 class="chapter-title">Rising Up</h3>
+                <p class="chapter-desc">Deeper into DSA, OOP, and databases. First hackathons, first real friendships tested.</p>
+                <span class="chapter-count">↳ 18 events · 62 photos</span>
+            </a>
+
+            <!-- CHAPTER 3 -->
+            <a href="#year-2022" class="chapter-card chapter-teal reveal reveal-delay-3">
+                <div class="chapter-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                </div>
+                <span class="chapter-year">3rd Year · 2022</span>
+                <h3 class="chapter-title">The Golden Hustle</h3>
+                <p class="chapter-desc">Thesis proposals, internships, department trips, cultural fest, and the most memorable nights.</p>
+                <span class="chapter-count">↳ 24 events · 110 photos</span>
+            </a>
+
+            <!-- CHAPTER 4 -->
+            <a href="#year-2023" class="chapter-card chapter-rose reveal reveal-delay-4">
+                <div class="chapter-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+                </div>
+                <span class="chapter-year">4th Year · 2023–24</span>
+                <h3 class="chapter-title">The Final Chapter</h3>
+                <p class="chapter-desc">Thesis defences, farewell, convocation, and stepping out into the world we built ourselves for.</p>
+                <span class="chapter-count">↳ 16 events · 85 photos</span>
+            </a>
+        </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ② VERTICAL TIMELINE
+         HOW TO EDIT:
+           • Each .tl-item = one event.
+           • .tl-year = decorative year heading — place it before the first
+             item of each year.
+           • Change .tl-date, .tl-title, .tl-body freely.
+           • Swap the tag class: tag-academic | tag-social | tag-milestone
+             | tag-fest | tag-project
+           • Replace Unsplash URLs with your real photo paths.
+           • Replace YouTube IDs (VIDEO_ID) with real IDs, or remove .tl-video.
+           • Add/remove .tl-link for external resources.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="timeline" aria-labelledby="timelineTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">Full Chronicle</span>
+            <h2 id="timelineTitle">The Timeline</h2>
+            <p>Every milestone, in the order it happened. Scroll through four years of becoming.</p>
+        </div>
+
+        <div class="timeline-container">
+            <div class="tl-spine" aria-hidden="true"></div>
+
+            <!-- ══ YEAR 2020 ══════════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2020">20<span>20</span></div>
+
+            <!-- EVENT 1 — Orientation Day -->
+            <div class="tl-item reveal">
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">September 2020</span>
+                        <span class="tl-tag tag-milestone">Milestone</span>
+                    </div>
+                    <h3 class="tl-title">Orientation Day</h3>
+                    <p class="tl-body">
+                        40 strangers walked into Netrokona University's CSE department — nervous, excited,
+                        and carrying entirely too many bags. The vice-chancellor spoke. We didn't fully understand.
+                        But we showed up. Replace this with your own orientation day memory.
+                    </p>
+                    <!-- REPLACE with your own photo -->
+                    <div class="tl-media">
+                        <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=600&auto=format&fit=crop" alt="Orientation Day" loading="lazy">
+                        <p class="tl-media-caption">📍 CSE Dept. Auditorium · Replace with real photo</p>
+                    </div>
+                </div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                </div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- EVENT 2 — Online Classes Start -->
+            <div class="tl-item reveal">
+                <div class="tl-empty"></div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                </div>
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">October 2020</span>
+                        <span class="tl-tag tag-academic">Academic</span>
+                    </div>
+                    <h3 class="tl-title">First Semester Goes Online</h3>
+                    <p class="tl-body">
+                        COVID-19 pushed our first semester entirely online. We learned C programming through
+                        shaky internet connections, unmuted microphones, and Zoom fatigue.
+                        Add your own story of the online semester here.
+                    </p>
+                    <a href="#" class="tl-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        View Course Portal →
+                    </a>
+                </div>
+            </div>
+
+            <!-- EVENT 3 — First Exam -->
+            <div class="tl-item reveal">
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">December 2020</span>
+                        <span class="tl-tag tag-academic">Academic</span>
+                    </div>
+                    <h3 class="tl-title">1st Semester Final Exams</h3>
+                    <p class="tl-body">
+                        We survived our first university exams — mostly. Maths was brutal.
+                        Physics was surprisingly okay. Discrete Math divided opinions.
+                        Share your exam survival stories here.
+                    </p>
+                </div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                </div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- ══ YEAR 2021 ══════════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2021">20<span>21</span></div>
+
+            <!-- EVENT 4 — First Campus Visit -->
+            <div class="tl-item reveal">
+                <div class="tl-empty"></div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                </div>
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">March 2021</span>
+                        <span class="tl-tag tag-milestone">Milestone</span>
+                    </div>
+                    <h3 class="tl-title">Back to Campus!</h3>
+                    <p class="tl-body">
+                        The first time most of us physically walked the corridors of our university.
+                        The canteen. The lab. The benches. It was surreal to finally be there in person.
+                        Add your campus arrival memory here.
+                    </p>
+                    <!-- REPLACE src with your own campus photo -->
+                    <div class="tl-media">
+                        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&auto=format&fit=crop" alt="Campus" loading="lazy">
+                        <p class="tl-media-caption">📍 Netrokona University Campus · Replace with real photo</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EVENT 5 — First Hackathon -->
+            <div class="tl-item reveal">
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">June 2021</span>
+                        <span class="tl-tag tag-project">Project</span>
+                    </div>
+                    <h3 class="tl-title">Inter-Department Hackathon</h3>
+                    <p class="tl-body">
+                        Our first hackathon as a batch. 24 hours, bad coffee, and a project we half-understood.
+                        We didn't win but we learned more in those 24 hours than in a full month of lectures.
+                        Update with your actual hackathon result and project name.
+                    </p>
+                    <!-- REPLACE with your actual YouTube video ID -->
+                    <div class="tl-video">
+                        <div class="tl-video-placeholder" id="tlVideoPlay1">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="rgba(245,158,11,0.1)" stroke="var(--gold)" stroke-width="1.5"/><polygon points="10 8 16 12 10 16 10 8" fill="var(--gold)"/></svg>
+                            <span>Play Hackathon Recap Video</span>
+                        </div>
+                    </div>
+                    <a href="#" class="tl-link" style="margin-top:0.75rem">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        Project Repository →
+                    </a>
+                </div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
+                </div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- EVENT 6 — Cultural Night -->
+            <div class="tl-item reveal">
+                <div class="tl-empty"></div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    </div>
+                </div>
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">November 2021</span>
+                        <span class="tl-tag tag-fest">Cultural</span>
+                    </div>
+                    <h3 class="tl-title">CSE Cultural Night 2021</h3>
+                    <p class="tl-body">
+                        Songs, dances, skits, and roasts. The night we discovered hidden talents
+                        — and embarrassed ourselves in the best way possible.
+                        Replace with your actual cultural event details and photos.
+                    </p>
+                    <div class="tl-media">
+                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop" alt="Cultural Night" loading="lazy">
+                        <p class="tl-media-caption">🎤 CSE Cultural Evening · Replace with real photo</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ YEAR 2022 ══════════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2022">20<span>22</span></div>
+
+            <!-- EVENT 7 — Educational Tour -->
+            <div class="tl-item reveal">
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">February 2022</span>
+                        <span class="tl-tag tag-social">Tour</span>
+                    </div>
+                    <h3 class="tl-title">Educational Tour — Cox's Bazar</h3>
+                    <p class="tl-body">
+                        40 students, one bus, zero sleep, and the world's longest sea beach.
+                        The best 3 days of our university life. Some of us still haven't recovered.
+                        Update destination, dates, and add your real trip photos.
+                    </p>
+                    <div class="tl-media">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Beach Tour" loading="lazy">
+                        <p class="tl-media-caption">🏖️ Cox's Bazar · Replace with real tour photos</p>
+                    </div>
+                    <a href="#" class="tl-link" style="margin-top:0.75rem">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        Full Album →
+                    </a>
+                </div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                </div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- EVENT 8 — Thesis Proposal -->
+            <div class="tl-item reveal">
+                <div class="tl-empty"></div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                </div>
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">July 2022</span>
+                        <span class="tl-tag tag-academic">Academic</span>
+                    </div>
+                    <h3 class="tl-title">Thesis Proposal Submissions</h3>
+                    <p class="tl-body">
+                        The research era begins. Topics ranged from machine learning and NLP to IoT and
+                        cybersecurity. Add the actual thesis topics and team names here.
+                    </p>
+                    <a href="#" class="tl-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        View Thesis Repository →
+                    </a>
+                </div>
+            </div>
+
+            <!-- EVENT 9 — Sports Week -->
+            <div class="tl-item reveal">
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">November 2022</span>
+                        <span class="tl-tag tag-social">Sports</span>
+                    </div>
+                    <h3 class="tl-title">CSE Sports Week 2022</h3>
+                    <p class="tl-body">
+                        Cricket, football, table tennis, and a surprising number of people who turned out to be
+                        excellent at badminton. Add your batch's sports results and highlight reel here.
+                    </p>
+                    <div class="tl-media">
+                        <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop" alt="Sports" loading="lazy">
+                        <p class="tl-media-caption">🏏 CSE Sports Week · Replace with real photos</p>
+                    </div>
+                </div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    </div>
+                </div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- ══ YEAR 2023–24 ═════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2023">20<span>23</span></div>
+
+            <!-- EVENT 10 — Thesis Defence -->
+            <div class="tl-item reveal">
+                <div class="tl-empty"></div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">March 2024</span>
+                        <span class="tl-tag tag-milestone">Milestone</span>
+                    </div>
+                    <h3 class="tl-title">Thesis Defences</h3>
+                    <p class="tl-body">
+                        The culmination of years of research — every group standing before a panel, defending
+                        the work they poured themselves into. Nervous. Proud. Exhausted. Add actual thesis
+                        titles and outcomes here.
+                    </p>
+                    <!-- REPLACE YouTube video ID -->
+                    <div class="tl-video">
+                        <div class="tl-video-placeholder" id="tlVideoPlay2">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="rgba(245,158,11,0.1)" stroke="var(--gold)" stroke-width="1.5"/><polygon points="10 8 16 12 10 16 10 8" fill="var(--gold)"/></svg>
+                            <span>Play Thesis Defence Highlights</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EVENT 11 — Farewell -->
+            <div class="tl-item reveal">
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">June 2024</span>
+                        <span class="tl-tag tag-fest">Farewell</span>
+                    </div>
+                    <h3 class="tl-title">Farewell Night</h3>
+                    <p class="tl-body">
+                        The night that nobody wanted to arrive and nobody wanted to end.
+                        Speeches, tears, laughter, and the quiet realisation that this chapter was closing.
+                        Add your farewell memory, photos, and video here.
+                    </p>
+                    <div class="tl-media">
+                        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop" alt="Farewell Night" loading="lazy">
+                        <p class="tl-media-caption">🌟 Farewell Night 2024 · Replace with real photo</p>
+                    </div>
+                    <a href="#" class="tl-link" style="margin-top:0.75rem">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        Farewell Album →
+                    </a>
+                </div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </div>
+                </div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- EVENT 12 — Convocation -->
+            <div class="tl-item reveal">
+                <div class="tl-empty"></div>
+                <div class="tl-dot" aria-hidden="true">
+                    <div class="tl-dot-inner" style="border-color:var(--gold);box-shadow:0 0 20px -4px var(--gold-glow);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    </div>
+                </div>
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">TBD · 2024</span>
+                        <span class="tl-tag tag-milestone">Convocation</span>
+                    </div>
+                    <h3 class="tl-title">Graduation Day</h3>
+                    <p class="tl-body">
+                        Caps, gowns, and the moment our names are called. Four years distilled into a
+                        handshake and a scroll. This page is for that day.
+                        Update with actual convocation date when confirmed.
+                    </p>
+                    <!-- Countdown populated by JS -->
+                    <div class="event-countdown" id="convocationCountdown" style="margin-top:0.75rem">
+                        ⏳ Calculating time to graduation…
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /timeline-container -->
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ③ PHOTO GALLERY MOSAIC
+         HOW TO EDIT: Replace Unsplash URLs with your actual photo paths.
+         Change badge classes and captions. Add/remove .gallery-item divs.
+         Update g-item-N class to control mosaic position/size.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="gallery" aria-labelledby="galleryTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">Visual Diary</span>
+            <h2 id="galleryTitle">Moments in Frames</h2>
+            <p>Every photo tells a part of the story. Replace the demo images with your real memories.</p>
+        </div>
+
+        <!-- Filter buttons — data-filter matches badge text -->
+        <div class="gallery-filters" role="group" aria-label="Filter photos by category">
+            <button class="gallery-filter-btn active" data-filter="all">All</button>
+            <button class="gallery-filter-btn" data-filter="academic">Academic</button>
+            <button class="gallery-filter-btn" data-filter="social">Social</button>
+            <button class="gallery-filter-btn" data-filter="fest">Fest</button>
+            <button class="gallery-filter-btn" data-filter="trip">Trip</button>
+        </div>
+
+        <div class="gallery-mosaic" role="list">
+            <!-- PHOTO 1 — Large feature photo -->
+            <div class="gallery-item g-item-1 reveal" role="listitem" aria-label="Orientation Day 2020" data-category="academic">
+                <span class="gallery-badge badge-academic">Academic</span>
+                <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&auto=format&fit=crop" alt="Orientation Day" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Orientation Day</p>
+                    <p class="gallery-caption-sub">September 2020 · Replace with real photo</p>
+                </div>
+            </div>
+            <!-- PHOTO 2 -->
+            <div class="gallery-item g-item-2 reveal" role="listitem" aria-label="Lab Sessions" data-category="academic">
+                <span class="gallery-badge badge-academic">Academic</span>
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop" alt="Lab" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">CSE Lab Sessions</p>
+                    <p class="gallery-caption-sub">2021 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 3 -->
+            <div class="gallery-item g-item-3 reveal" role="listitem" aria-label="Canteen Talks" data-category="social">
+                <span class="gallery-badge badge-social">Social</span>
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop" alt="Canteen" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Canteen Talks</p>
+                    <p class="gallery-caption-sub">2021 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 4 -->
+            <div class="gallery-item g-item-4 reveal" role="listitem" aria-label="Cultural Fest" data-category="fest">
+                <span class="gallery-badge badge-fest">Fest</span>
+                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop" alt="Cultural Fest" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Cultural Fest 2021</p>
+                    <p class="gallery-caption-sub">November 2021 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 5 — Tall card -->
+            <div class="gallery-item g-item-5 reveal" role="listitem" aria-label="Department Trip" data-category="trip">
+                <span class="gallery-badge badge-trip">Trip</span>
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Trip" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Cox's Bazar Trip</p>
+                    <p class="gallery-caption-sub">February 2022 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 6 -->
+            <div class="gallery-item g-item-6 reveal" role="listitem" aria-label="Project Demo" data-category="academic">
+                <span class="gallery-badge badge-academic">Academic</span>
+                <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop" alt="Project Demo" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Project Demo Day</p>
+                    <p class="gallery-caption-sub">2022 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 7 — Wide card -->
+            <div class="gallery-item g-item-7 reveal" role="listitem" aria-label="Batch Group Photo" data-category="social">
+                <span class="gallery-badge badge-social">Social</span>
+                <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&auto=format&fit=crop" alt="Group Photo" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Batch Group Photo</p>
+                    <p class="gallery-caption-sub">2022 · Replace with your real group photo</p>
+                </div>
+            </div>
+            <!-- PHOTO 8 -->
+            <div class="gallery-item g-item-8 reveal" role="listitem" aria-label="Sports Week" data-category="social">
+                <span class="gallery-badge badge-social">Sports</span>
+                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop" alt="Sports" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Sports Week 2022</p>
+                    <p class="gallery-caption-sub">November 2022 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 9 — Large tall card -->
+            <div class="gallery-item g-item-9 reveal" role="listitem" aria-label="Farewell Night" data-category="fest">
+                <span class="gallery-badge badge-fest">Farewell</span>
+                <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop" alt="Farewell" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Farewell Night 2024</p>
+                    <p class="gallery-caption-sub">June 2024 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 10 -->
+            <div class="gallery-item g-item-10 reveal" role="listitem" aria-label="Thesis Defence" data-category="academic">
+                <span class="gallery-badge badge-academic">Thesis</span>
+                <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&auto=format&fit=crop" alt="Thesis" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Thesis Defence Day</p>
+                    <p class="gallery-caption-sub">March 2024 · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 11 -->
+            <div class="gallery-item g-item-11 reveal" role="listitem" aria-label="Night before exams" data-category="academic">
+                <span class="gallery-badge badge-academic">Academic</span>
+                <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop" alt="Study Night" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">The Night Before Exams</p>
+                    <p class="gallery-caption-sub">Every semester · Replace</p>
+                </div>
+            </div>
+            <!-- PHOTO 12 -->
+            <div class="gallery-item g-item-12 reveal" role="listitem" aria-label="Convocation" data-category="fest">
+                <span class="gallery-badge badge-fest">Convocation</span>
+                <img src="https://images.unsplash.com/photo-1520608760-eff2c44d8ac4?w=600&auto=format&fit=crop" alt="Convocation" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">Graduation Day</p>
+                    <p class="gallery-caption-sub">2024 · Update when available</p>
+                </div>
+            </div>
+        </div><!-- /gallery-mosaic -->
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+        <img src="" alt="" id="lightboxTargetImage">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close photo viewer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    </div>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ④ VIDEO REEL
+         HOW TO EDIT: Change .video-title, .video-desc, thumbnail src,
+         and video-link href for each card. Replace YOUTUBE_ID with real IDs.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="videos" aria-labelledby="videosTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">Video Archive</span>
+            <h2 id="videosTitle">In Motion</h2>
+            <p>The moments too alive for a photo. Replace the placeholder links with your real video URLs.</p>
+        </div>
+
+        <div class="video-grid">
+            <!-- VIDEO 1 -->
+            <div class="video-card reveal reveal-delay-1">
+                <div class="video-thumb">
+                    <!-- REPLACE with YouTube thumbnail: https://img.youtube.com/vi/YOUR_VIDEO_ID/hqdefault.jpg -->
+                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=640&auto=format&fit=crop" alt="Orientation Vlog">
+                    <div class="play-btn">
+                        <!-- REPLACE href with your video URL -->
+                        <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID" target="_blank" rel="noopener" class="play-btn-inner" aria-label="Play Orientation Day Vlog">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-meta">
+                        <span class="video-label">Vlog</span>
+                        <span class="video-duration">· 8:24 · Replace duration</span>
+                    </div>
+                    <h3 class="video-title">Orientation Day Vlog 2020</h3>
+                    <p class="video-desc">The very first day. Nervous faces, a city we barely knew, and the beginning of everything. Replace with real description.</p>
+                    <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID" target="_blank" rel="noopener" class="video-link">
+                        Watch on YouTube
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- VIDEO 2 -->
+            <div class="video-card reveal reveal-delay-2">
+                <div class="video-thumb">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=640&auto=format&fit=crop" alt="Tour Video">
+                    <div class="play-btn">
+                        <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_2" target="_blank" rel="noopener" class="play-btn-inner" aria-label="Play Tour Video">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-meta">
+                        <span class="video-label">Trip Film</span>
+                        <span class="video-duration">· 12:07 · Replace</span>
+                    </div>
+                    <h3 class="video-title">Cox's Bazar Tour Highlights 2022</h3>
+                    <p class="video-desc">Three days, forty people, one bus, and memories that will outlast every hard drive. Replace with real description.</p>
+                    <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_2" target="_blank" rel="noopener" class="video-link">
+                        Watch on YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- VIDEO 3 -->
+            <div class="video-card reveal reveal-delay-3">
+                <div class="video-thumb">
+                    <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=640&auto=format&fit=crop" alt="Farewell">
+                    <div class="play-btn">
+                        <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_3" target="_blank" rel="noopener" class="play-btn-inner" aria-label="Play Farewell Video">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-meta">
+                        <span class="video-label">Farewell Film</span>
+                        <span class="video-duration">· 22:40 · Replace</span>
+                    </div>
+                    <h3 class="video-title">Farewell Night 2024 — Full Film</h3>
+                    <p class="video-desc">The night we documented everything, because we knew we'd need to remember it. Replace with real farewell film link.</p>
+                    <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_3" target="_blank" rel="noopener" class="video-link">
+                        Watch on YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ⑤ BATCH STATS
+         HOW TO EDIT: Change numbers, labels, and icons. Add new .stat-cell
+         divs as needed. All in a single row bar.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="stats" aria-labelledby="statsTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">By the Numbers</span>
+            <h2 id="statsTitle">Four Years in Figures</h2>
+        </div>
+        <div class="stats-bar reveal">
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--gold-glow);color:var(--gold)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="stat-number">40</div><!-- REPLACE with actual count -->
+                <div class="stat-label">Batch Members</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--violet-glow);color:var(--violet)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </div>
+                <div class="stat-number">48</div><!-- REPLACE with actual course count -->
+                <div class="stat-label">Courses Completed</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--teal-glow);color:var(--teal)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div class="stat-number">12</div><!-- REPLACE with actual project count -->
+                <div class="stat-label">Thesis Projects</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--rose-glow);color:var(--rose)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div class="stat-number">3</div><!-- REPLACE with actual trips -->
+                <div class="stat-label">Educational Tours</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--gold-glow);color:var(--gold)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="stat-number">8</div><!-- REPLACE with actual awards -->
+                <div class="stat-label">Awards Won</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--violet-glow);color:var(--violet)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </div>
+                <div class="stat-number">400+</div><!-- REPLACE with actual photo count -->
+                <div class="stat-label">Shared Photos</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--teal-glow);color:var(--teal)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="stat-number">4</div>
+                <div class="stat-label">Years Together</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ⑥ ACHIEVEMENTS
+         HOW TO EDIT: Each .ach-card is one achievement. Use colour
+         variants ach-gold / ach-violet / ach-teal / ach-rose to distinguish.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="achievements" aria-labelledby="achTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">Honours & Recognition</span>
+            <h2 id="achTitle">What We Built & Won</h2>
+            <p>The awards, publications, and moments our batch made us proud. Replace with your actual achievements.</p>
+        </div>
+
+        <div class="ach-grid">
+            <div class="ach-card ach-gold reveal reveal-delay-1">
+                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <p class="ach-year">2021 · Replace Year</p>
+                <h3 class="ach-title">Best Project Award</h3>
+                <p class="ach-desc">Replace with actual award name, issuing body, and a brief description of the winning project or achievement.</p>
+            </div>
+            <div class="ach-card ach-violet reveal reveal-delay-2">
+                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+                <p class="ach-year">2021 · Replace Year</p>
+                <h3 class="ach-title">Hackathon Runners-Up</h3>
+                <p class="ach-desc">Replace with actual hackathon name, organiser, and what the team built. Tag the team members involved.</p>
+            </div>
+            <div class="ach-card ach-teal reveal reveal-delay-3">
+                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                <p class="ach-year">2023 · Replace Year</p>
+                <h3 class="ach-title">Research Paper Published</h3>
+                <p class="ach-desc">Replace with actual paper title, journal/conference name, DOI link, and authoring students' names.</p>
+            </div>
+            <div class="ach-card ach-rose reveal reveal-delay-4">
+                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                <p class="ach-year">2022 · Replace Year</p>
+                <h3 class="ach-title">Cultural Fest Champion</h3>
+                <p class="ach-desc">Replace with actual cultural event name, category won, and participants involved.</p>
+            </div>
+            <div class="ach-card ach-gold reveal reveal-delay-1">
+                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+                <p class="ach-year">2023 · Replace Year</p>
+                <h3 class="ach-title">Dean's List — Multiple Students</h3>
+                <p class="ach-desc">Replace with list of students who made the Dean's List and the semester/year. A tribute to academic excellence.</p>
+            </div>
+            <div class="ach-card ach-teal reveal reveal-delay-2">
+                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+                <p class="ach-year">2022–24 · Replace</p>
+                <h3 class="ach-title">Internship Placements</h3>
+                <p class="ach-desc">Replace with the companies where batch members secured internships — a testament to the batch's drive and skill.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ⑦ MEMORIES QUOTES CAROUSEL
+         HOW TO EDIT: Add/remove .quote-slide divs. Change quote text,
+         Bengali translation, author name, and role/batch year.
+         Avatar: replace .quote-avatar-placeholder with an <img> tag.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="memories" aria-labelledby="memoriesTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">What They Said</span>
+            <h2 id="memoriesTitle">Words We'll Keep</h2>
+            <p>Quotes from batch members — honest, funny, and real. Replace with actual words from your classmates.</p>
+        </div>
+
+        <div class="quote-carousel" aria-roledescription="carousel" aria-label="Memory quotes">
+            <div class="quote-track">
+                <div class="quote-slides" id="quoteSlides">
+
+                    <!-- QUOTE 1 — Replace everything below -->
+                    <div class="quote-slide" role="group" aria-roledescription="slide" aria-label="Quote 1 of 5">
+                        <span class="quote-mark">"</span>
+                        <p class="quote-text">
+                            "Replace this with a real quote from a batch member — something they said about university life,
+                            a memory, or what this journey meant to them."
+                        </p>
+                        <p class="quote-bn">এখানে বাংলায় উক্তি বা স্মৃতি লিখুন। আপনার ব্যাচমেটের কথা।</p>
+                        <div class="quote-author">
+                            <div class="quote-avatar-placeholder" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <!-- Or use: <img src="photos/student-name.jpg" class="quote-avatar" alt="Student Name"> -->
+                            <div>
+                                <p class="quote-name">Student Name — Replace</p>
+                                <p class="quote-role">Roll No. XXX · CSE 7th Batch</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QUOTE 2 -->
+                    <div class="quote-slide" role="group" aria-roledescription="slide" aria-label="Quote 2 of 5">
+                        <span class="quote-mark">"</span>
+                        <p class="quote-text">
+                            "The hardest part was not the exams — it was saying goodbye to people who had become
+                            family. Replace this with a real memory from your batch."
+                        </p>
+                        <p class="quote-bn">পরীক্ষা কঠিন ছিল, কিন্তু বিদায় আরও কঠিন। Replace this Bengali quote.</p>
+                        <div class="quote-author">
+                            <div class="quote-avatar-placeholder" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <div>
+                                <p class="quote-name">Another Student — Replace</p>
+                                <p class="quote-role">Roll No. XXX · CSE 7th Batch</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QUOTE 3 -->
+                    <div class="quote-slide" role="group" aria-roledescription="slide" aria-label="Quote 3 of 5">
+                        <span class="quote-mark">"</span>
+                        <p class="quote-text">
+                            "I came here to learn programming. I left knowing how to learn anything.
+                            Add your own version of this quote from a real classmate."
+                        </p>
+                        <p class="quote-bn">আমি এসেছিলাম প্রোগ্রামিং শিখতে, শিখলাম কীভাবে যেকোনো কিছু শিখতে হয়।</p>
+                        <div class="quote-author">
+                            <div class="quote-avatar-placeholder" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <div>
+                                <p class="quote-name">Yet Another — Replace</p>
+                                <p class="quote-role">Roll No. XXX · CSE 7th Batch</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ADD MORE QUOTES: Copy a quote-slide block and paste here -->
+
+                </div><!-- /quote-slides -->
+            </div><!-- /quote-track -->
+
+            <div class="carousel-controls" aria-label="Carousel controls">
+                <button class="carousel-btn" id="quotePrev" aria-label="Previous quote">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div class="carousel-dots" id="carouselDots" role="tablist"></div>
+                <button class="carousel-btn" id="quoteNext" aria-label="Next quote">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ⑧ ARTICLES / WRITE-UPS
+         HOW TO EDIT: Each .blog-card is one article, reflection, or
+         write-up. Change title, excerpt, date, and link. Add/remove cards.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="articles" aria-labelledby="articlesTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">Written by Us</span>
+            <h2 id="articlesTitle">Reflections & Stories</h2>
+            <p>Long-form memories, technical reflections, and personal essays by batch members. Add real articles when ready.</p>
+        </div>
+
+        <div class="blog-grid">
+            <!-- ARTICLE 1 -->
+            <article class="blog-card reveal reveal-delay-1">
+                <!-- REPLACE with real thumbnail -->
+                <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop" alt="Article 1" class="blog-thumb" loading="lazy">
+                <div class="blog-body">
+                    <div class="blog-meta">
+                        <span class="blog-date">Replace Date</span>
+                        <span class="blog-cat tag-academic">Reflection</span>
+                    </div>
+                    <h3 class="blog-title">What Four Years of CSE Taught Me Beyond Code</h3>
+                    <p class="blog-excerpt">Replace this with a real excerpt from the article. Talk about what the author learned, what surprised them, what they'd tell a first-year student.</p>
+                    <div class="blog-footer">
+                        <div class="blog-author">
+                            <div class="blog-avatar" style="background:var(--violet-glow);display:flex;align-items:center;justify-content:center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--violet)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <span class="blog-author-name">Author Name — Replace</span>
+                        </div>
+                        <a href="#" class="blog-read-more">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ARTICLE 2 -->
+            <article class="blog-card reveal reveal-delay-2">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Article 2" class="blog-thumb" loading="lazy">
+                <div class="blog-body">
+                    <div class="blog-meta">
+                        <span class="blog-date">Replace Date</span>
+                        <span class="blog-cat tag-social">Memory</span>
+                    </div>
+                    <h3 class="blog-title">The Trip That Changed How We Saw Each Other</h3>
+                    <p class="blog-excerpt">Replace with real article excerpt about the educational tour. Who surprised you? What did you learn about your classmates outside the classroom?</p>
+                    <div class="blog-footer">
+                        <div class="blog-author">
+                            <div class="blog-avatar" style="background:var(--teal-glow);display:flex;align-items:center;justify-content:center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <span class="blog-author-name">Author Name — Replace</span>
+                        </div>
+                        <a href="#" class="blog-read-more">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ARTICLE 3 -->
+            <article class="blog-card reveal reveal-delay-3">
+                <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop" alt="Article 3" class="blog-thumb" loading="lazy">
+                <div class="blog-body">
+                    <div class="blog-meta">
+                        <span class="blog-date">Replace Date</span>
+                        <span class="blog-cat tag-fest">Farewell</span>
+                    </div>
+                    <h3 class="blog-title">A Letter to the Batch I Grew Up With</h3>
+                    <p class="blog-excerpt">Replace with a real personal letter or essay about the farewell, the friendships, and what comes next. Make it personal, make it real.</p>
+                    <div class="blog-footer">
+                        <div class="blog-author">
+                            <div class="blog-avatar" style="background:var(--rose-glow);display:flex;align-items:center;justify-content:center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <span class="blog-author-name">Author Name — Replace</span>
+                        </div>
+                        <a href="#" class="blog-read-more">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ⑨ UPCOMING EVENTS
+         HOW TO EDIT: Change event titles, dates (day/month), and
+         descriptions. JS will auto-calculate countdown from data-date attr.
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="upcoming" aria-labelledby="upcomingTitle">
+        <div class="section-head reveal">
+            <span class="section-tag">What's Next</span>
+            <h2 id="upcomingTitle">Upcoming Events</h2>
+            <p>The chapter isn't over yet. Update these events with real dates as they're confirmed.</p>
+        </div>
+
+        <div class="upcoming-grid">
+            <!-- EVENT CARD 1 — Replace day, month, title, desc, and data-date -->
+            <div class="event-card reveal reveal-delay-1" data-date="2024-12-15">
+                <div class="event-date-badge">
+                    <span class="event-day">15</span><!-- Replace day -->
+                    <span class="event-month">Dec 2024</span><!-- Replace month/year -->
+                </div>
+                <h3 class="event-title">Convocation Day — Replace Date</h3>
+                <p class="event-desc">The official graduation ceremony. Update with the confirmed date, venue, and schedule when available from the university.</p>
+                <p class="event-countdown" id="countdown-1"></p>
+            </div>
+
+            <!-- EVENT CARD 2 -->
+            <div class="event-card reveal reveal-delay-2" data-date="2024-11-01">
+                <div class="event-date-badge">
+                    <span class="event-day">01</span>
+                    <span class="event-month">Nov 2024</span>
+                </div>
+                <h3 class="event-title">Batch Reunion Dinner — Replace</h3>
+                <p class="event-desc">The first planned reunion after graduation. Replace with real venue, date, and RSVP details. Add a link to the registration form.</p>
+                <p class="event-countdown" id="countdown-2"></p>
+            </div>
+
+            <!-- EVENT CARD 3 -->
+            <div class="event-card reveal reveal-delay-3" data-date="2025-03-21">
+                <div class="event-date-badge">
+                    <span class="event-day">21</span>
+                    <span class="event-month">Mar 2025</span>
+                </div>
+                <h3 class="event-title">Alumni Network Launch — Replace</h3>
+                <p class="event-desc">The launch of the CSE 7th Batch alumni network. Replace with real details, social links, and how to join.</p>
+                <p class="event-countdown" id="countdown-3"></p>
+            </div>
+
+            <!-- ADD MORE EVENTS: Copy an event-card block and paste here -->
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         FOOTER
+    ════════════════════════════════════════════════════════════════════ -->
+    <footer>
+        <p class="footer-logo">CSE <span>7th Batch</span></p>
+        <p class="footer-tagline">Netrokona University · 2020–2024</p>
+        <nav class="footer-links" aria-label="Footer navigation">
+            <a href="index.html">Home</a>
+            <a href="#overview">Overview</a>
+            <a href="#timeline">Timeline</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#videos">Videos</a>
+            <a href="#achievements">Achievements</a>
+            <a href="#memories">Memories</a>
+        </nav>
+        <p class="footer-copy">Built with love by CSE 7th Batch · Netrokona University</p>
+    </footer>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         JAVASCRIPT
+    ════════════════════════════════════════════════════════════════════ -->
+    <script>
+        // ─── DOM refs ─────────────────────────────────────────────────────
+        const siteHeader    = document.getElementById('siteHeader');
+        const scrollBar     = document.getElementById('scrollBar');
+        const backToTop     = document.getElementById('backToTop');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeSvgIcon  = document.getElementById('themeSvgIcon');
+        const mobileHamburger = document.getElementById('mobileHamburger');
+        const mobileDrawer  = document.getElementById('mobileDrawer');
+        const drawerClose   = document.getElementById('drawerClose');
+        const toastEl       = document.getElementById('toast');
+
+        // ─── Theme ───────────────────────────────────────────────────────
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        if (currentTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeSvgIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+        }
+        setTimeout(() => document.body.classList.add('theme-ready'), 100);
+
+        const SVG_SUN  = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+        const SVG_MOON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                currentTheme = 'light';
+                themeSvgIcon.innerHTML = SVG_MOON;
+                showToast('Light mode on');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                currentTheme = 'dark';
+                themeSvgIcon.innerHTML = SVG_SUN;
+                showToast('Dark mode on');
+            }
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // ─── Toast ────────────────────────────────────────────────────────
+        let toastTimer;
+        function showToast(msg) {
+            clearTimeout(toastTimer);
+            toastEl.textContent = msg;
+            toastEl.classList.add('show');
+            toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+        }
+
+        // ─── Scroll effects ───────────────────────────────────────────────
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    const docH = document.documentElement.scrollHeight - window.innerHeight;
+                    scrollBar.style.width = (docH > 0 ? (scrollY / docH) * 100 : 0) + '%';
+                    siteHeader.classList.toggle('scrolled', scrollY > 40);
+                    backToTop.classList.toggle('show', scrollY > 600);
+                    updateActiveNav();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // ─── Active nav link ──────────────────────────────────────────────
+        function updateActiveNav() {
+            const sections = ['home','overview','timeline','gallery','videos','achievements','memories','articles','upcoming'];
+            const scrollY = window.scrollY + 120;
+            let current = 'home';
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.offsetTop <= scrollY) current = id;
+            });
+            document.querySelectorAll('.nav-link').forEach(a => {
+                a.classList.toggle('active', a.dataset.section === current);
+            });
+        }
+        updateActiveNav();
+
+        // ─── Mobile drawer ────────────────────────────────────────────────
+        function openDrawer()  { mobileDrawer.classList.add('open'); mobileHamburger.setAttribute('aria-expanded','true'); mobileDrawer.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+        function closeDrawer() { mobileDrawer.classList.remove('open'); mobileHamburger.setAttribute('aria-expanded','false'); mobileDrawer.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+        mobileHamburger.addEventListener('click', () => mobileDrawer.classList.contains('open') ? closeDrawer() : openDrawer());
+        drawerClose.addEventListener('click', closeDrawer);
+        document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', closeDrawer));
+
+        // ─── Scroll reveal ────────────────────────────────────────────────
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); revealObs.unobserve(e.target); }});
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+        // ─── Lightbox ─────────────────────────────────────────────────────
+        const lightbox     = document.getElementById('galleryLightbox');
+        const lightboxImg  = document.getElementById('lightboxTargetImage');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('.gallery-img');
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        function closeLightbox() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox(); closeDrawer(); } });
+
+        // ─── Gallery filters ──────────────────────────────────────────────
+        document.querySelectorAll('.gallery-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.gallery-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                document.querySelectorAll('.gallery-item').forEach(item => {
+                    const cat = item.dataset.category || '';
+                    item.style.opacity  = (filter === 'all' || cat === filter) ? '1' : '0.2';
+                    item.style.transform = (filter === 'all' || cat === filter) ? '' : 'scale(0.97)';
+                    item.style.transition = 'opacity 0.3s, transform 0.3s';
+                });
+            });
+        });
+
+        // ─── Quote Carousel ───────────────────────────────────────────────
+        const slides    = document.getElementById('quoteSlides');
+        const dotsWrap  = document.getElementById('carouselDots');
+        const prevBtn   = document.getElementById('quotePrev');
+        const nextBtn   = document.getElementById('quoteNext');
+        let   currentSlide = 0;
+        const slideCount   = document.querySelectorAll('.quote-slide').length;
+
+        // Build dots
+        for (let i = 0; i < slideCount; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Go to quote ${i+1}`);
+            dot.setAttribute('role', 'tab');
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsWrap.appendChild(dot);
+        }
+
+        function goToSlide(n) {
+            currentSlide = (n + slideCount) % slideCount;
+            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i === currentSlide));
+        }
+
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+        // Auto-advance every 6 seconds
+        let carouselTimer = setInterval(() => goToSlide(currentSlide + 1), 6000);
+        [prevBtn, nextBtn].forEach(b => b.addEventListener('click', () => { clearInterval(carouselTimer); carouselTimer = setInterval(() => goToSlide(currentSlide + 1), 6000); }));
+
+        // Keyboard support
+        document.querySelector('.quote-carousel').addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+        });
+
+        // ─── Year pill highlight on scroll ───────────────────────────────
+        const yearPills = document.querySelectorAll('.year-pill');
+        const yearSections = ['year-2020','year-2021','year-2022','year-2023'];
+
+        function updateYearPills() {
+            const scrollMid = window.scrollY + window.innerHeight / 2;
+            let closestYear = null, closestDist = Infinity;
+            yearSections.forEach((id, idx) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const dist = Math.abs(el.offsetTop - scrollMid);
+                if (dist < closestDist) { closestDist = dist; closestYear = idx; }
+            });
+            yearPills.forEach((p, i) => p.classList.toggle('active', i === closestYear));
+        }
+        window.addEventListener('scroll', updateYearPills, { passive: true });
+
+        // ─── Countdown helper ─────────────────────────────────────────────
+        function countdownToDate(targetDateStr) {
+            const now    = new Date();
+            const target = new Date(targetDateStr);
+            const diff   = target - now;
+            if (diff <= 0) return 'This event has passed';
+            const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+            return `⏳ ${days}d ${hours}h until this event`;
+        }
+
+        // Wire up event card countdowns
+        document.querySelectorAll('.event-card[data-date]').forEach((card, i) => {
+            const el = card.querySelector('.event-countdown') || document.getElementById(`countdown-${i+1}`);
+            if (el) el.textContent = countdownToDate(card.dataset.date);
+        });
+
+        // Convocation countdown (timeline)
+        const convEl = document.getElementById('convocationCountdown');
+        if (convEl) convEl.textContent = countdownToDate('2024-12-15'); // REPLACE DATE
+
+        // ─── Video placeholder click-to-embed ─────────────────────────────
+        // Replace YOUR_HACKATHON_VIDEO_ID and YOUR_THESIS_VIDEO_ID with real IDs
+        function setupVideoPlaceholder(placeholderId, youtubeVideoId) {
+            const el = document.getElementById(placeholderId);
+            if (!el || !youtubeVideoId || youtubeVideoId === 'YOUR_VIDEO_ID') return;
+            el.addEventListener('click', () => {
+                const container = el.closest('.tl-video');
+                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            });
+        }
+        setupVideoPlaceholder('tlVideoPlay1', 'YOUR_HACKATHON_VIDEO_ID'); // REPLACE
+        setupVideoPlaceholder('tlVideoPlay2', 'YOUR_THESIS_VIDEO_ID');     // REPLACE
+    </script>
+</body>
+</html>
