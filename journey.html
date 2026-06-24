@@ -22,8 +22,9 @@
     <link rel="preconnect" href="https://images.unsplash.com">
     <link rel="preconnect" href="https://unpkg.com">
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" async></script>
+    <!-- Lucide Icons (pinned version for faster, reliable loading) -->
+    <link rel="preload" href="https://unpkg.com/lucide@0.383.0/dist/umd/lucide.min.js" as="script">
+    <script src="https://unpkg.com/lucide@0.383.0/dist/umd/lucide.min.js" defer></script>
 
     <!-- Fonts -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Bengali:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -512,9 +513,61 @@
         .video-duration { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); }
         .video-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
         .video-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; }
-        .video-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--teal); text-decoration: none; margin-top: 0.75rem; transition: color var(--speed-fast); }
-        .video-link:hover { color: var(--text-primary); }
-        .video-link svg { width: 12px; height: 12px; stroke-width: 2; }
+        .video-link { display: none; } /* hidden — no external links */
+
+        /* ─── Custom HTML5 Video Player ─────────────────────────────────── */
+        .video-player-wrap {
+            position: relative; aspect-ratio: 16/9; background: #000;
+            border-radius: var(--radius-md); overflow: hidden;
+            border: 1px solid var(--border-subtle);
+        }
+        .video-player-wrap video {
+            width: 100%; height: 100%; object-fit: contain; display: block;
+            background: #000;
+        }
+        /* Upload placeholder shown when no src */
+        .video-upload-placeholder {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 1rem; background: var(--bg-surface-raised); cursor: pointer;
+            transition: background var(--speed-fast);
+        }
+        .video-upload-placeholder:hover { background: rgba(30,41,59,0.9); }
+        .video-upload-placeholder i[data-lucide] { width: 44px; height: 44px; color: var(--gold); opacity: 0.8; }
+        .video-upload-placeholder p { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; color: var(--text-muted); text-align: center; line-height: 1.6; }
+        .video-upload-placeholder span { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-muted); opacity: 0.6; }
+        .video-upload-input { display: none; }
+
+        /* Custom controls bar */
+        .video-controls {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(4,7,20,0.95), transparent);
+            padding: 1.5rem 1rem 0.75rem;
+            display: flex; flex-direction: column; gap: 0.5rem;
+            opacity: 0; transition: opacity var(--speed-fast);
+        }
+        .video-player-wrap:hover .video-controls,
+        .video-player-wrap.playing .video-controls { opacity: 1; }
+        .video-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; position: relative; }
+        .video-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #fbbf24); border-radius: 2px; width: 0%; transition: width 0.1s linear; pointer-events: none; }
+        .video-progress-bar:hover { height: 6px; }
+        .video-ctrl-row { display: flex; align-items: center; gap: 0.6rem; }
+        .video-ctrl-btn {
+            background: none; border: none; color: #fff; cursor: pointer;
+            width: 30px; height: 30px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background var(--speed-fast), color var(--speed-fast);
+            flex-shrink: 0;
+        }
+        .video-ctrl-btn:hover { background: rgba(255,255,255,0.12); color: var(--gold); }
+        .video-ctrl-btn i[data-lucide] { width: 16px; height: 16px; }
+        .video-time { font-family: var(--font-mono); font-size: 0.65rem; color: rgba(255,255,255,0.7); flex: 1; }
+        .video-vol-slider { width: 70px; accent-color: var(--gold); cursor: pointer; }
+        .video-fullscreen-btn { margin-left: auto; }
+
+        /* Timeline inline video player */
+        .tl-video { margin-top: 1rem; border-radius: var(--radius-md); overflow: hidden; }
+        .tl-video .video-player-wrap { border-radius: var(--radius-sm); }
 
         /* ════════════════════════════════════════════════════════════════════
            ⑤ ACHIEVEMENT CARDS
@@ -629,16 +682,37 @@
         .event-countdown { font-family: var(--font-mono); font-size: 0.72rem; color: var(--teal); letter-spacing: 1.5px; }
 
         /* ════════════════════════════════════════════════════════════════════
-           FOOTER
+           FOOTER — Fixed, no overlap
         ════════════════════════════════════════════════════════════════════ */
-        footer { position: relative; z-index: 2; padding: 4rem var(--space-6) 2.5rem; border-top: 1px solid var(--border-subtle); text-align: center; }
-        .footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem; }
+        footer {
+            position: relative; z-index: 2;
+            padding: 4rem var(--space-6) 3rem;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 0;
+        }
+        .footer-inner {
+            width: 100%; max-width: 1100px;
+            display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+        }
+        .footer-brand { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+        .footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; }
         .footer-logo span { color: var(--gold); }
-        .footer-tagline { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem; }
-        .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color var(--speed-fast); }
-        .footer-links a:hover { color: var(--text-primary); }
-        .footer-copy { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 1px; }
+        .footer-tagline { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; }
+        .footer-links {
+            display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+            padding: 1.5rem 0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);
+            width: 100%;
+        }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.84rem; display: inline-flex; align-items: center; gap: 5px; transition: color var(--speed-fast); white-space: nowrap; }
+        .footer-links a i[data-lucide] { width: 13px; height: 13px; }
+        .footer-links a:hover { color: var(--gold); }
+        .footer-bottom { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; width: 100%; }
+        .footer-copy { font-family: var(--font-mono); font-size: 0.67rem; color: var(--text-muted); letter-spacing: 1px; }
+        .footer-designer { font-family: var(--font-mono); font-size: 0.67rem; color: var(--text-muted); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+        .footer-designer a { color: var(--teal); text-decoration: none; transition: color var(--speed-fast); }
+        .footer-designer a:hover { color: var(--text-primary); text-decoration: underline; }
+        @media (max-width: 600px) { .footer-links { gap: 1rem; } footer { padding: 3rem 1.25rem 2rem; } }
 
         /* ─── Responsive ─────────────────────────────────────────────────── */
         @media (max-width: 900px) { nav { display: none; } .mobile-hamburger { display: flex; } }
@@ -719,20 +793,19 @@
         <div class="hero-overlay" aria-hidden="true"></div>
 
         <div class="hero-content">
-            <!-- Year pills — add/remove years as needed -->
+            <!-- Year pills — 2026 to 2029 -->
             <div class="year-strip" aria-hidden="true">
-                <span class="year-pill">2020</span>
-                <span class="year-pill">2021</span>
-                <span class="year-pill">2022</span>
-                <span class="year-pill active">2023</span>
-                <span class="year-pill">2024</span>
+                <span class="year-pill active">2026</span>
+                <span class="year-pill">2027</span>
+                <span class="year-pill">2028</span>
+                <span class="year-pill">2029</span>
             </div>
 
             <p class="eyebrow">CSE 7th Batch · Netrokona University</p>
             <h1 id="heroTitle">Our <em>Journey</em></h1>
             <p class="hero-sub">আমাদের বিশ্ববিদ্যালয় জীবনের গল্প</p>
             <p class="hero-desc">
-                From the first nervous day of orientation to the final chapter of graduation — every lecture,
+                From the first day of orientation in 2026 to the golden moment of graduation — every lecture,
                 late night, laugh, project, trip, and triumph, documented here for us and for everyone who
                 comes after.
             </p>
@@ -767,48 +840,48 @@
         </div>
 
         <div class="chapter-grid">
-            <!-- CHAPTER 1 — edit title, desc, count freely -->
-            <a href="#year-2020" class="chapter-card chapter-gold reveal reveal-delay-1">
+            <!-- CHAPTER 1 -->
+            <a href="#year-2026" class="chapter-card chapter-gold reveal reveal-delay-1">
                 <div class="chapter-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <i data-lucide="shield"></i>
                 </div>
-                <span class="chapter-year">1st Year · 2020</span>
+                <span class="chapter-year">1st Year · 2026</span>
                 <h3 class="chapter-title">The Beginning</h3>
-                <p class="chapter-desc">Orientation, first lectures, making friends, and discovering university life in the middle of a pandemic.</p>
-                <span class="chapter-count">↳ 12 events · 38 photos</span>
+                <p class="chapter-desc">Orientation, first lectures, making friends, and discovering university life together as CSE 7th Batch.</p>
+                <span class="chapter-count">↳ Chapter 1 · 2026</span>
             </a>
 
             <!-- CHAPTER 2 -->
-            <a href="#year-2021" class="chapter-card chapter-violet reveal reveal-delay-2">
+            <a href="#year-2027" class="chapter-card chapter-violet reveal reveal-delay-2">
                 <div class="chapter-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <i data-lucide="trending-up"></i>
                 </div>
-                <span class="chapter-year">2nd Year · 2021</span>
+                <span class="chapter-year">2nd Year · 2027</span>
                 <h3 class="chapter-title">Rising Up</h3>
-                <p class="chapter-desc">Deeper into DSA, OOP, and databases. First hackathons, first real friendships tested.</p>
-                <span class="chapter-count">↳ 18 events · 62 photos</span>
+                <p class="chapter-desc">Deeper into DSA, OOP, and databases. First hackathons, first real friendships tested under pressure.</p>
+                <span class="chapter-count">↳ Chapter 2 · 2027</span>
             </a>
 
             <!-- CHAPTER 3 -->
-            <a href="#year-2022" class="chapter-card chapter-teal reveal reveal-delay-3">
+            <a href="#year-2028" class="chapter-card chapter-teal reveal reveal-delay-3">
                 <div class="chapter-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                    <i data-lucide="zap"></i>
                 </div>
-                <span class="chapter-year">3rd Year · 2022</span>
+                <span class="chapter-year">3rd Year · 2028</span>
                 <h3 class="chapter-title">The Golden Hustle</h3>
                 <p class="chapter-desc">Thesis proposals, internships, department trips, cultural fest, and the most memorable nights.</p>
-                <span class="chapter-count">↳ 24 events · 110 photos</span>
+                <span class="chapter-count">↳ Chapter 3 · 2028</span>
             </a>
 
             <!-- CHAPTER 4 -->
-            <a href="#year-2023" class="chapter-card chapter-rose reveal reveal-delay-4">
+            <a href="#year-2029" class="chapter-card chapter-rose reveal reveal-delay-4">
                 <div class="chapter-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+                    <i data-lucide="graduation-cap"></i>
                 </div>
-                <span class="chapter-year">4th Year · 2023–24</span>
+                <span class="chapter-year">4th Year · 2029</span>
                 <h3 class="chapter-title">The Final Chapter</h3>
                 <p class="chapter-desc">Thesis defences, farewell, convocation, and stepping out into the world we built ourselves for.</p>
-                <span class="chapter-count">↳ 16 events · 85 photos</span>
+                <span class="chapter-count">↳ Chapter 4 · 2029</span>
             </a>
         </div>
     </section>
@@ -838,107 +911,105 @@
         <div class="timeline-container">
             <div class="tl-spine" aria-hidden="true"></div>
 
-            <!-- ══ YEAR 2020 ══════════════════════════════════════════════ -->
-            <div class="tl-year" id="year-2020">20<span>20</span></div>
+            <!-- ══ YEAR 2026 ══════════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2026">20<span>26</span></div>
 
             <!-- EVENT 1 — Orientation Day -->
             <div class="tl-item reveal">
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">September 2020</span>
+                        <span class="tl-date">September 2026</span>
                         <span class="tl-tag tag-milestone">Milestone</span>
                     </div>
-                    <h3 class="tl-title">Orientation Day</h3>
+                    <h3 class="tl-title">Orientation Day — Day One</h3>
                     <p class="tl-body">
-                        40 strangers walked into Netrokona University's CSE department — nervous, excited,
-                        and carrying entirely too many bags. The vice-chancellor spoke. We didn't fully understand.
-                        But we showed up. Replace this with your own orientation day memory.
+                        40 students walk into Netrokona University's CSE department — nervous, excited, and ready
+                        to start a four-year adventure. The first handshakes, the first faces, the first step of our journey together.
+                        Replace this with your actual orientation day memory when it happens.
                     </p>
-                    <!-- REPLACE with your own photo -->
                     <div class="tl-media">
                         <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=600&auto=format&fit=crop" alt="Orientation Day" loading="lazy">
-                        <p class="tl-media-caption">📍 CSE Dept. Auditorium · Replace with real photo</p>
+                        <p class="tl-media-caption">📍 CSE Dept. · Netrokona University · Replace with real photo</p>
                     </div>
                 </div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <i data-lucide="shield"></i>
                     </div>
                 </div>
                 <div class="tl-empty"></div>
             </div>
 
-            <!-- EVENT 2 — Online Classes Start -->
+            <!-- EVENT 2 — First Semester -->
             <div class="tl-item reveal">
                 <div class="tl-empty"></div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        <i data-lucide="monitor"></i>
                     </div>
                 </div>
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">October 2020</span>
+                        <span class="tl-date">October 2026</span>
                         <span class="tl-tag tag-academic">Academic</span>
                     </div>
-                    <h3 class="tl-title">First Semester Goes Online</h3>
+                    <h3 class="tl-title">1st Semester Begins</h3>
                     <p class="tl-body">
-                        COVID-19 pushed our first semester entirely online. We learned C programming through
-                        shaky internet connections, unmuted microphones, and Zoom fatigue.
-                        Add your own story of the online semester here.
+                        Introduction to programming, mathematics, and the fundamentals of computer science.
+                        The first algorithms, the first bugs, and the first "aha!" moments that make this all worth it.
+                        Update with your own 1st semester story as it unfolds.
                     </p>
                     <a href="#" class="tl-link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        <i data-lucide="external-link"></i>
                         View Course Portal →
                     </a>
                 </div>
             </div>
 
-            <!-- EVENT 3 — First Exam -->
+            <!-- EVENT 3 — First Exams -->
             <div class="tl-item reveal">
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">December 2020</span>
+                        <span class="tl-date">December 2026</span>
                         <span class="tl-tag tag-academic">Academic</span>
                     </div>
                     <h3 class="tl-title">1st Semester Final Exams</h3>
                     <p class="tl-body">
-                        We survived our first university exams — mostly. Maths was brutal.
-                        Physics was surprisingly okay. Discrete Math divided opinions.
+                        The first real test — literally. Discrete Math, Physics, Programming fundamentals.
+                        Sleepless nights, group study sessions, and finally crossing the finish line of our first semester.
                         Share your exam survival stories here.
                     </p>
                 </div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        <i data-lucide="file-text"></i>
                     </div>
                 </div>
                 <div class="tl-empty"></div>
             </div>
 
-            <!-- ══ YEAR 2021 ══════════════════════════════════════════════ -->
-            <div class="tl-year" id="year-2021">20<span>21</span></div>
+            <!-- ══ YEAR 2027 ══════════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2027">20<span>27</span></div>
 
-            <!-- EVENT 4 — First Campus Visit -->
+            <!-- EVENT 4 — 2nd Year Campus Life -->
             <div class="tl-item reveal">
                 <div class="tl-empty"></div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <i data-lucide="map-pin"></i>
                     </div>
                 </div>
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">March 2021</span>
+                        <span class="tl-date">March 2027</span>
                         <span class="tl-tag tag-milestone">Milestone</span>
                     </div>
-                    <h3 class="tl-title">Back to Campus!</h3>
+                    <h3 class="tl-title">Deep into Campus Life</h3>
                     <p class="tl-body">
-                        The first time most of us physically walked the corridors of our university.
-                        The canteen. The lab. The benches. It was surreal to finally be there in person.
-                        Add your campus arrival memory here.
+                        By 2nd year, the corridors feel like home. The canteen has a favourite table.
+                        The lab bench has a regular seat. DSA, OOP, and database courses push everyone harder — and closer together.
+                        Add your campus memories here.
                     </p>
-                    <!-- REPLACE src with your own campus photo -->
                     <div class="tl-media">
                         <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&auto=format&fit=crop" alt="Campus" loading="lazy">
                         <p class="tl-media-caption">📍 Netrokona University Campus · Replace with real photo</p>
@@ -950,30 +1021,44 @@
             <div class="tl-item reveal">
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">June 2021</span>
+                        <span class="tl-date">June 2027</span>
                         <span class="tl-tag tag-project">Project</span>
                     </div>
                     <h3 class="tl-title">Inter-Department Hackathon</h3>
                     <p class="tl-body">
-                        Our first hackathon as a batch. 24 hours, bad coffee, and a project we half-understood.
-                        We didn't win but we learned more in those 24 hours than in a full month of lectures.
+                        Our first hackathon as a batch. 24 hours, bad coffee, and a project we half-understand but fully believe in.
+                        We may not win but we'll learn more in those 24 hours than in a full month of lectures.
                         Update with your actual hackathon result and project name.
                     </p>
-                    <!-- REPLACE with your actual YouTube video ID -->
+                    <!-- Inline video player — upload your hackathon recap video here -->
                     <div class="tl-video">
-                        <div class="tl-video-placeholder" id="tlVideoPlay1">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="rgba(245,158,11,0.1)" stroke="var(--gold)" stroke-width="1.5"/><polygon points="10 8 16 12 10 16 10 8" fill="var(--gold)"/></svg>
-                            <span>Play Hackathon Recap Video</span>
+                        <div class="video-player-wrap" id="tlPlayer1">
+                            <video id="tlVideo1" preload="none"></video>
+                            <div class="video-upload-placeholder" id="tlUpload1" onclick="document.getElementById('tlFile1').click()">
+                                <i data-lucide="video"></i>
+                                <p>Click to upload Hackathon Video</p>
+                                <span>MP4, WebM, or MOV · Plays directly in the page</span>
+                            </div>
+                            <input type="file" class="video-upload-input" id="tlFile1" accept="video/*">
+                            <div class="video-controls" id="tlControls1">
+                                <div class="video-progress-bar" id="tlProgress1"><div class="video-progress-fill" id="tlFill1"></div></div>
+                                <div class="video-ctrl-row">
+                                    <button class="video-ctrl-btn" id="tlPlay1" aria-label="Play/Pause"><i data-lucide="play"></i></button>
+                                    <span class="video-time" id="tlTime1">0:00 / 0:00</span>
+                                    <input type="range" class="video-vol-slider" id="tlVol1" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                                    <button class="video-ctrl-btn video-fullscreen-btn" id="tlFs1" aria-label="Fullscreen"><i data-lucide="maximize"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <a href="#" class="tl-link" style="margin-top:0.75rem">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <i data-lucide="link"></i>
                         Project Repository →
                     </a>
                 </div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        <i data-lucide="code-2"></i>
                     </div>
                 </div>
                 <div class="tl-empty"></div>
@@ -984,18 +1069,18 @@
                 <div class="tl-empty"></div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                        <i data-lucide="music"></i>
                     </div>
                 </div>
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">November 2021</span>
+                        <span class="tl-date">November 2027</span>
                         <span class="tl-tag tag-fest">Cultural</span>
                     </div>
-                    <h3 class="tl-title">CSE Cultural Night 2021</h3>
+                    <h3 class="tl-title">CSE Cultural Night 2027</h3>
                     <p class="tl-body">
-                        Songs, dances, skits, and roasts. The night we discovered hidden talents
-                        — and embarrassed ourselves in the best way possible.
+                        Songs, dances, skits, and roasts. The night we discover hidden talents
+                        — and embarrass ourselves in the best way possible.
                         Replace with your actual cultural event details and photos.
                     </p>
                     <div class="tl-media">
@@ -1005,34 +1090,33 @@
                 </div>
             </div>
 
-            <!-- ══ YEAR 2022 ══════════════════════════════════════════════ -->
-            <div class="tl-year" id="year-2022">20<span>22</span></div>
+            <!-- ══ YEAR 2028 ══════════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2028">20<span>28</span></div>
 
             <!-- EVENT 7 — Educational Tour -->
             <div class="tl-item reveal">
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">February 2022</span>
+                        <span class="tl-date">February 2028</span>
                         <span class="tl-tag tag-social">Tour</span>
                     </div>
-                    <h3 class="tl-title">Educational Tour — Cox's Bazar</h3>
+                    <h3 class="tl-title">Educational Tour</h3>
                     <p class="tl-body">
-                        40 students, one bus, zero sleep, and the world's longest sea beach.
-                        The best 3 days of our university life. Some of us still haven't recovered.
-                        Update destination, dates, and add your real trip photos.
+                        40 students, one bus, zero sleep, and the adventure of a lifetime.
+                        The best days of our university life. Update destination and dates when confirmed.
                     </p>
                     <div class="tl-media">
-                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Beach Tour" loading="lazy">
-                        <p class="tl-media-caption">🏖️ Cox's Bazar · Replace with real tour photos</p>
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Tour" loading="lazy">
+                        <p class="tl-media-caption">🏖️ Educational Tour 2028 · Replace with real tour photos</p>
                     </div>
                     <a href="#" class="tl-link" style="margin-top:0.75rem">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <i data-lucide="image"></i>
                         Full Album →
                     </a>
                 </div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <i data-lucide="map-pin"></i>
                     </div>
                 </div>
                 <div class="tl-empty"></div>
@@ -1043,21 +1127,21 @@
                 <div class="tl-empty"></div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <i data-lucide="file-text"></i>
                     </div>
                 </div>
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">July 2022</span>
+                        <span class="tl-date">July 2028</span>
                         <span class="tl-tag tag-academic">Academic</span>
                     </div>
                     <h3 class="tl-title">Thesis Proposal Submissions</h3>
                     <p class="tl-body">
-                        The research era begins. Topics ranged from machine learning and NLP to IoT and
-                        cybersecurity. Add the actual thesis topics and team names here.
+                        The research era begins. Topics spanning machine learning, NLP, IoT, cybersecurity, and more.
+                        Add the actual thesis topics and team names here when finalized.
                     </p>
                     <a href="#" class="tl-link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        <i data-lucide="external-link"></i>
                         View Thesis Repository →
                     </a>
                 </div>
@@ -1067,13 +1151,13 @@
             <div class="tl-item reveal">
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">November 2022</span>
+                        <span class="tl-date">November 2028</span>
                         <span class="tl-tag tag-social">Sports</span>
                     </div>
-                    <h3 class="tl-title">CSE Sports Week 2022</h3>
+                    <h3 class="tl-title">CSE Sports Week 2028</h3>
                     <p class="tl-body">
-                        Cricket, football, table tennis, and a surprising number of people who turned out to be
-                        excellent at badminton. Add your batch's sports results and highlight reel here.
+                        Cricket, football, table tennis, and badminton. Our batch vs everyone else.
+                        Add your batch's sports results and highlight reel here.
                     </p>
                     <div class="tl-media">
                         <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop" alt="Sports" loading="lazy">
@@ -1082,26 +1166,26 @@
                 </div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                        <i data-lucide="trophy"></i>
                     </div>
                 </div>
                 <div class="tl-empty"></div>
             </div>
 
-            <!-- ══ YEAR 2023–24 ═════════════════════════════════════════ -->
-            <div class="tl-year" id="year-2023">20<span>23</span></div>
+            <!-- ══ YEAR 2029 ══════════════════════════════════════════════ -->
+            <div class="tl-year" id="year-2029">20<span>29</span></div>
 
             <!-- EVENT 10 — Thesis Defence -->
             <div class="tl-item reveal">
                 <div class="tl-empty"></div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                        <i data-lucide="check-circle"></i>
                     </div>
                 </div>
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">March 2024</span>
+                        <span class="tl-date">March 2029</span>
                         <span class="tl-tag tag-milestone">Milestone</span>
                     </div>
                     <h3 class="tl-title">Thesis Defences</h3>
@@ -1110,11 +1194,25 @@
                         the work they poured themselves into. Nervous. Proud. Exhausted. Add actual thesis
                         titles and outcomes here.
                     </p>
-                    <!-- REPLACE YouTube video ID -->
+                    <!-- Inline video player for thesis defence highlights -->
                     <div class="tl-video">
-                        <div class="tl-video-placeholder" id="tlVideoPlay2">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="rgba(245,158,11,0.1)" stroke="var(--gold)" stroke-width="1.5"/><polygon points="10 8 16 12 10 16 10 8" fill="var(--gold)"/></svg>
-                            <span>Play Thesis Defence Highlights</span>
+                        <div class="video-player-wrap" id="tlPlayer2">
+                            <video id="tlVideo2" preload="none"></video>
+                            <div class="video-upload-placeholder" id="tlUpload2" onclick="document.getElementById('tlFile2').click()">
+                                <i data-lucide="video"></i>
+                                <p>Click to upload Thesis Defence Highlights</p>
+                                <span>MP4, WebM, or MOV · Plays directly in the page</span>
+                            </div>
+                            <input type="file" class="video-upload-input" id="tlFile2" accept="video/*">
+                            <div class="video-controls" id="tlControls2">
+                                <div class="video-progress-bar" id="tlProgress2"><div class="video-progress-fill" id="tlFill2"></div></div>
+                                <div class="video-ctrl-row">
+                                    <button class="video-ctrl-btn" id="tlPlay2" aria-label="Play/Pause"><i data-lucide="play"></i></button>
+                                    <span class="video-time" id="tlTime2">0:00 / 0:00</span>
+                                    <input type="range" class="video-vol-slider" id="tlVol2" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                                    <button class="video-ctrl-btn video-fullscreen-btn" id="tlFs2" aria-label="Fullscreen"><i data-lucide="maximize"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1124,27 +1222,27 @@
             <div class="tl-item reveal">
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">June 2024</span>
+                        <span class="tl-date">June 2029</span>
                         <span class="tl-tag tag-fest">Farewell</span>
                     </div>
                     <h3 class="tl-title">Farewell Night</h3>
                     <p class="tl-body">
-                        The night that nobody wanted to arrive and nobody wanted to end.
-                        Speeches, tears, laughter, and the quiet realisation that this chapter was closing.
+                        The night nobody wants to arrive and nobody wants to end.
+                        Speeches, tears, laughter, and the quiet realisation that this chapter is closing.
                         Add your farewell memory, photos, and video here.
                     </p>
                     <div class="tl-media">
                         <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop" alt="Farewell Night" loading="lazy">
-                        <p class="tl-media-caption">🌟 Farewell Night 2024 · Replace with real photo</p>
+                        <p class="tl-media-caption">🌟 Farewell Night 2029 · Replace with real photo</p>
                     </div>
                     <a href="#" class="tl-link" style="margin-top:0.75rem">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        <i data-lucide="image"></i>
                         Farewell Album →
                     </a>
                 </div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        <i data-lucide="heart"></i>
                     </div>
                 </div>
                 <div class="tl-empty"></div>
@@ -1155,19 +1253,19 @@
                 <div class="tl-empty"></div>
                 <div class="tl-dot" aria-hidden="true">
                     <div class="tl-dot-inner" style="border-color:var(--gold);box-shadow:0 0 20px -4px var(--gold-glow);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        <i data-lucide="graduation-cap" style="color:var(--gold)"></i>
                     </div>
                 </div>
                 <div class="tl-content">
                     <div class="tl-meta">
-                        <span class="tl-date">TBD · 2024</span>
+                        <span class="tl-date">TBD · 2029</span>
                         <span class="tl-tag tag-milestone">Convocation</span>
                     </div>
                     <h3 class="tl-title">Graduation Day</h3>
                     <p class="tl-body">
                         Caps, gowns, and the moment our names are called. Four years distilled into a
                         handshake and a scroll. This page is for that day.
-                        Update with actual convocation date when confirmed.
+                        Update with actual convocation date when confirmed by the university.
                     </p>
                     <!-- Countdown populated by JS -->
                     <div class="event-countdown" id="convocationCountdown" style="margin-top:0.75rem">
@@ -1340,73 +1438,91 @@
         <div class="video-grid">
             <!-- VIDEO 1 -->
             <div class="video-card reveal reveal-delay-1">
-                <div class="video-thumb">
-                    <!-- REPLACE with YouTube thumbnail: https://img.youtube.com/vi/YOUR_VIDEO_ID/hqdefault.jpg -->
-                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=640&auto=format&fit=crop" alt="Orientation Vlog">
-                    <div class="play-btn">
-                        <!-- REPLACE href with your video URL -->
-                        <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID" target="_blank" rel="noopener" class="play-btn-inner" aria-label="Play Orientation Day Vlog">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        </a>
+                <div class="video-player-wrap" id="vPlayer1">
+                    <video id="vVideo1" preload="none"></video>
+                    <div class="video-upload-placeholder" id="vUpload1" onclick="document.getElementById('vFile1').click()">
+                        <i data-lucide="film"></i>
+                        <p>Upload Orientation Vlog</p>
+                        <span>MP4 / WebM / MOV · Direct upload, no YouTube needed</span>
+                    </div>
+                    <input type="file" class="video-upload-input" id="vFile1" accept="video/*">
+                    <div class="video-controls" id="vControls1">
+                        <div class="video-progress-bar" id="vProgress1"><div class="video-progress-fill" id="vFill1"></div></div>
+                        <div class="video-ctrl-row">
+                            <button class="video-ctrl-btn" id="vPlay1" aria-label="Play/Pause"><i data-lucide="play"></i></button>
+                            <span class="video-time" id="vTime1">0:00 / 0:00</span>
+                            <input type="range" class="video-vol-slider" id="vVol1" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                            <button class="video-ctrl-btn video-fullscreen-btn" id="vFs1" aria-label="Fullscreen"><i data-lucide="maximize"></i></button>
+                        </div>
                     </div>
                 </div>
                 <div class="video-info">
                     <div class="video-meta">
-                        <span class="video-label">Vlog</span>
-                        <span class="video-duration">· 8:24 · Replace duration</span>
+                        <span class="video-label"><i data-lucide="clapperboard" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Orientation</span>
+                        <span class="video-duration">· Replace duration</span>
                     </div>
-                    <h3 class="video-title">Orientation Day Vlog 2020</h3>
-                    <p class="video-desc">The very first day. Nervous faces, a city we barely knew, and the beginning of everything. Replace with real description.</p>
-                    <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID" target="_blank" rel="noopener" class="video-link">
-                        Watch on YouTube
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
+                    <h3 class="video-title">Orientation Vlog — Day One 2026</h3>
+                    <p class="video-desc">The first day, the nerves, the excitement — captured. Upload your orientation vlog above and relive day one any time.</p>
                 </div>
             </div>
 
             <!-- VIDEO 2 -->
             <div class="video-card reveal reveal-delay-2">
-                <div class="video-thumb">
-                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=640&auto=format&fit=crop" alt="Tour Video">
-                    <div class="play-btn">
-                        <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_2" target="_blank" rel="noopener" class="play-btn-inner" aria-label="Play Tour Video">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        </a>
+                <div class="video-player-wrap" id="vPlayer2">
+                    <video id="vVideo2" preload="none"></video>
+                    <div class="video-upload-placeholder" id="vUpload2" onclick="document.getElementById('vFile2').click()">
+                        <i data-lucide="film"></i>
+                        <p>Upload Tour Highlights Video</p>
+                        <span>MP4 / WebM / MOV · Direct upload, no YouTube needed</span>
+                    </div>
+                    <input type="file" class="video-upload-input" id="vFile2" accept="video/*">
+                    <div class="video-controls" id="vControls2">
+                        <div class="video-progress-bar" id="vProgress2"><div class="video-progress-fill" id="vFill2"></div></div>
+                        <div class="video-ctrl-row">
+                            <button class="video-ctrl-btn" id="vPlay2" aria-label="Play/Pause"><i data-lucide="play"></i></button>
+                            <span class="video-time" id="vTime2">0:00 / 0:00</span>
+                            <input type="range" class="video-vol-slider" id="vVol2" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                            <button class="video-ctrl-btn video-fullscreen-btn" id="vFs2" aria-label="Fullscreen"><i data-lucide="maximize"></i></button>
+                        </div>
                     </div>
                 </div>
                 <div class="video-info">
                     <div class="video-meta">
-                        <span class="video-label">Trip Film</span>
-                        <span class="video-duration">· 12:07 · Replace</span>
+                        <span class="video-label"><i data-lucide="map-pin" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Trip Film</span>
+                        <span class="video-duration">· Replace duration</span>
                     </div>
-                    <h3 class="video-title">Cox's Bazar Tour Highlights 2022</h3>
-                    <p class="video-desc">Three days, forty people, one bus, and memories that will outlast every hard drive. Replace with real description.</p>
-                    <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_2" target="_blank" rel="noopener" class="video-link">
-                        Watch on YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
+                    <h3 class="video-title">Educational Tour Highlights 2028</h3>
+                    <p class="video-desc">Three days, forty people, one bus, and memories that outlast every hard drive. Upload the tour video above.</p>
                 </div>
             </div>
 
             <!-- VIDEO 3 -->
             <div class="video-card reveal reveal-delay-3">
-                <div class="video-thumb">
-                    <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=640&auto=format&fit=crop" alt="Farewell">
-                    <div class="play-btn">
-                        <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_3" target="_blank" rel="noopener" class="play-btn-inner" aria-label="Play Farewell Video">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        </a>
+                <div class="video-player-wrap" id="vPlayer3">
+                    <video id="vVideo3" preload="none"></video>
+                    <div class="video-upload-placeholder" id="vUpload3" onclick="document.getElementById('vFile3').click()">
+                        <i data-lucide="film"></i>
+                        <p>Upload Farewell Film</p>
+                        <span>MP4 / WebM / MOV · Direct upload, no YouTube needed</span>
+                    </div>
+                    <input type="file" class="video-upload-input" id="vFile3" accept="video/*">
+                    <div class="video-controls" id="vControls3">
+                        <div class="video-progress-bar" id="vProgress3"><div class="video-progress-fill" id="vFill3"></div></div>
+                        <div class="video-ctrl-row">
+                            <button class="video-ctrl-btn" id="vPlay3" aria-label="Play/Pause"><i data-lucide="play"></i></button>
+                            <span class="video-time" id="vTime3">0:00 / 0:00</span>
+                            <input type="range" class="video-vol-slider" id="vVol3" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                            <button class="video-ctrl-btn video-fullscreen-btn" id="vFs3" aria-label="Fullscreen"><i data-lucide="maximize"></i></button>
+                        </div>
                     </div>
                 </div>
                 <div class="video-info">
                     <div class="video-meta">
-                        <span class="video-label">Farewell Film</span>
-                        <span class="video-duration">· 22:40 · Replace</span>
+                        <span class="video-label"><i data-lucide="heart" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Farewell Film</span>
+                        <span class="video-duration">· Replace duration</span>
                     </div>
-                    <h3 class="video-title">Farewell Night 2024 — Full Film</h3>
-                    <p class="video-desc">The night we documented everything, because we knew we'd need to remember it. Replace with real farewell film link.</p>
-                    <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID_3" target="_blank" rel="noopener" class="video-link">
-                        Watch on YouTube <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
+                    <h3 class="video-title">Farewell Night 2029 — Full Film</h3>
+                    <p class="video-desc">The night we documented everything, because we knew we'd need to remember it. Upload the farewell film above.</p>
                 </div>
             </div>
         </div>
@@ -1724,40 +1840,38 @@
         </div>
 
         <div class="upcoming-grid">
-            <!-- EVENT CARD 1 — Replace day, month, title, desc, and data-date -->
-            <div class="event-card reveal reveal-delay-1" data-date="2024-12-15">
+            <!-- EVENT CARD 1 -->
+            <div class="event-card reveal reveal-delay-1" data-date="2026-09-15">
                 <div class="event-date-badge">
-                    <span class="event-day">15</span><!-- Replace day -->
-                    <span class="event-month">Dec 2024</span><!-- Replace month/year -->
+                    <span class="event-day">15</span>
+                    <span class="event-month">Sep 2026</span>
                 </div>
-                <h3 class="event-title">Convocation Day — Replace Date</h3>
-                <p class="event-desc">The official graduation ceremony. Update with the confirmed date, venue, and schedule when available from the university.</p>
+                <h3 class="event-title">Orientation Day 2026</h3>
+                <p class="event-desc">The official start of CSE 7th Batch. Replace with confirmed date, venue, and schedule from the university.</p>
                 <p class="event-countdown" id="countdown-1"></p>
             </div>
 
             <!-- EVENT CARD 2 -->
-            <div class="event-card reveal reveal-delay-2" data-date="2024-11-01">
+            <div class="event-card reveal reveal-delay-2" data-date="2028-02-10">
                 <div class="event-date-badge">
-                    <span class="event-day">01</span>
-                    <span class="event-month">Nov 2024</span>
+                    <span class="event-day">10</span>
+                    <span class="event-month">Feb 2028</span>
                 </div>
-                <h3 class="event-title">Batch Reunion Dinner — Replace</h3>
-                <p class="event-desc">The first planned reunion after graduation. Replace with real venue, date, and RSVP details. Add a link to the registration form.</p>
+                <h3 class="event-title">Educational Tour 2028</h3>
+                <p class="event-desc">The batch trip — 40 people, one destination. Replace with confirmed venue, date, and RSVP details.</p>
                 <p class="event-countdown" id="countdown-2"></p>
             </div>
 
             <!-- EVENT CARD 3 -->
-            <div class="event-card reveal reveal-delay-3" data-date="2025-03-21">
+            <div class="event-card reveal reveal-delay-3" data-date="2029-06-21">
                 <div class="event-date-badge">
                     <span class="event-day">21</span>
-                    <span class="event-month">Mar 2025</span>
+                    <span class="event-month">Jun 2029</span>
                 </div>
-                <h3 class="event-title">Alumni Network Launch — Replace</h3>
-                <p class="event-desc">The launch of the CSE 7th Batch alumni network. Replace with real details, social links, and how to join.</p>
+                <h3 class="event-title">Graduation / Convocation 2029</h3>
+                <p class="event-desc">The final milestone — caps, gowns, and the handshake that closes four years. Update with confirmed date when available.</p>
                 <p class="event-countdown" id="countdown-3"></p>
             </div>
-
-            <!-- ADD MORE EVENTS: Copy an event-card block and paste here -->
         </div>
     </section>
 
@@ -1765,18 +1879,31 @@
          FOOTER
     ════════════════════════════════════════════════════════════════════ -->
     <footer>
-        <p class="footer-logo">CSE <span>7th Batch</span></p>
-        <p class="footer-tagline">Netrokona University · 2020–2024</p>
-        <nav class="footer-links" aria-label="Footer navigation">
-            <a href="index.html">Home</a>
-            <a href="#overview">Overview</a>
-            <a href="#timeline">Timeline</a>
-            <a href="#gallery">Gallery</a>
-            <a href="#videos">Videos</a>
-            <a href="#achievements">Achievements</a>
-            <a href="#memories">Memories</a>
-        </nav>
-        <p class="footer-copy">Built with love by CSE 7th Batch · Netrokona University</p>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <p class="footer-logo">CSE <span>7th Batch</span></p>
+                <p class="footer-tagline">Netrokona University · 2026–2029</p>
+            </div>
+
+            <nav class="footer-links" aria-label="Footer navigation">
+                <a href="index.html"><i data-lucide="home"></i> Home</a>
+                <a href="#overview"><i data-lucide="layout-grid"></i> Overview</a>
+                <a href="#timeline"><i data-lucide="clock"></i> Timeline</a>
+                <a href="#gallery"><i data-lucide="image"></i> Gallery</a>
+                <a href="#videos"><i data-lucide="film"></i> Videos</a>
+                <a href="#achievements"><i data-lucide="trophy"></i> Achievements</a>
+                <a href="#memories"><i data-lucide="heart"></i> Memories</a>
+            </nav>
+
+            <div class="footer-bottom">
+                <p class="footer-copy">© 2026–2029 CSE 7th Batch · Netrokona University · All memories reserved.</p>
+                <p class="footer-designer">
+                    <i data-lucide="code-2" style="width:12px;height:12px"></i>
+                    Designed & developed by
+                    <a href="https://urfa-hasan-fattah.vercel.app" target="_blank" rel="noopener">Urfa Hasan Fattah</a>
+                </p>
+            </div>
+        </div>
     </footer>
 
     <!-- Back to Top -->
@@ -1925,7 +2052,6 @@
         let   currentSlide = 0;
         const slideCount   = document.querySelectorAll('.quote-slide').length;
 
-        // Build dots
         for (let i = 0; i < slideCount; i++) {
             const dot = document.createElement('button');
             dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
@@ -1944,19 +2070,17 @@
         prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
         nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
 
-        // Auto-advance every 6 seconds
         let carouselTimer = setInterval(() => goToSlide(currentSlide + 1), 6000);
         [prevBtn, nextBtn].forEach(b => b.addEventListener('click', () => { clearInterval(carouselTimer); carouselTimer = setInterval(() => goToSlide(currentSlide + 1), 6000); }));
 
-        // Keyboard support
         document.querySelector('.quote-carousel').addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
             if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
         });
 
-        // ─── Year pill highlight on scroll ───────────────────────────────
+        // ─── Year pill highlight on scroll — updated for 2026–2029 ────────
         const yearPills = document.querySelectorAll('.year-pill');
-        const yearSections = ['year-2020','year-2021','year-2022','year-2023'];
+        const yearSections = ['year-2026','year-2027','year-2028','year-2029'];
 
         function updateYearPills() {
             const scrollMid = window.scrollY + window.innerHeight / 2;
@@ -1976,34 +2100,127 @@
             const now    = new Date();
             const target = new Date(targetDateStr);
             const diff   = target - now;
-            if (diff <= 0) return 'This event has passed';
+            if (diff <= 0) return '✓ This event has passed';
             const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
             return `⏳ ${days}d ${hours}h until this event`;
         }
 
-        // Wire up event card countdowns
         document.querySelectorAll('.event-card[data-date]').forEach((card, i) => {
             const el = card.querySelector('.event-countdown') || document.getElementById(`countdown-${i+1}`);
             if (el) el.textContent = countdownToDate(card.dataset.date);
         });
 
-        // Convocation countdown (timeline)
         const convEl = document.getElementById('convocationCountdown');
-        if (convEl) convEl.textContent = countdownToDate('2024-12-15'); // REPLACE DATE
+        if (convEl) convEl.textContent = countdownToDate('2029-06-21');
 
-        // ─── Video placeholder click-to-embed ─────────────────────────────
-        // Replace YOUR_HACKATHON_VIDEO_ID and YOUR_THESIS_VIDEO_ID with real IDs
-        function setupVideoPlaceholder(placeholderId, youtubeVideoId) {
-            const el = document.getElementById(placeholderId);
-            if (!el || !youtubeVideoId || youtubeVideoId === 'YOUR_VIDEO_ID') return;
-            el.addEventListener('click', () => {
-                const container = el.closest('.tl-video');
-                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        // ─── HTML5 Video Players ──────────────────────────────────────────
+        function setupVideoPlayer(cfg) {
+            const { videoEl, fileInput, uploadPlaceholder, playBtn, timeLbl,
+                    progressBar, progressFill, volSlider, fsBtn, wrap } = cfg;
+
+            if (!videoEl) return;
+
+            // File upload
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const url = URL.createObjectURL(file);
+                videoEl.src = url;
+                uploadPlaceholder.style.display = 'none';
+                videoEl.play();
+            });
+
+            // Format time helper
+            function fmtTime(s) {
+                if (isNaN(s)) return '0:00';
+                const m = Math.floor(s / 60);
+                const sec = Math.floor(s % 60);
+                return `${m}:${sec.toString().padStart(2,'0')}`;
+            }
+
+            // Play / Pause
+            playBtn.addEventListener('click', () => {
+                if (videoEl.paused) {
+                    videoEl.play();
+                } else {
+                    videoEl.pause();
+                }
+            });
+
+            videoEl.addEventListener('play', () => {
+                wrap.classList.add('playing');
+                const icon = playBtn.querySelector('i[data-lucide]');
+                if (icon) { icon.setAttribute('data-lucide','pause'); lucide.createIcons(); }
+            });
+            videoEl.addEventListener('pause', () => {
+                wrap.classList.remove('playing');
+                const icon = playBtn.querySelector('i[data-lucide]');
+                if (icon) { icon.setAttribute('data-lucide','play'); lucide.createIcons(); }
+            });
+
+            // Progress
+            videoEl.addEventListener('timeupdate', () => {
+                if (!videoEl.duration) return;
+                const pct = (videoEl.currentTime / videoEl.duration) * 100;
+                progressFill.style.width = pct + '%';
+                timeLbl.textContent = `${fmtTime(videoEl.currentTime)} / ${fmtTime(videoEl.duration)}`;
+            });
+
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const pct = (e.clientX - rect.left) / rect.width;
+                videoEl.currentTime = pct * videoEl.duration;
+            });
+
+            // Volume
+            volSlider.addEventListener('input', () => { videoEl.volume = volSlider.value; });
+
+            // Fullscreen
+            fsBtn.addEventListener('click', () => {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    wrap.requestFullscreen && wrap.requestFullscreen();
+                }
             });
         }
-        setupVideoPlaceholder('tlVideoPlay1', 'YOUR_HACKATHON_VIDEO_ID'); // REPLACE
-        setupVideoPlaceholder('tlVideoPlay2', 'YOUR_THESIS_VIDEO_ID');     // REPLACE
+
+        // Wire up all players
+        [
+            { suffix: '1', wrap: document.getElementById('vPlayer1') },
+            { suffix: '2', wrap: document.getElementById('vPlayer2') },
+            { suffix: '3', wrap: document.getElementById('vPlayer3') },
+            { suffix: '1', wrap: document.getElementById('tlPlayer1'), tl: true },
+            { suffix: '2', wrap: document.getElementById('tlPlayer2'), tl: true },
+        ].forEach(cfg => {
+            if (!cfg.wrap) return;
+            const s = cfg.tl ? 'tl' : 'v';
+            const n = cfg.suffix;
+            setupVideoPlayer({
+                wrap:             cfg.wrap,
+                videoEl:          cfg.wrap.querySelector('video'),
+                fileInput:        cfg.wrap.querySelector('input[type="file"]'),
+                uploadPlaceholder: cfg.wrap.querySelector('.video-upload-placeholder'),
+                playBtn:          document.getElementById(`${s}Play${n}`),
+                timeLbl:          document.getElementById(`${s}Time${n}`),
+                progressBar:      document.getElementById(`${s}Progress${n}`),
+                progressFill:     document.getElementById(`${s}Fill${n}`),
+                volSlider:        document.getElementById(`${s}Vol${n}`),
+                fsBtn:            document.getElementById(`${s}Fs${n}`),
+            });
+        });
+
+        // ─── Init Lucide icons (runs after defer load) ─────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+        // Fallback: also try when script is loaded
+        window.addEventListener('load', () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
     </script>
+
+
 </body>
 </html>
