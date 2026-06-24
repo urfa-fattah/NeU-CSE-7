@@ -56,28 +56,72 @@
   },
   {
     "roll": "06",
-    "nameEn": "Jubayed Islam Polin",
-    "nameBn": "জুবায়েদ ইসলাম পলিন",
-    "hometown": "Netrakona",
-    "interest": "Data Science, AI, Coding,",
+    "nameEn": "Nazmus Sakib",
+    "nameBn": "নাজমুস সাকিব",
+    "hometown": "Mirzapur, Tangail",
+    "interest": "Programming, Technology, Traveling",
     "subject": "CSE",
-    "fact": "Future Data Scientist in progress",
-    "bio": "CSE Student. Aspiring Data Scientist.",
+    "fact": "Dreams of traveling the world.",
+    "bio": "passionate about technology and continuous learning.",
     "img": "images/6.png"
   },
   {
     "roll": "07",
-    "nameEn": "Mst Marjan Akter",
-    "nameBn": "মোছাঃ মার্জান আক্তার",
-    "hometown": "Netrakona",
-    "interest": "Programming/Problem Solving/Technology",
+    "nameEn": "Md Sanjid Hossain",
+    "nameBn": "মো:সানজিদ হোসেন",
+    "hometown": "Pabna",
+    "interest": "sports",
     "subject": "CSE",
-    "fact": "Aspiring Female Programmer in progress",
-    "bio": "CSE Student from Netrakona. Starting my tech journey.",
+    "fact": "Sports teach us discipline and give us the motivation to not give up until something is completely finished.",
+    "bio": "Chase your dream unless you won it",
     "img": "images/7.png"
   },
   {
     "roll": "08",
+    "nameEn": "Jubayed Islam Polin",
+    "nameBn": "জুবায়েদ ইসলাম পলিন",
+    "hometown": "Netrakona",
+    "interest": "Data base administration,coding",
+    "subject": "CSE",
+    "fact": "Future Data Scientist in progress",
+    "bio": "CSE Student. Aspiring Data Scientist.",
+    "img": "images/8.png"
+  },
+  {
+    "roll": "09",
+    "nameEn": "MD Abir Hossain Siam",
+    "nameBn": "মো আবির হোসেন সিয়াম",
+    "hometown": "Magura",
+    "interest": "Cybersecurity, Data Science",
+    "subject": "CSE",
+    "fact": "Passionate about Cybersecurity  &  Data Science",
+    "bio": "learning through software & sophistication",
+    "img": "images/9.png"
+  },
+  {
+    "roll": "10",
+    "nameEn": "Sumaiya Israt Emu",
+    "nameBn": "সুমাইয়া ইসরাত ইমু",
+    "hometown": "Kendua",
+    "interest": "Coding, Web development",
+    "subject": "CSE",
+    "fact": "Hardworking and always curious to learn something new",
+    "bio": "A passionate CSE student who loves learning new technologies and improving skills every day",
+    "img": "images/10.png"
+  },
+  {
+    "roll": "11",
+    "nameEn": "Student 07",
+    "nameBn": "শিক্ষার্থী ০৭",
+    "hometown": "Khulna",
+    "interest": "Open Source",
+    "subject": "Database Systems",
+    "fact": "Sketches UI on napkins",
+    "bio": "Passionate about building things that matter, from clean code to clean UI.",
+    "img": "images/11.png"
+  },
+  {
+    "roll": "12",
     "nameEn": "Student 08",
     "nameBn": "শিক্ষার্থী ০৮",
     "hometown": "Comilla",
@@ -85,10 +129,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/8.png"
+    "img": "images/12.png"
   },
   {
-    "roll": "09",
+    "roll": "13",
     "nameEn": "Student 09",
     "nameBn": "শিক্ষার্থী ০৯",
     "hometown": "Sherpur",
@@ -96,10 +140,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/9.png"
+    "img": "images/13.png"
   },
   {
-    "roll": "10",
+    "roll": "14",
     "nameEn": "Student 10",
     "nameBn": "শিক্ষার্থী ১০",
     "hometown": "Narsingdi",
@@ -107,10 +151,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/10.png"
+    "img": "images/14.png"
   },
   {
-    "roll": "11",
+    "roll": "15",
     "nameEn": "Student 11",
     "nameBn": "শিক্ষার্থী ১১",
     "hometown": "Dhaka",
@@ -118,10 +162,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/11.png"
+    "img": "images/15.png"
   },
   {
-    "roll": "12",
+    "roll": "16",
     "nameEn": "Student 12",
     "nameBn": "শিক্ষার্থী ১২",
     "hometown": "Rajshahi",
@@ -129,10 +173,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/12.png"
+    "img": "images/16.png"
   },
   {
-    "roll": "13",
+    "roll": "17",
     "nameEn": "Student 13",
     "nameBn": "শিক্ষার্থী ১৩",
     "hometown": "Rangpur",
@@ -140,10 +184,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/13.png"
+    "img": "images/17.png"
   },
   {
-    "roll": "14",
+    "roll": "18",
     "nameEn": "Student 14",
     "nameBn": "শিক্ষার্থী ১৪",
     "hometown": "Kishoreganj",
@@ -151,10 +195,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/14.png"
+    "img": "images/18.png"
   },
   {
-    "roll": "15",
+    "roll": "19",
     "nameEn": "Student 15",
     "nameBn": "শিক্ষার্থী ১৫",
     "hometown": "Gazipur",
@@ -162,10 +206,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/15.png"
+    "img": "images/19.png"
   },
   {
-    "roll": "16",
+    "roll": "20",
     "nameEn": "Student 16",
     "nameBn": "শিক্ষার্থী ১৬",
     "hometown": "Mymensingh",
@@ -173,10 +217,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/16.png"
+    "img": "images/20.png"
   },
   {
-    "roll": "17",
+    "roll": "21",
     "nameEn": "Student 17",
     "nameBn": "শিক্ষার্থী ১৭",
     "hometown": "Chattogram",
@@ -184,10 +228,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/17.png"
+    "img": "images/21.png"
   },
   {
-    "roll": "18",
+    "roll": "22",
     "nameEn": "Student 18",
     "nameBn": "শিক্ষার্থী ১৮",
     "hometown": "Barishal",
@@ -195,10 +239,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/18.png"
+    "img": "images/22.png"
   },
   {
-    "roll": "19",
+    "roll": "23",
     "nameEn": "Student 19",
     "nameBn": "শিক্ষার্থী ১৯",
     "hometown": "Jamalpur",
@@ -206,10 +250,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/19.png"
+    "img": "images/23.png"
   },
   {
-    "roll": "20",
+    "roll": "24",
     "nameEn": "Student 20",
     "nameBn": "শিক্ষার্থী ২০",
     "hometown": "Tangail",
@@ -217,10 +261,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/20.png"
+    "img": "images/24.png"
   },
   {
-    "roll": "21",
+    "roll": "25",
     "nameEn": "Student 21",
     "nameBn": "শিক্ষার্থী ২১",
     "hometown": "Netrokona",
@@ -228,10 +272,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/21.png"
+    "img": "images/25.png"
   },
   {
-    "roll": "22",
+    "roll": "26",
     "nameEn": "Student 22",
     "nameBn": "শিক্ষার্থী ২২",
     "hometown": "Sylhet",
@@ -239,10 +283,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/22.png"
+    "img": "images/26.png"
   },
   {
-    "roll": "23",
+    "roll": "27",
     "nameEn": "Student 23",
     "nameBn": "শিক্ষার্থী ২৩",
     "hometown": "Khulna",
@@ -250,10 +294,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/23.png"
+    "img": "images/27.png"
   },
   {
-    "roll": "24",
+    "roll": "28",
     "nameEn": "Student 24",
     "nameBn": "শিক্ষার্থী ২৪",
     "hometown": "Comilla",
@@ -261,10 +305,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/24.png"
+    "img": "images/28.png"
   },
   {
-    "roll": "25",
+    "roll": "29",
     "nameEn": "Student 25",
     "nameBn": "শিক্ষার্থী ২৫",
     "hometown": "Sherpur",
@@ -272,10 +316,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/25.png"
+    "img": "images/29.png"
   },
   {
-    "roll": "26",
+    "roll": "30",
     "nameEn": "Student 26",
     "nameBn": "শিক্ষার্থী ২৬",
     "hometown": "Narsingdi",
@@ -283,10 +327,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/26.png"
+    "img": "images/30.png"
   },
   {
-    "roll": "27",
+    "roll": "31",
     "nameEn": "Student 27",
     "nameBn": "শিক্ষার্থী ২৭",
     "hometown": "Dhaka",
@@ -294,10 +338,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/27.png"
+    "img": "images/31.png"
   },
   {
-    "roll": "28",
+    "roll": "32",
     "nameEn": "Student 28",
     "nameBn": "শিক্ষার্থী ২৮",
     "hometown": "Rajshahi",
@@ -305,10 +349,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/28.png"
+    "img": "images/32.png"
   },
   {
-    "roll": "29",
+    "roll": "33",
     "nameEn": "Student 29",
     "nameBn": "শিক্ষার্থী ২৯",
     "hometown": "Rangpur",
@@ -316,10 +360,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/29.png"
+    "img": "images/33.png"
   },
   {
-    "roll": "30",
+    "roll": "34",
     "nameEn": "Student 30",
     "nameBn": "শিক্ষার্থী ৩০",
     "hometown": "Kishoreganj",
@@ -327,10 +371,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/30.png"
+    "img": "images/34.png"
   },
   {
-    "roll": "31",
+    "roll": "35",
     "nameEn": "Student 31",
     "nameBn": "শিক্ষার্থী ৩১",
     "hometown": "Gazipur",
@@ -338,10 +382,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/31.png"
+    "img": "images/35.png"
   },
   {
-    "roll": "32",
+    "roll": "36",
     "nameEn": "Student 32",
     "nameBn": "শিক্ষার্থী ৩২",
     "hometown": "Mymensingh",
@@ -349,10 +393,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/32.png"
+    "img": "images/36.png"
   },
   {
-    "roll": "33",
+    "roll": "37",
     "nameEn": "Student 33",
     "nameBn": "শিক্ষার্থী ৩৩",
     "hometown": "Chattogram",
@@ -360,10 +404,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/33.png"
+    "img": "images/37.png"
   },
   {
-    "roll": "34",
+    "roll": "38",
     "nameEn": "Student 34",
     "nameBn": "শিক্ষার্থী ৩৪",
     "hometown": "Barishal",
@@ -371,10 +415,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/34.png"
+    "img": "images/38.png"
   },
   {
-    "roll": "35",
+    "roll": "39",
     "nameEn": "Student 35",
     "nameBn": "শিক্ষার্থী ৩৫",
     "hometown": "Jamalpur",
@@ -382,10 +426,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/35.png"
+    "img": "images/39.png"
   },
   {
-    "roll": "36",
+    "roll": "40",
     "nameEn": "Student 36",
     "nameBn": "শিক্ষার্থী ৩৬",
     "hometown": "Tangail",
@@ -393,10 +437,10 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/36.png"
+    "img": "images/40.png"
   },
   {
-    "roll": "37",
+    "roll": "41",
     "nameEn": "Student 37",
     "nameBn": "শিক্ষার্থী ৩৭",
     "hometown": "Netrokona",
@@ -404,10 +448,10 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/37.png"
+    "img": "images/41.png"
   },
   {
-    "roll": "38",
+    "roll": "42",
     "nameEn": "Student 38",
     "nameBn": "শিক্ষার্থী ৩৮",
     "hometown": "Sylhet",
@@ -415,10 +459,10 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/38.png"
+    "img": "images/42.png"
   },
   {
-    "roll": "39",
+    "roll": "43",
     "nameEn": "Student 39",
     "nameBn": "শিক্ষার্থী ৩৯",
     "hometown": "Khulna",
@@ -426,10 +470,10 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/39.png"
+    "img": "images/43.png"
   },
   {
-    "roll": "40",
+    "roll": "44",
     "nameEn": "Student 40",
     "nameBn": "শিক্ষার্থী ৪০",
     "hometown": "Comilla",
@@ -437,6 +481,6 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/40.png"
+    "img": "images/44.png"
   }
 ]
