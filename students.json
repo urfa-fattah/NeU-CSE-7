@@ -33,9 +33,13 @@
     "linkedin": "",
     "email": "uhfabdulfattah@gmail.com",
     "skills": [
-      "Network Security",
+      "Terminal",
       "AI Powerd Web Development",
       "Linux",
+      "C",
+      "Python",
+      "Javascript",
+      "Prompt Engineering",
       "Ethical Hacking Basics"
     ]
   },
@@ -198,21 +202,21 @@
   },
   {
     "roll": "11",
-    "nameEn": "Student 07",
-    "nameBn": "শিক্ষার্থী ০৭",
-    "hometown": "Khulna",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
+    "nameEn": "Mst Marjan Akter",
+    "nameBn": "মোছাঃ মার্জান আক্তার",
+    "hometown": "Netrakona",
+    "interest": "Programming/Problem Solving/Technology",
+    "subject": "CSE",
+    "fact": "Aspiring Female Programmer in progress",
+    "bio": "CSE Student from Netrakona. Starting my tech journey.",
     "img": "images/11.png",
     "facebook": "",
     "github": "",
     "linkedin": "",
     "email": "",
     "skills": [
-      "Git & GitHub",
-      "Collaboration"
+      "C",
+      "C++"
     ]
   },
   {
