@@ -8,7 +8,15 @@
     "subject": "CSE",
     "fact": "Future Software Engineer",
     "bio": "Aspiring software engineer who enjoys building software and solving real-world problems through code.",
-    "img": "images/1.png"
+    "img": "images/1.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Problem Solving",
+      "OOP Concepts"
+    ]
   },
   {
     "roll": "02",
@@ -19,7 +27,17 @@
     "subject": "CSE",
     "fact": "Coffee-powered coder",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/2.png"
+    "img": "images/2.png",
+    "facebook": "https://www.facebook.com/share/1CePWwE4dm/",
+    "github": "https://github.com/urfa-fattah",
+    "linkedin": "",
+    "email": "uhfabdulfattah@gmail.com",
+    "skills": [
+      "Network Security",
+      "AI Powerd Web Development",
+      "Linux",
+      "Ethical Hacking Basics"
+    ]
   },
   {
     "roll": "03",
@@ -30,7 +48,15 @@
     "subject": "CSE",
     "fact": "Data is the new oil, but Data Scientists are the ones who refine it. 💡",
     "bio": "Passionate about Data, AI, Machine Learning & Technology Innovation.\nLearning today to build intelligent solutions for tomorrow. 🚀",
-    "img": "images/3.png"
+    "img": "images/3.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "SQL",
+      "Data Analysis"
+    ]
   },
   {
     "roll": "04",
@@ -41,7 +67,17 @@
     "subject": "CSE",
     "fact": "Future Data Scientist in progress",
     "bio": "CSE Student. Aspiring Data Scientist. Passionate about AI & Problem Solving",
-    "img": "images/4.png"
+    "img": "images/4.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "SQL",
+      "Data Analysis",
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "05",
@@ -52,7 +88,15 @@
     "subject": "CSE",
     "fact": "Turning coffee into code. ☕💻",
     "bio": "Learning algorithms, solving problems & chasing innovation",
-    "img": "images/5.png"
+    "img": "images/5.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Problem Solving",
+      "OOP Concepts"
+    ]
   },
   {
     "roll": "06",
@@ -63,7 +107,15 @@
     "subject": "CSE",
     "fact": "Dreams of traveling the world.",
     "bio": "passionate about technology and continuous learning.",
-    "img": "images/6.png"
+    "img": "images/6.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "C Programming",
+      "Problem Solving"
+    ]
   },
   {
     "roll": "07",
@@ -74,7 +126,16 @@
     "subject": "CSE",
     "fact": "Sports teach us discipline and give us the motivation to not give up until something is completely finished.",
     "bio": "Chase your dream unless you won it",
-    "img": "images/7.png"
+    "img": "images/7.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Teamwork",
+      "Discipline",
+      "Time Management"
+    ]
   },
   {
     "roll": "08",
@@ -85,7 +146,15 @@
     "subject": "CSE",
     "fact": "Future Data Scientist in progress",
     "bio": "CSE Student. Aspiring Data Scientist.",
-    "img": "images/8.png"
+    "img": "images/8.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "SQL",
+      "Data Analysis"
+    ]
   },
   {
     "roll": "09",
@@ -96,7 +165,17 @@
     "subject": "CSE",
     "fact": "Passionate about Cybersecurity  &  Data Science",
     "bio": "learning through software & sophistication",
-    "img": "images/9.png"
+    "img": "images/9.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Network Security",
+      "Linux",
+      "Ethical Hacking Basics",
+      "SQL"
+    ]
   },
   {
     "roll": "10",
@@ -107,7 +186,15 @@
     "subject": "CSE",
     "fact": "Hardworking and always curious to learn something new",
     "bio": "A passionate CSE student who loves learning new technologies and improving skills every day",
-    "img": "images/10.png"
+    "img": "images/10.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "HTML/CSS",
+      "JavaScript"
+    ]
   },
   {
     "roll": "11",
@@ -118,7 +205,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/11.png"
+    "img": "images/11.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "12",
@@ -129,7 +224,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/12.png"
+    "img": "images/12.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "13",
@@ -140,7 +243,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/13.png"
+    "img": "images/13.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "14",
@@ -151,7 +262,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/14.png"
+    "img": "images/14.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "15",
@@ -162,7 +281,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/15.png"
+    "img": "images/15.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "16",
@@ -173,7 +300,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/16.png"
+    "img": "images/16.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "17",
@@ -184,7 +319,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/17.png"
+    "img": "images/17.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "18",
@@ -195,7 +338,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/18.png"
+    "img": "images/18.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "19",
@@ -206,7 +357,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/19.png"
+    "img": "images/19.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "20",
@@ -217,7 +376,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/20.png"
+    "img": "images/20.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "21",
@@ -228,7 +395,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/21.png"
+    "img": "images/21.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "22",
@@ -239,7 +414,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/22.png"
+    "img": "images/22.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "23",
@@ -250,7 +433,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/23.png"
+    "img": "images/23.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "24",
@@ -261,7 +452,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/24.png"
+    "img": "images/24.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "25",
@@ -272,7 +471,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/25.png"
+    "img": "images/25.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "26",
@@ -283,7 +490,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/26.png"
+    "img": "images/26.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "27",
@@ -294,7 +509,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/27.png"
+    "img": "images/27.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "28",
@@ -305,7 +528,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/28.png"
+    "img": "images/28.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "29",
@@ -316,7 +547,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/29.png"
+    "img": "images/29.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "30",
@@ -327,7 +566,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/30.png"
+    "img": "images/30.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "31",
@@ -338,7 +585,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/31.png"
+    "img": "images/31.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "32",
@@ -349,7 +604,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/32.png"
+    "img": "images/32.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "33",
@@ -360,7 +623,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/33.png"
+    "img": "images/33.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "34",
@@ -371,7 +642,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/34.png"
+    "img": "images/34.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "35",
@@ -382,7 +661,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/35.png"
+    "img": "images/35.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "36",
@@ -393,7 +680,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/36.png"
+    "img": "images/36.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "37",
@@ -404,7 +699,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/37.png"
+    "img": "images/37.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "38",
@@ -415,7 +718,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/38.png"
+    "img": "images/38.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "39",
@@ -426,7 +737,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/39.png"
+    "img": "images/39.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "40",
@@ -437,7 +756,15 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/40.png"
+    "img": "images/40.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "41",
@@ -448,7 +775,15 @@
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/41.png"
+    "img": "images/41.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "42",
@@ -459,7 +794,15 @@
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/42.png"
+    "img": "images/42.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   },
   {
     "roll": "43",
@@ -470,7 +813,15 @@
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/43.png"
+    "img": "images/43.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Git & GitHub",
+      "Collaboration"
+    ]
   },
   {
     "roll": "44",
@@ -481,6 +832,14 @@
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/44.png"
+    "img": "images/44.png",
+    "facebook": "",
+    "github": "",
+    "linkedin": "",
+    "email": "",
+    "skills": [
+      "Python",
+      "Machine Learning Basics"
+    ]
   }
 ]

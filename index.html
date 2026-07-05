@@ -7,8 +7,23 @@
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Official student directory and portfolio portal of B.Sc. in CSE 7th Batch, Netrokona University. Exploring code, creativity, and technological innovation.">
-    <meta name="theme-color" content="#060918">
+    <meta name="theme-color" content="#060918" id="themeColorMeta">
     <meta name="keywords" content="Netrokona University, CSE, Computer Science, Bangladesh, 7th Batch, Software Engineers">
+    <link rel="icon" href="logo.png" type="image/png">
+
+    <!-- Early theme init — runs before first paint to avoid a flash of the wrong theme.
+         Priority: saved user choice > OS preference > dark (default). -->
+    <script>
+    (function () {
+        try {
+            var saved = localStorage.getItem('cse7-theme');
+            var wantsLight = saved ? saved === 'light' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
+            if (wantsLight) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        } catch (e) { /* localStorage unavailable — fall back to default dark theme */ }
+    })();
+    </script>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -169,7 +184,7 @@
             .mesh-orb, .hero-cover { animation: none !important; transform: none !important; }
             * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
         }
-        @media (max-width: 768px) { .mesh-orb { animation-play-state: paused; } }
+        @media (max-width: 768px) { .mesh-orb, .lang-icon { animation-play-state: paused; } }
 
         /* ─── Grain Texture ─────────────────────────────────────────────── */
         .grain {
@@ -687,45 +702,38 @@
             color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
         }
 
-        /* ─── Card Interest Logo ─────────────────────────────────────────── */
-        .card-interest-logo {
+        /* ─── Card Skill Badge (standard-size interest logo) ────────────────
+           Fixed pixel position + fixed pixel size so this NEVER collides with
+           the roll-badge (top-left) or the interest text badge (top-right),
+           regardless of card height or which side it's assigned to. */
+        .card-skill-badge {
             position: absolute; z-index: 3;
-            /* Sits in the top 30% — visually centred in that band */
-            top: 22%; transform: translateY(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            opacity: 0.82;
-            /* Glassmorphic pill behind the icon */
-            background: rgba(4, 7, 20, 0.55);
+            top: 58px;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(4, 7, 20, 0.6);
             backdrop-filter: blur(10px) saturate(140%);
             -webkit-backdrop-filter: blur(10px) saturate(140%);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 16px;
-            padding: 10px 8px 6px;
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 12px;
+            opacity: 0.82;
             transition: opacity var(--speed-medium) var(--transition-smooth),
                         transform var(--speed-medium) var(--transition-smooth),
                         border-color var(--speed-medium),
                         box-shadow var(--speed-medium);
             pointer-events: none;
         }
-        .card-interest-logo.logo-left  { left: 14px; }
-        .card-interest-logo.logo-right { right: 14px; }
-        .card:hover .card-interest-logo,
-        .card:focus-visible .card-interest-logo,
-        .card.active-theme-host .card-interest-logo {
+        .card-skill-badge.badge-left  { left: 16px; }
+        .card-skill-badge.badge-right { right: 16px; }
+        .card-skill-badge svg { width: 22px !important; height: 22px !important; display: block; }
+        .card:hover .card-skill-badge,
+        .card:focus-visible .card-skill-badge,
+        .card.active-theme-host .card-skill-badge {
             opacity: 1;
-            transform: translateY(-50%) scale(1.08);
+            transform: scale(1.08);
             border-color: var(--accent-color, var(--violet));
-            box-shadow: 0 0 20px -4px var(--accent-color, var(--violet));
+            box-shadow: 0 0 16px -3px var(--accent-color, var(--violet));
         }
-        .card-interest-logo svg { display: block; }
-        .card-interest-logo .logo-label {
-            font-family: var(--font-mono); font-size: 0.52rem;
-            text-transform: uppercase; letter-spacing: 2px;
-            color: var(--accent-color, var(--gold));
-            writing-mode: vertical-rl; text-orientation: mixed;
-            transform: rotate(180deg);
-        }
-        .card-interest-logo.logo-right .logo-label { transform: rotate(0deg); }
 
         .avatar-fallback {
             position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -734,11 +742,30 @@
             font-weight: 700; color: rgba(255,255,255,0.1);
         }
         .card-content { position: relative; z-index: 3; padding: var(--space-6); }
+        .stu-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff; line-height: 1.2; }
+        .stu-name-bn { font-family: var(--font-bn); font-size: 1rem; color: var(--accent-color, var(--gold)); margin-top: 2px; }
+        /* Hometown — always visible right under the name, NOT gated behind hover */
+        .stu-hometown {
+            display: flex; align-items: center; gap: 5px;
+            font-family: var(--font-mono); font-size: 0.74rem;
+            color: var(--text-muted); margin-top: 6px;
+        }
+        .stu-hometown .icon-wrap { color: var(--accent-color, var(--gold)); }
+        /* Interest / Focus — revealed only on hover, keyboard focus, or when
+           the card is the active theme host (click) — same behavior as before */
         .card-stats-rows {
             display: flex; flex-direction: column; gap: 4px;
-            margin-bottom: var(--space-4);
             border-left: 2px solid var(--accent-color, var(--violet));
             padding-left: 12px;
+            max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; margin-bottom: 0;
+            transition: max-height var(--speed-medium) var(--transition-smooth),
+                        opacity var(--speed-medium),
+                        margin var(--speed-medium) var(--transition-smooth);
+        }
+        .card:hover .card-stats-rows,
+        .card:focus-visible .card-stats-rows,
+        .card.active-theme-host .card-stats-rows {
+            max-height: 70px; opacity: 1; margin-top: var(--space-3); margin-bottom: var(--space-3);
         }
         .stat-row {
             display: flex; justify-content: space-between;
@@ -746,8 +773,6 @@
             color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
         }
         .stat-row b { color: #fff; font-weight: 500; }
-        .stu-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff; line-height: 1.2; }
-        .stu-name-bn { font-family: var(--font-bn); font-size: 1rem; color: var(--accent-color, var(--gold)); margin-top: 2px; }
         .stu-bio {
             font-size: 0.8rem; color: var(--text-muted); margin-top: var(--space-3);
             line-height: 1.5; max-height: 0; opacity: 0; overflow: hidden;
@@ -755,11 +780,26 @@
         }
         .card:hover .stu-bio, .card:focus-visible .stu-bio, .card.active-theme-host .stu-bio { max-height: 80px; opacity: 1; }
         .card-foot {
-            display: flex; justify-content: center; align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             margin-top: var(--space-4); border-top: 1px solid rgba(255,255,255,0.08);
-            padding-top: var(--space-3);
+            padding-top: var(--space-3); gap: var(--space-2);
+        }
+        .profile-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.15);
+            color: var(--text-accent); font-family: var(--font-mono); font-size: 0.7rem;
+            padding: 7px 12px; border-radius: 20px; cursor: pointer;
+            transition: all var(--speed-fast); white-space: nowrap;
+        }
+        .profile-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .profile-btn:hover, .profile-btn:focus-visible {
+            color: #fff; border-color: var(--accent-color, var(--violet));
+            background: rgba(255,255,255,0.09);
+            box-shadow: 0 4px 12px -2px var(--glow-color, var(--violet-glow));
+            outline: none;
         }
         .card-socials { display: flex; gap: 8px; align-items: center; }
+        .card-socials:empty { display: none; }
         .card-socials a {
             color: var(--text-muted); text-decoration: none;
             width: 30px; height: 30px; border-radius: 8px;
@@ -825,6 +865,135 @@
         }
         .lightbox-close:hover { background: rgba(255,255,255,0.2); }
         .lightbox-close svg { width: 20px; height: 20px; }
+
+        /* ─── Card Pulse (Random Student highlight) ─────────────────────── */
+        @keyframes cardPulseGlow {
+            0%, 100% { box-shadow: 0 20px 40px -15px var(--glow-color, var(--violet-glow)); }
+            50% { box-shadow: 0 0 0 5px var(--accent-color, var(--violet)), 0 25px 60px -12px var(--glow-color, var(--violet-glow)); }
+        }
+        .card.card-pulse { animation: cardPulseGlow 0.7s ease-in-out 2; }
+
+        /* ─── Profile Modal ──────────────────────────────────────────────── */
+        .profile-modal {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(4,7,20,0.78); backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            padding: var(--space-4); animation: fadeIn 0.2s ease;
+        }
+        .profile-modal.active { display: flex; }
+        .profile-modal-content {
+            position: relative; width: 100%; max-width: 560px; max-height: 88vh;
+            overflow-y: auto; background: var(--bg-surface-raised);
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+            box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+            animation: modalPop 0.3s var(--transition-smooth);
+        }
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.94) translateY(10px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .profile-modal-close {
+            position: absolute; top: 14px; right: 14px; z-index: 5;
+            background: rgba(4,7,20,0.6); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px; color: #fff; width: 36px; height: 36px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background var(--speed-fast);
+        }
+        .profile-modal-close:hover { background: rgba(0,0,0,0.75); }
+        .profile-modal-close svg { width: 18px; height: 18px; }
+        /* Cover: was a hard 190px crop with object-fit:cover, which chopped
+           off faces/bodies on portrait images ("full view" never showed).
+           Now it's a taller, theme-matched frame that uses object-fit:contain
+           so the ENTIRE photo is always visible, with a softly blurred copy
+           of the same image filling the letterbox space behind it. */
+        .profile-cover {
+            position: relative; height: 300px; overflow: hidden;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            background: var(--bg-surface-raised);
+        }
+        .profile-cover-bg {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; filter: blur(18px) brightness(0.55) saturate(1.2);
+            transform: scale(1.15); opacity: 0.9;
+        }
+        .profile-cover img.profile-cover-main {
+            position: relative; width: 100%; height: 100%;
+            object-fit: contain; object-position: center; display: block;
+        }
+        .profile-cover::after {
+            content: ''; position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(180deg, rgba(4,7,20,0) 55%, var(--bg-surface-raised) 100%);
+            pointer-events: none;
+        }
+        .profile-roll-chip {
+            position: absolute; top: 14px; left: 14px; z-index: 2;
+            background: rgba(4,7,20,0.75); border: 1px solid var(--accent-color, var(--gold));
+            color: var(--accent-color, var(--gold)); font-family: var(--font-mono);
+            font-weight: 700; font-size: 0.75rem; padding: 5px 12px; border-radius: 20px;
+        }
+        .profile-body { position: relative; z-index: 2; padding: 0 var(--space-8) var(--space-8); margin-top: -44px; }
+        .profile-name-en { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--text-primary); }
+        .profile-name-bn { font-family: var(--font-bn); font-size: 1.05rem; color: var(--accent-color, var(--gold)); margin-top: 2px; margin-bottom: var(--space-4); }
+        .profile-stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+        .profile-stat-box {
+            background: var(--bg-surface); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm); padding: var(--space-3);
+        }
+        .profile-stat-label {
+            font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .profile-stat-value { font-size: 0.9rem; color: var(--text-primary); font-weight: 500; }
+        .profile-section-label {
+            font-family: var(--font-mono); font-size: 0.68rem; color: var(--accent-color, var(--gold));
+            text-transform: uppercase; letter-spacing: 2px; margin: var(--space-4) 0 8px;
+        }
+        .profile-bio { color: var(--text-muted); font-size: 0.92rem; line-height: 1.7; }
+        .profile-fact {
+            font-style: italic; color: var(--text-muted); font-size: 0.88rem;
+            border-left: 3px solid var(--accent-color, var(--gold));
+            padding: 6px 0 6px 12px; margin-top: var(--space-3);
+        }
+        .profile-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .profile-skill-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--gold-glow); color: var(--accent-color, var(--gold));
+            border: 1px solid var(--border-subtle); font-family: var(--font-mono);
+            font-size: 0.7rem; padding: 4px 11px 4px 8px; border-radius: 20px;
+        }
+        .profile-skill-chip .skill-icon-wrap { display: flex; width: 14px; height: 14px; flex-shrink: 0; }
+        .profile-skill-chip .skill-icon-wrap svg { width: 14px !important; height: 14px !important; }
+        .profile-socials {
+            display: flex; gap: 10px; margin-top: var(--space-6);
+            border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);
+        }
+        .profile-socials a {
+            color: var(--text-muted); text-decoration: none;
+            width: 38px; height: 38px; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03);
+            display: flex; align-items: center; justify-content: center;
+            transition: all var(--speed-fast);
+        }
+        .profile-socials a svg { width: 16px; height: 16px; }
+        .profile-socials a:hover {
+            color: var(--accent-color, var(--violet)); border-color: var(--accent-color, var(--violet));
+            transform: translateY(-2px); background: rgba(255,255,255,0.07);
+        }
+        .profile-no-socials { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.78rem; margin-top: var(--space-6); }
+
+        /* ─── Random Student Button ──────────────────────────────────────── */
+        .random-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
+            color: var(--text-primary); font-family: var(--font-mono); font-size: 0.85rem;
+            padding: 12px 18px; border-radius: var(--radius-sm); cursor: pointer;
+            transition: all var(--speed-fast); white-space: nowrap;
+        }
+        .random-btn svg { width: 15px; height: 15px; }
+        .random-btn:hover { border-color: var(--gold); color: var(--gold); box-shadow: 0 4px 14px -4px var(--gold-glow); }
 
         /* ─── About Section ──────────────────────────────────────────────── */
         .about-wrapper { max-width: 900px; margin: 0 auto; text-align: center; }
@@ -910,6 +1079,9 @@
         @media (max-width: 480px) {
             .hero h1 { font-size: 2.6rem; }
             .counters-grid { gap: var(--space-6); }
+            .profile-stats-grid { grid-template-columns: 1fr; }
+            .profile-body { padding: 0 var(--space-4) var(--space-6); }
+            .profile-cover { height: 240px; }
         }
 
         /* ─── Reveal animations (scroll-triggered via JS) ─────────────────── */
@@ -943,19 +1115,19 @@
         </a>
 
         <nav aria-label="Main navigation" id="mainNav">
-            <a href="#home" class="nav-link" data-section="home">
+            <a href="#home" class="nav-link" data-section="home" data-icon="home">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home
             </a>
-            <a href="#students" class="nav-link" data-section="students">
+            <a href="#students" class="nav-link" data-section="students" data-icon="users">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Students
             </a>
-            <a href="#moments" class="nav-link" data-section="moments">
+            <a href="#moments" class="nav-link" data-section="moments" data-icon="image">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Moments
             </a>
-            <a href="#about" class="nav-link" data-section="about">
+            <a href="#about" class="nav-link" data-section="about" data-icon="info">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About
             </a>
-            <a href="journey.html" class="nav-link" data-section="journey">
+            <a href="journey.html" class="nav-link" data-section="journey" data-icon="compass">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg> Our Journey
             </a>
         </nav>
@@ -1029,7 +1201,7 @@
 
                 <!-- CSS3 — lower-right -->
                 <div class="lang-icon" style="top:62%;right:6%;--dur:21s;--delay:-9s;--drift-x:-12px;--drift-y:-18px;--rot-start:-7deg;--rot-end:9deg;--max-opacity:0.38;--icon-glow:rgba(21,114,182,0.6);">
-                    <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#1572b6" d="M9.4 2l10.8 121 43.8 12.2 43.8-12.2L118.6 2z"/><path fill="#33a9dc" d="M64 120.9l35.5-9.8 9.2-103.5H64z"/><path fill="#fff" d="M64 52.4H29.7l1.2 13.8H64zm0-28H29.7l1.3 13.8H64zm0 66.6l-.1.1-16.9-4.6-1.1-12.4H31.7l2.2 24.2L64 116.8z"/><path fill="#ebebeb" d="M63.9 91l16-4.3 1.6-18H63.9V55.4h18.2l.4-4.1 1-10.9.3-2.4H63.9V24.4h35.7l-.3 2.5-.7 7.7-.3 3.6H63.9zm0-66.6v13.8h34.5l.3-2.5.7-7.7.3-3.6H63.9z"/></svg>
+                    <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#1572b6" d="M9.4 2l10.8 121 43.8 12.2 43.8-12.2L118.6 2z"/><path fill="#33a9dc" d="M64 120.9l35.5-9.8 9.2-103.5H64z"/><path fill="#fff" d="M64 52.4H29.7l1.2 13.8H64zm0-28H29.7l1.3 13.8H64zm0 66.6l-.1.1-16.9-4.6-1.1-12.4H31.7l2.2 24.2L64 116.8z"/><path fill="#ebebeb" d="M63.9 91l16-4.3 1.6-18H63.9V55.4h18.2l.4-4.1 1-10.9.3-2.4H63.9zm0-66.6v13.8h34.5l.3-2.5.7-7.7.3-3.6H63.9z"/></svg>
                 </div>
 
                 <!-- Git — top-center-ish -->
@@ -1113,6 +1285,10 @@
                         <option value="rollDesc">↓ Sort by Roll</option>
                         <option value="nameEn">A–Z by Name</option>
                     </select>
+                    <button type="button" class="random-btn" id="randomStudentBtn" title="Jump to a random student">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+                        Random Student
+                    </button>
                 </div>
 
                 <div class="chip-container" id="filterChipContainer">
@@ -1154,37 +1330,10 @@
                 <p>ক্যাম্পাসের চিরস্মরণীয় কিছু মুহূর্ত ও আমাদের একসঙ্গে পথচলার সুন্দর কিছু ছবি।</p>
             </div>
             <div class="moments-container reveal">
-                <div class="gallery-grid">
-                    <button class="gallery-item" aria-label="View larger image: Campus Tour">
-                        <img loading="lazy" decoding="async" width="600" height="450"
-                             src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop"
-                             srcset="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400&auto=format&fit=crop 400w,
-                                     https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop 600w,
-                                     https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=900&auto=format&fit=crop 900w"
-                             sizes="(max-width: 600px) 100vw, 280px"
-                             class="gallery-img" alt="Campus and classroom gatherings">
-                        <span class="gallery-item-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Inaugural Classroom Gatherings</span>
-                    </button>
-                    <button class="gallery-item" aria-label="View larger image: Coding Workshop">
-                        <img loading="lazy" decoding="async" width="600" height="450"
-                             src="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop"
-                             srcset="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=400&auto=format&fit=crop 400w,
-                                     https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop 600w,
-                                     https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=900&auto=format&fit=crop 900w"
-                             sizes="(max-width: 600px) 100vw, 280px"
-                             class="gallery-img" alt="First team hackathon group session">
-                        <span class="gallery-item-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> First Hackathon Jam Session</span>
-                    </button>
-                    <button class="gallery-item" aria-label="View larger image: Picnic Day">
-                        <img loading="lazy" decoding="async" width="600" height="450"
-                             src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=600&auto=format&fit=crop"
-                             srcset="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=400&auto=format&fit=crop 400w,
-                                     https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=600&auto=format&fit=crop 600w,
-                                     https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=900&auto=format&fit=crop 900w"
-                             sizes="(max-width: 600px) 100vw, 280px"
-                             class="gallery-img" alt="Annual batch orientation retreat">
-                        <span class="gallery-item-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Batch Freshers Celebration Day</span>
-                    </button>
+                <div class="gallery-grid" id="galleryGrid">
+                    <div class="skeleton-card" style="min-height:auto;aspect-ratio:4/3;" aria-hidden="true"></div>
+                    <div class="skeleton-card" style="min-height:auto;aspect-ratio:4/3;" aria-hidden="true"></div>
+                    <div class="skeleton-card" style="min-height:auto;aspect-ratio:4/3;" aria-hidden="true"></div>
                 </div>
             </div>
         </section>
@@ -1196,6 +1345,13 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
                 <img src="" alt="" class="lightbox-img" id="lightboxTargetImage">
+            </div>
+        </div>
+
+        <!-- Student Profile Modal -->
+        <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-label="Student profile">
+            <div class="profile-modal-content" id="profileModalContent">
+                <!-- Populated dynamically by JS via openProfileModal() -->
             </div>
         </div>
 
@@ -1231,7 +1387,7 @@
     <!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
     <footer>
         <div class="footer-logo">
-            <img src="logo.png" alt="Netrokona University" width="36" height="36" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
+            <img src="logo.png" alt="Netrokona University" id="footerLogo" width="36" height="36" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
             <div class="brand-text">Netrokona University <span class="brand-accent">· CSE 7th Batch</span></div>
         </div>
         <div class="footer-motto">নতুন যাত্রার শুরু, একসাথে এগিয়ে চলা</div>
@@ -1277,15 +1433,59 @@
             }
         }
 
+        // ─── Icon Registry (icons.json) ───────────────────────────────────
+        // A single external JSON file drives every icon on this page (nav,
+        // socials, filter chips, interest badges, and per-skill icons inside
+        // the profile modal). Ship a solid built-in fallback set inline so
+        // the page never breaks if icons.json is missing/slow — whatever
+        // icons.json DOES provide simply overrides/extends these by key.
+        let ICONS = {};
+        const ICON_FALLBACKS = {
+            'home': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+            'map-pin': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+            'users': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+            'image': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+            'info': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+            'compass': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>`,
+            'code': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+            'grid': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`,
+            'facebook': `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+            'instagram': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
+            'linkedin': `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+            'github': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
+            'email': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>`
+        };
+
+        function iconMarkup(key, size) {
+            const raw = (ICONS && ICONS[key]) || ICON_FALLBACKS[key];
+            if (!raw) return '';
+            return `<span class="icon-wrap" style="display:inline-flex;width:${size}px;height:${size}px;flex-shrink:0;" aria-hidden="true">${raw}</span>`;
+        }
+
+        function loadIcons() {
+            return fetch('icons.json')
+                .then(r => { if (!r.ok) throw new Error('icons.json not found'); return r.json(); })
+                .then(data => { ICONS = Object.assign({}, ICON_FALLBACKS, data); })
+                .catch(err => {
+                    console.warn('icons.json not loaded, using built-in fallback icon set:', err.message);
+                    ICONS = Object.assign({}, ICON_FALLBACKS);
+                });
+        }
+
         // ─── Student Data ────────────────────────────────────────────────
         let BATCH_STUDENTS = [];
 
+        const iconsReady = loadIcons();
+
         fetch('students.json')
             .then(r => { if (!r.ok) throw new Error('Failed to load students.json'); return r.json(); })
-            .then(data => {
+            .then(data => Promise.all([data, iconsReady]))
+            .then(([data]) => {
                 BATCH_STUDENTS = data;
                 buildFilterChips();   // build chips from real interest values
                 renderRoster();
+                const numStudentsEl = document.getElementById('numStudents');
+                if (numStudentsEl) numStudentsEl.textContent = data.length;
             })
             .catch(err => {
                 console.error('students.json load error:', err);
@@ -1293,16 +1493,24 @@
                 studentGrid.innerHTML = `<p style="color:var(--text-muted);font-family:var(--font-mono);grid-column:1/-1;text-align:center;padding:3rem 0;">⚠️ Could not load students.json — make sure the file is in the same directory.</p>`;
             });
 
-        // ─── Accent Registry ─────────────────────────────────────────────
-        const ACCENTS_REGISTRY = {
-            '#e59e0b': { b1:'#f59e0b', b2:'#fbbf24', b3:'#b45309', bg:'#0c0a05', bg2:'#161107', accent:'#e59e0b', glow:'rgba(229,158,11,0.45)' },
-            '#8b5cf6': { b1:'#8b5cf6', b2:'#a78bfa', b3:'#4c1d95', bg:'#06040b', bg2:'#100a1c', accent:'#8b5cf6', glow:'rgba(139,92,246,0.45)' },
-            '#14b8a6': { b1:'#14b8a6', b2:'#2dd4bf', b3:'#115e59', bg:'#030908', bg2:'#081614', accent:'#14b8a6', glow:'rgba(20,184,166,0.45)' },
-            '#ef4444': { b1:'#ef4444', b2:'#f87171', b3:'#7f1d1d', bg:'#0b0404', bg2:'#1c0a0a', accent:'#ef4444', glow:'rgba(239,68,68,0.45)' },
-            '#3b82f6': { b1:'#3b82f6', b2:'#60a5fa', b3:'#1d4ed8', bg:'#03060c', bg2:'#08101e', accent:'#3b82f6', glow:'rgba(59,130,246,0.45)' },
-            '#ec4899': { b1:'#ec4899', b2:'#f472b6', b3:'#9d174d', bg:'#0b0307', bg2:'#1c0812', accent:'#ec4899', glow:'rgba(236,72,153,0.45)' }
+        // ─── Accent Registry (theme-aware) ────────────────────────────────
+        // Each accent key stores a "dark" and "light" variant so switching
+        // day/night mode never leaves a jarring, low-contrast color behind.
+        const ACCENT_THEMES = {
+            amber:  { dark: { accent:'#f59e0b', glow:'rgba(245,158,11,0.45)', v:'#f59e0b', g:'#fbbf24', t:'#b45309' },
+                      light:{ accent:'#d97706', glow:'rgba(217,119,6,0.22)',  v:'#d97706', g:'#b45309', t:'#78350f' } },
+            violet: { dark: { accent:'#8b5cf6', glow:'rgba(139,92,246,0.45)', v:'#8b5cf6', g:'#a78bfa', t:'#4c1d95' },
+                      light:{ accent:'#6d28d9', glow:'rgba(109,40,217,0.22)', v:'#6d28d9', g:'#5b21b6', t:'#4c1d95' } },
+            teal:   { dark: { accent:'#14b8a6', glow:'rgba(20,184,166,0.45)', v:'#14b8a6', g:'#2dd4bf', t:'#115e59' },
+                      light:{ accent:'#0f766e', glow:'rgba(15,118,110,0.22)', v:'#0f766e', g:'#0d9488', t:'#134e4a' } },
+            red:    { dark: { accent:'#ef4444', glow:'rgba(239,68,68,0.45)',  v:'#ef4444', g:'#f87171', t:'#7f1d1d' },
+                      light:{ accent:'#b91c1c', glow:'rgba(185,28,28,0.22)',  v:'#b91c1c', g:'#991b1b', t:'#7f1d1d' } },
+            blue:   { dark: { accent:'#3b82f6', glow:'rgba(59,130,246,0.45)', v:'#3b82f6', g:'#60a5fa', t:'#1d4ed8' },
+                      light:{ accent:'#1d4ed8', glow:'rgba(29,78,216,0.22)',  v:'#1d4ed8', g:'#1e40af', t:'#1e3a8a' } },
+            pink:   { dark: { accent:'#ec4899', glow:'rgba(236,72,153,0.45)', v:'#ec4899', g:'#f472b6', t:'#9d174d' },
+                      light:{ accent:'#9d174d', glow:'rgba(157,23,77,0.22)',  v:'#9d174d', g:'#831843', t:'#500724' } }
         };
-        const staticColors = ['#e59e0b','#8b5cf6','#14b8a6','#ef4444','#3b82f6','#ec4899'];
+        const ACCENT_KEYS = ['amber','violet','teal','red','blue','pink'];
 
         // ─── DOM Cache ───────────────────────────────────────────────────
         const studentGrid   = document.getElementById('studentGrid');
@@ -1330,8 +1538,36 @@
 
         let activeTagFilter = 'all';
         let searchQuery = '';
-        let currentTheme = 'dark';
+        // The early <head> script may already have set data-theme="light" before this ran.
+        let currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
         let activeCardElement = null;
+
+        function updateThemeColorMeta(theme) {
+            const meta = document.getElementById('themeColorMeta');
+            if (meta) meta.setAttribute('content', theme === 'light' ? '#f8fafc' : '#060918');
+        }
+
+        // Applies the theme-correct accent/glow to a single card's hover styling.
+        function applyCardAccentVars(card) {
+            const palette = ACCENT_THEMES[card.dataset.accentKey] && ACCENT_THEMES[card.dataset.accentKey][currentTheme];
+            if (!palette) return;
+            card.style.setProperty('--accent-color', palette.accent);
+            card.style.setProperty('--glow-color', palette.glow);
+        }
+
+        // Applies a theme-correct site-wide accent (used when a card is "active").
+        function applySiteAccent(accentKey) {
+            const palette = ACCENT_THEMES[accentKey] && ACCENT_THEMES[accentKey][currentTheme];
+            if (!palette) return;
+            const root = document.documentElement;
+            root.style.setProperty('--active-accent', palette.accent);
+            root.style.setProperty('--active-glow', palette.glow);
+            root.style.setProperty('--violet', palette.v);
+            root.style.setProperty('--gold', palette.g);
+            root.style.setProperty('--teal', palette.t);
+            themeDot.style.background = palette.accent;
+            themeDot.style.boxShadow = `0 0 14px ${palette.glow}`;
+        }
 
         // ─── Toast Helper ────────────────────────────────────────────────
         const TOAST_ICON = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
@@ -1349,294 +1585,100 @@
             }, 2500);
         }
 
-        // ─── Interest Logo Map ───────────────────────────────────────────
-        // SVG logos keyed by interest value from JSON. Side: 'left' or 'right'.
+        // ─── Interest Logo Map (fallback artwork; icons.json can override
+        //     any of these keys — 'ai-ml', 'cybersecurity', 'open-source',
+        //     'web-development', 'data-science', 'app-development',
+        //     'cloud-computing', 'competitive-programming',
+        //     'machine-learning', 'ui-ux-design' — with its own SVG) ───────
         const INTEREST_LOGOS = {
             'AI / ML': {
-                side: 'right',
-                label: 'AI · ML',
-                color: '#a78bfa',
-                glow: 'rgba(167,139,250,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Brain halves -->
-                  <path d="M64 18c-8 0-14 3-18 7-3-1-7 0-9 2-4 3-5 8-3 13-4 3-6 8-4 13 1 5 5 9 9 10 0 6 2 11 7 15 4 3 9 5 14 5h2c5 0 10-2 14-5 5-4 7-9 7-15 4-1 8-5 9-10 2-5 0-10-4-13 2-5 1-10-3-13-2-2-6-3-9-2-4-4-10-7-18-7z" stroke="#a78bfa" stroke-width="4.5" fill="rgba(167,139,250,0.07)"/>
-                  <!-- Center divide -->
-                  <line x1="64" y1="20" x2="64" y2="83" stroke="#a78bfa" stroke-width="2.5" stroke-dasharray="5 3" opacity="0.5"/>
-                  <!-- Neural nodes -->
-                  <circle cx="48" cy="50" r="5.5" fill="#a78bfa"/>
-                  <circle cx="80" cy="50" r="5.5" fill="#a78bfa"/>
-                  <circle cx="40" cy="66" r="4.5" fill="#a78bfa" opacity="0.75"/>
-                  <circle cx="88" cy="66" r="4.5" fill="#a78bfa" opacity="0.75"/>
-                  <circle cx="64" cy="70" r="5.5" fill="#c4b5fd"/>
-                  <!-- Connections -->
-                  <line x1="48" y1="50" x2="80" y2="50" stroke="#a78bfa" stroke-width="2" opacity="0.5"/>
-                  <line x1="48" y1="50" x2="40" y2="66" stroke="#a78bfa" stroke-width="2" opacity="0.5"/>
-                  <line x1="80" y1="50" x2="88" y2="66" stroke="#a78bfa" stroke-width="2" opacity="0.5"/>
-                  <line x1="48" y1="50" x2="64" y2="70" stroke="#c4b5fd" stroke-width="2.5" opacity="0.7"/>
-                  <line x1="80" y1="50" x2="64" y2="70" stroke="#c4b5fd" stroke-width="2.5" opacity="0.7"/>
-                  <!-- Pulse rings -->
-                  <circle cx="64" cy="70" r="11" stroke="#a78bfa" stroke-width="1.5" opacity="0.3"/>
-                  <circle cx="64" cy="70" r="17" stroke="#a78bfa" stroke-width="1" opacity="0.15"/>
-                </svg>`
+                side: 'right', label: 'AI · ML', iconKey: 'ai-ml',
+                color: '#a78bfa', glow: 'rgba(167,139,250,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a13 13 0 0 0 0 17M20.5 3.5a13 13 0 0 1 0 17"/></svg>`
             },
             'Cybersecurity': {
-                side: 'left',
-                label: 'Security',
-                color: '#34d399',
-                glow: 'rgba(52,211,153,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Shield body with gradient fill -->
-                  <path d="M64 10L18 28v36c0 26 20 49 46 55 26-6 46-29 46-55V28L64 10z" stroke="#34d399" stroke-width="4.5" stroke-linejoin="round" fill="rgba(52,211,153,0.09)"/>
-                  <!-- Inner shield accent -->
-                  <path d="M64 22L30 36v26c0 18 14 34 34 39 20-5 34-21 34-39V36L64 22z" stroke="#34d399" stroke-width="2" opacity="0.3" fill="none"/>
-                  <!-- Lock body -->
-                  <rect x="50" y="64" width="28" height="22" rx="5" stroke="#34d399" stroke-width="4" fill="rgba(52,211,153,0.12)"/>
-                  <!-- Lock shackle -->
-                  <path d="M56 64v-9a8 8 0 0116 0v9" stroke="#34d399" stroke-width="4" stroke-linecap="round"/>
-                  <!-- Keyhole -->
-                  <circle cx="64" cy="74" r="4" fill="#34d399"/>
-                  <line x1="64" y1="78" x2="64" y2="83" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
-                  <!-- Corner check marks -->
-                  <polyline points="36,56 42,62 54,48" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
-                </svg>`
+                side: 'left', label: 'Security', iconKey: 'cybersecurity',
+                color: '#34d399', glow: 'rgba(52,211,153,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`
             },
             'Open Source': {
-                side: 'right',
-                label: 'Open Src',
-                color: '#fb923c',
-                glow: 'rgba(251,146,60,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Outer circle (open source ring) -->
-                  <circle cx="64" cy="64" r="44" stroke="#fb923c" stroke-width="4.5" fill="rgba(251,146,60,0.06)"/>
-                  <!-- Git branch: main node -->
-                  <circle cx="64" cy="56" r="7" fill="#fb923c"/>
-                  <!-- Branch left -->
-                  <circle cx="40" cy="80" r="6" fill="#fb923c" opacity="0.8"/>
-                  <path d="M64 63 Q50 72 40 74" stroke="#fb923c" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-                  <!-- Branch right -->
-                  <circle cx="88" cy="80" r="6" fill="#fb923c" opacity="0.8"/>
-                  <path d="M64 63 Q78 72 88 74" stroke="#fb923c" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-                  <!-- Stem up to fork -->
-                  <line x1="64" y1="56" x2="64" y2="36" stroke="#fb923c" stroke-width="3.5" stroke-linecap="round"/>
-                  <circle cx="64" cy="34" r="5.5" fill="#fb923c" opacity="0.7"/>
-                  <!-- Merge lines down -->
-                  <path d="M40 86 Q40 96 56 100" stroke="#fb923c" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
-                  <path d="M88 86 Q88 96 72 100" stroke="#fb923c" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
-                </svg>`
+                side: 'right', label: 'Open Src', iconKey: 'open-source',
+                color: '#fb923c', glow: 'rgba(251,146,60,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M8 3v3M16 3v3M8 18v3M16 18v3M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>`
             },
             'Web Development': {
-                side: 'left',
-                label: 'Web Dev',
-                color: '#f59e0b',
-                glow: 'rgba(245,158,11,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Browser frame -->
-                  <rect x="8" y="20" width="112" height="88" rx="9" stroke="#f59e0b" stroke-width="4.5" fill="rgba(245,158,11,0.06)"/>
-                  <!-- Title bar -->
-                  <line x1="8" y1="42" x2="120" y2="42" stroke="#f59e0b" stroke-width="3.5" opacity="0.55"/>
-                  <!-- Window buttons -->
-                  <circle cx="24" cy="31" r="4.5" fill="#ef4444" opacity="0.8"/>
-                  <circle cx="38" cy="31" r="4.5" fill="#f59e0b" opacity="0.8"/>
-                  <circle cx="52" cy="31" r="4.5" fill="#22c55e" opacity="0.8"/>
-                  <!-- URL bar -->
-                  <rect x="62" y="24" width="48" height="14" rx="4" stroke="#f59e0b" stroke-width="2" opacity="0.35"/>
-                  <!-- Code lines in body -->
-                  <polyline points="24,66 38,76 24,86" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                  <line x1="46" y1="86" x2="72" y2="86" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-                  <line x1="46" y1="76" x2="88" y2="76" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
-                  <line x1="46" y1="66" x2="76" y2="66" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
-                </svg>`
+                side: 'left', label: 'Web Dev', iconKey: 'web-development',
+                color: '#f59e0b', glow: 'rgba(245,158,11,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
             },
             'Data Science': {
-                side: 'right',
-                label: 'Data Sci',
-                color: '#22d3ee',
-                glow: 'rgba(34,211,238,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Axes -->
-                  <line x1="18" y1="108" x2="18" y2="20" stroke="#22d3ee" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
-                  <line x1="18" y1="108" x2="112" y2="108" stroke="#22d3ee" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
-                  <!-- Axis arrows -->
-                  <polyline points="12,28 18,18 24,28" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
-                  <polyline points="104,114 112,108 104,102" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
-                  <!-- Bars -->
-                  <rect x="28" y="82" width="14" height="26" rx="3" fill="#22d3ee" opacity="0.65"/>
-                  <rect x="50" y="62" width="14" height="46" rx="3" fill="#22d3ee" opacity="0.75"/>
-                  <rect x="72" y="44" width="14" height="64" rx="3" fill="#22d3ee" opacity="0.85"/>
-                  <rect x="94" y="30" width="14" height="78" rx="3" fill="#22d3ee"/>
-                  <!-- Trend line -->
-                  <polyline points="35,80 57,60 79,42 101,28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
-                  <!-- Trend dots -->
-                  <circle cx="35" cy="80" r="4" fill="#fff" opacity="0.8"/>
-                  <circle cx="57" cy="60" r="4" fill="#fff" opacity="0.8"/>
-                  <circle cx="79" cy="42" r="4" fill="#fff" opacity="0.8"/>
-                  <circle cx="101" cy="28" r="4" fill="#fff" opacity="0.8"/>
-                </svg>`
+                side: 'right', label: 'Data Sci', iconKey: 'data-science',
+                color: '#22d3ee', glow: 'rgba(34,211,238,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`
             },
             'App Development': {
-                side: 'left',
-                label: 'Mobile',
-                color: '#4ade80',
-                glow: 'rgba(74,222,128,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Phone body -->
-                  <rect x="34" y="8" width="60" height="112" rx="12" stroke="#4ade80" stroke-width="4.5" fill="rgba(74,222,128,0.07)"/>
-                  <!-- Top bar -->
-                  <line x1="34" y1="28" x2="94" y2="28" stroke="#4ade80" stroke-width="3" opacity="0.4"/>
-                  <!-- Bottom bar -->
-                  <line x1="34" y1="100" x2="94" y2="100" stroke="#4ade80" stroke-width="3" opacity="0.4"/>
-                  <!-- Home button -->
-                  <rect x="52" y="106" width="24" height="8" rx="4" stroke="#4ade80" stroke-width="2.5" opacity="0.6"/>
-                  <!-- Screen notch -->
-                  <rect x="52" y="14" width="24" height="8" rx="4" fill="#4ade80" opacity="0.3"/>
-                  <!-- App screen content -->
-                  <rect x="44" y="36" width="40" height="28" rx="5" fill="rgba(74,222,128,0.18)" stroke="#4ade80" stroke-width="2.5"/>
-                  <!-- App grid icons -->
-                  <rect x="44" y="72" width="10" height="10" rx="3" fill="#4ade80" opacity="0.7"/>
-                  <rect x="59" y="72" width="10" height="10" rx="3" fill="#4ade80" opacity="0.5"/>
-                  <rect x="74" y="72" width="10" height="10" rx="3" fill="#4ade80" opacity="0.7"/>
-                  <!-- Screen UI lines -->
-                  <line x1="48" y1="44" x2="80" y2="44" stroke="#4ade80" stroke-width="2" opacity="0.5"/>
-                  <line x1="48" y1="52" x2="74" y2="52" stroke="#4ade80" stroke-width="2" opacity="0.35"/>
-                </svg>`
+                side: 'left', label: 'Mobile', iconKey: 'app-development',
+                color: '#4ade80', glow: 'rgba(74,222,128,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`
             },
             'Cloud Computing': {
-                side: 'right',
-                label: 'Cloud',
-                color: '#60a5fa',
-                glow: 'rgba(96,165,250,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Cloud shape -->
-                  <path d="M98 82H36a26 26 0 010-52h2a34 34 0 0164 8 22 22 0 01-4 44z" stroke="#60a5fa" stroke-width="4.5" fill="rgba(96,165,250,0.1)" stroke-linejoin="round"/>
-                  <!-- Upload arrow -->
-                  <line x1="64" y1="92" x2="64" y2="112" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/>
-                  <polyline points="52,100 64,88 76,100" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
-                  <!-- Server nodes inside cloud -->
-                  <circle cx="44" cy="60" r="5" fill="#60a5fa" opacity="0.7"/>
-                  <circle cx="64" cy="54" r="6" fill="#60a5fa" opacity="0.9"/>
-                  <circle cx="84" cy="60" r="5" fill="#60a5fa" opacity="0.7"/>
-                  <!-- Connection lines -->
-                  <line x1="49" y1="60" x2="58" y2="56" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
-                  <line x1="70" y1="56" x2="79" y2="60" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
-                  <!-- Wifi-like rings -->
-                  <path d="M56 74 a10 10 0 0116 0" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
-                  <path d="M50 80 a16 16 0 0128 0" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
-                </svg>`
+                side: 'right', label: 'Cloud', iconKey: 'cloud-computing',
+                color: '#60a5fa', glow: 'rgba(96,165,250,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>`
             },
             'Competitive Programming': {
-                side: 'left',
-                label: 'Comp. Prog',
-                color: '#f472b6',
-                glow: 'rgba(244,114,182,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Terminal frame -->
-                  <rect x="10" y="16" width="108" height="96" rx="9" stroke="#f472b6" stroke-width="4.5" fill="rgba(244,114,182,0.07)"/>
-                  <!-- Title bar -->
-                  <line x1="10" y1="36" x2="118" y2="36" stroke="#f472b6" stroke-width="3" opacity="0.4"/>
-                  <!-- Window dots -->
-                  <circle cx="26" cy="26" r="4" fill="#ef4444" opacity="0.7"/>
-                  <circle cx="40" cy="26" r="4" fill="#f59e0b" opacity="0.7"/>
-                  <circle cx="54" cy="26" r="4" fill="#22c55e" opacity="0.7"/>
-                  <!-- Prompt line -->
-                  <text x="22" y="60" font-family="monospace" font-size="14" fill="#f472b6" opacity="0.9">$_</text>
-                  <!-- Code lines -->
-                  <line x1="22" y1="74" x2="76" y2="74" stroke="#f472b6" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
-                  <line x1="22" y1="86" x2="96" y2="86" stroke="#f472b6" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
-                  <line x1="22" y1="98" x2="60" y2="98" stroke="#f472b6" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
-                  <!-- Trophy icon top-right -->
-                  <path d="M88 44 v8 a12 12 0 0024 0 v-8z" stroke="#f472b6" stroke-width="3" fill="rgba(244,114,182,0.15)" stroke-linecap="round"/>
-                  <line x1="100" y1="64" x2="100" y2="72" stroke="#f472b6" stroke-width="3" stroke-linecap="round"/>
-                  <line x1="92" y1="72" x2="108" y2="72" stroke="#f472b6" stroke-width="3" stroke-linecap="round"/>
-                </svg>`
+                side: 'left', label: 'Comp. Prog', iconKey: 'competitive-programming',
+                color: '#f472b6', glow: 'rgba(244,114,182,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 9 2 12 5 15"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/></svg>`
             },
             'Machine Learning': {
-                side: 'right',
-                label: 'ML',
-                color: '#a78bfa',
-                glow: 'rgba(167,139,250,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Neural network layers -->
-                  <!-- Input layer -->
-                  <circle cx="22" cy="38" r="7" stroke="#a78bfa" stroke-width="3" fill="rgba(167,139,250,0.2)"/>
-                  <circle cx="22" cy="64" r="7" stroke="#a78bfa" stroke-width="3" fill="rgba(167,139,250,0.2)"/>
-                  <circle cx="22" cy="90" r="7" stroke="#a78bfa" stroke-width="3" fill="rgba(167,139,250,0.2)"/>
-                  <!-- Hidden layer -->
-                  <circle cx="64" cy="28" r="7" fill="#a78bfa"/>
-                  <circle cx="64" cy="52" r="7" fill="#a78bfa"/>
-                  <circle cx="64" cy="76" r="7" fill="#a78bfa"/>
-                  <circle cx="64" cy="100" r="7" fill="#a78bfa"/>
-                  <!-- Output layer -->
-                  <circle cx="106" cy="44" r="7" stroke="#c4b5fd" stroke-width="3.5" fill="rgba(196,181,253,0.25)"/>
-                  <circle cx="106" cy="84" r="7" stroke="#c4b5fd" stroke-width="3.5" fill="rgba(196,181,253,0.25)"/>
-                  <!-- Connections input->hidden -->
-                  <line x1="29" y1="38" x2="57" y2="28" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
-                  <line x1="29" y1="38" x2="57" y2="52" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
-                  <line x1="29" y1="64" x2="57" y2="52" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
-                  <line x1="29" y1="64" x2="57" y2="76" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
-                  <line x1="29" y1="90" x2="57" y2="76" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
-                  <line x1="29" y1="90" x2="57" y2="100" stroke="#a78bfa" stroke-width="1.5" opacity="0.35"/>
-                  <!-- Connections hidden->output -->
-                  <line x1="71" y1="28" x2="99" y2="44" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
-                  <line x1="71" y1="52" x2="99" y2="44" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
-                  <line x1="71" y1="76" x2="99" y2="84" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
-                  <line x1="71" y1="100" x2="99" y2="84" stroke="#c4b5fd" stroke-width="2" opacity="0.55"/>
-                </svg>`
+                side: 'right', label: 'ML', iconKey: 'machine-learning',
+                color: '#a78bfa', glow: 'rgba(167,139,250,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.4 2.1-1.1 2.8C17.3 10 20 13.1 20 17H4c0-3.9 2.7-7 6.1-8.2A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/></svg>`
             },
             'UI/UX Design': {
-                side: 'right',
-                label: 'UI/UX',
-                color: '#e879f9',
-                glow: 'rgba(232,121,249,0.4)',
-                svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-                  <!-- Pen tool body -->
-                  <path d="M70 26 L102 58 L64 96 L26 96 L26 58 Z" stroke="#e879f9" stroke-width="4" stroke-linejoin="round" fill="rgba(232,121,249,0.08)"/>
-                  <!-- Pen nib -->
-                  <path d="M102 58 L116 72 L64 96" stroke="#e879f9" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
-                  <!-- Center bezier handle dot -->
-                  <circle cx="64" cy="62" r="7" fill="#e879f9"/>
-                  <!-- Handle lines -->
-                  <line x1="38" y1="62" x2="90" y2="62" stroke="#e879f9" stroke-width="2.5" stroke-dasharray="4 3" opacity="0.6"/>
-                  <circle cx="38" cy="62" r="5" stroke="#e879f9" stroke-width="3" fill="rgba(232,121,249,0.2)"/>
-                  <circle cx="90" cy="62" r="5" stroke="#e879f9" stroke-width="3" fill="rgba(232,121,249,0.2)"/>
-                  <!-- Grid guides -->
-                  <line x1="26" y1="44" x2="102" y2="44" stroke="#e879f9" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.2"/>
-                  <line x1="64" y1="24" x2="64" y2="98" stroke="#e879f9" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.2"/>
-                </svg>`
+                side: 'right', label: 'UI/UX', iconKey: 'ui-ux-design',
+                color: '#e879f9', glow: 'rgba(232,121,249,0.4)',
+                svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#e879f9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>`
             }
         };
 
         // Default fallback logo for unknown interests
         const DEFAULT_LOGO = {
-            side: 'right',
-            label: 'CSE',
-            color: '#94a3b8',
-            glow: 'rgba(148,163,184,0.3)',
-            svg: `<svg width="52" height="52" viewBox="0 0 128 128" fill="none" aria-hidden="true">
-              <!-- Code brackets -->
-              <polyline points="42,44 18,64 42,84" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-              <polyline points="86,44 110,64 86,84" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-              <line x1="56" y1="36" x2="72" y2="92" stroke="#94a3b8" stroke-width="5.5" stroke-linecap="round"/>
-            </svg>`
+            side: 'right', label: 'CSE', iconKey: 'code',
+            color: '#94a3b8', glow: 'rgba(148,163,184,0.3)',
+            svg: `<svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`
         };
+
+        // Returns the best-available markup for a card's skill badge: an
+        // icons.json entry (keyed by iconKey) takes priority; otherwise we
+        // fall back to the built-in artwork above. Either way the outer CSS
+        // (.card-skill-badge svg) forces a uniform 22x22 render size.
+        function resolveInterestIcon(logoData) {
+            if (ICONS && ICONS[logoData.iconKey]) return ICONS[logoData.iconKey];
+            return logoData.svg;
+        }
 
         // ─── Card Builder ────────────────────────────────────────────────
         function createStudentCard(student, index) {
-            const chosenAccentColor = staticColors[index % staticColors.length];
-            const chosenPalette = ACCENTS_REGISTRY[chosenAccentColor];
+            const accentKey = ACCENT_KEYS[index % ACCENT_KEYS.length];
 
-            const card = document.createElement('button');
+            // Use a <div> (not <button>) as the card root so it can legally contain
+            // the socials <a> links and the profile <button> without invalid nesting.
+            const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('role', 'button');
-            card.setAttribute('aria-expanded', 'false');
-            card.style.setProperty('--accent-color', chosenAccentColor);
-            card.style.setProperty('--glow-color', chosenPalette.glow);
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('aria-pressed', 'false');
+            card.setAttribute('aria-label', `${student.nameEn} — toggle accent theme`);
             // Stagger entrance animation
             card.style.animationDelay = `${Math.min(index * 60, 600)}ms`;
-            card.dataset.accent = chosenAccentColor;
+            card.dataset.accentKey = accentKey;
             card.dataset.name = student.nameEn.toLowerCase();
             card.dataset.roll = student.roll;
             card.dataset.hometown = student.hometown.toLowerCase();
             card.dataset.interest = student.interest;
+            applyCardAccentVars(card);
 
             const cardBg = document.createElement('div');
             cardBg.className = 'card-bg';
@@ -1676,7 +1718,6 @@
             const statsRows = document.createElement('div');
             statsRows.className = 'card-stats-rows';
             statsRows.append(
-                createStatRow('Hometown', student.hometown),
                 createStatRow('Interest', student.interest),
                 createStatRow('Focus', student.subject)
             );
@@ -1689,6 +1730,12 @@
             nameBn.className = 'stu-name-bn';
             nameBn.textContent = student.nameBn;
 
+            // Hometown — always visible under the name (not hidden behind
+            // hover like Interest/Focus below).
+            const hometown = document.createElement('div');
+            hometown.className = 'stu-hometown';
+            hometown.innerHTML = `${iconMarkup('map-pin', 12)} ${escapeHtml(student.hometown)}`;
+
             const bio = document.createElement('div');
             bio.className = 'stu-bio';
             bio.textContent = student.bio;
@@ -1696,65 +1743,79 @@
             const foot = document.createElement('div');
             foot.className = 'card-foot';
 
+            // "View Profile" button — opens the full profile modal (feature request #1)
+            const profileBtn = document.createElement('button');
+            profileBtn.type = 'button';
+            profileBtn.className = 'profile-btn';
+            profileBtn.setAttribute('aria-label', `View ${student.nameEn}'s full profile`);
+            profileBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile`;
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openProfileModal(student, accentKey);
+            });
+
+            // Social links — only rendered when the student actually has that link,
+            // instead of silently falling back to a generic homepage URL.
             const socials = document.createElement('div');
             socials.className = 'card-socials';
+            appendSocialLinks(socials, student, 14);
 
-            // Facebook link
-            const fbLink = document.createElement('a');
-            fbLink.href = student.facebook || 'https://facebook.com';
-            fbLink.target = '_blank';
-            fbLink.rel = 'noopener noreferrer';
-            fbLink.setAttribute('aria-label', `${student.nameEn}'s Facebook`);
-            fbLink.title = 'Facebook';
-            fbLink.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-            </svg>`;
+            foot.append(profileBtn, socials);
+            content.append(nameEn, nameBn, hometown, statsRows, bio, foot);
 
-            // GitHub link
-            const ghLink = document.createElement('a');
-            ghLink.href = student.github || 'https://github.com';
-            ghLink.target = '_blank';
-            ghLink.rel = 'noopener noreferrer';
-            ghLink.setAttribute('aria-label', `${student.nameEn}'s GitHub`);
-            ghLink.title = 'GitHub';
-            ghLink.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-            </svg>`;
-
-            // LinkedIn link
-            const liLink = document.createElement('a');
-            liLink.href = student.linkedin || 'https://linkedin.com';
-            liLink.target = '_blank';
-            liLink.rel = 'noopener noreferrer';
-            liLink.setAttribute('aria-label', `${student.nameEn}'s LinkedIn`);
-            liLink.title = 'LinkedIn';
-            liLink.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-              <rect x="2" y="9" width="4" height="12"/>
-              <circle cx="4" cy="4" r="2"/>
-            </svg>`;
-
-            socials.append(fbLink, ghLink, liLink);
-            foot.append(socials);
-            content.append(statsRows, nameEn, nameBn, bio, foot);
-
-            // ─── Interest Logo ──────────────────────────────────────────
+            // ─── Skill Badge (standard fixed size, positioned so it can
+            // never collide with the roll-badge or interest-text badge) ───
             const logoData = INTEREST_LOGOS[student.interest] || DEFAULT_LOGO;
-            const interestLogo = document.createElement('div');
-            interestLogo.className = `card-interest-logo logo-${logoData.side}`;
-            interestLogo.style.setProperty('color', logoData.color);
-            interestLogo.style.setProperty('filter', `drop-shadow(0 0 10px ${logoData.glow})`);
-            interestLogo.innerHTML = logoData.svg +
-                `<span class="logo-label">${logoData.label}</span>`;
+            const skillBadge = document.createElement('div');
+            skillBadge.className = `card-skill-badge badge-${logoData.side}`;
+            skillBadge.style.setProperty('color', logoData.color);
+            skillBadge.setAttribute('title', student.interest);
+            skillBadge.setAttribute('aria-label', `Primary interest: ${student.interest}`);
+            skillBadge.innerHTML = resolveInterestIcon(logoData);
 
-            card.append(cardBg, overlay, rollBadge, interestBadge, interestLogo, content);
+            card.append(cardBg, overlay, rollBadge, interestBadge, skillBadge, content);
 
-            card.addEventListener('click', (e) => {
-                if (e.target.closest('.card-socials')) return;
-                toggleCardTheme(card, chosenAccentColor);
+            const handleActivate = (e) => {
+                if (e.target.closest('.card-socials') || e.target.closest('.profile-btn')) return;
+                toggleCardTheme(card, accentKey);
+            };
+            card.addEventListener('click', handleActivate);
+            card.addEventListener('keydown', (e) => {
+                // Bug fix: this used to call preventDefault() unconditionally,
+                // which silently ate the native Enter/Space "click" that the
+                // nested "Profile" button relies on for keyboard users —
+                // making the Profile button unreachable via keyboard. Now we
+                // bail out first for any click-through target.
+                if (e.target.closest('.card-socials') || e.target.closest('.profile-btn')) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleCardTheme(card, accentKey);
+                }
             });
 
             return card;
+        }
+
+        // Builds <a> icons only for socials the student actually has, so we never
+        // link out to a generic facebook.com/github.com placeholder.
+        function appendSocialLinks(container, student, size) {
+            const platforms = [
+                { key: 'facebook', label: 'Facebook' },
+                { key: 'github', label: 'GitHub' },
+                { key: 'linkedin', label: 'LinkedIn' },
+                { key: 'email', label: 'Email' }
+            ];
+            platforms.forEach(p => {
+                const url = student[p.key];
+                if (!url) return; // skip icons with no link supplied yet
+                const a = document.createElement('a');
+                a.href = p.key === 'email' && !/^mailto:/.test(url) ? `mailto:${url}` : url;
+                if (p.key !== 'email') { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+                a.setAttribute('aria-label', `${student.nameEn}'s ${p.label}`);
+                a.title = p.label;
+                a.innerHTML = iconMarkup(p.key, size);
+                container.appendChild(a);
+            });
         }
 
         function createStatRow(label, value) {
@@ -1769,45 +1830,37 @@
         }
 
         // ─── Theme Switching ─────────────────────────────────────────────
-        function toggleCardTheme(cardElement, accentColor) {
+        // (accentKey is a stable key like 'amber'/'violet' — NOT a hex string —
+        //  so the correct light/dark variant can always be looked up later.)
+        function toggleCardTheme(cardElement, accentKey) {
             if (activeCardElement === cardElement) {
                 resetTheme();
                 return;
             }
             if (activeCardElement) {
                 activeCardElement.classList.remove('active-theme-host');
-                activeCardElement.setAttribute('aria-expanded', 'false');
+                activeCardElement.setAttribute('aria-pressed', 'false');
             }
             activeCardElement = cardElement;
             cardElement.classList.add('active-theme-host');
-            cardElement.setAttribute('aria-expanded', 'true');
-
-            const palette = ACCENTS_REGISTRY[accentColor];
-            if (palette) {
-                document.documentElement.style.setProperty('--active-accent', palette.accent);
-                document.documentElement.style.setProperty('--active-glow', palette.glow);
-                document.documentElement.style.setProperty('--violet', palette.b1);
-                document.documentElement.style.setProperty('--gold', palette.b2);
-                document.documentElement.style.setProperty('--teal', palette.b3);
-                themeDot.style.background = palette.accent;
-                themeDot.style.boxShadow = `0 0 14px ${palette.glow}`;
-            }
+            cardElement.setAttribute('aria-pressed', 'true');
+            applySiteAccent(accentKey);
         }
 
-        function resetTheme() {
+        // Removes the inline accent overrides entirely (instead of hardcoding
+        // dark-mode hex values) so the CSS cascade correctly falls back to
+        // whichever theme — light or dark — is currently active.
+        function resetTheme(silent) {
             if (activeCardElement) {
                 activeCardElement.classList.remove('active-theme-host');
-                activeCardElement.setAttribute('aria-expanded', 'false');
+                activeCardElement.setAttribute('aria-pressed', 'false');
                 activeCardElement = null;
             }
-            document.documentElement.style.setProperty('--active-accent', 'var(--violet)');
-            document.documentElement.style.setProperty('--active-glow', 'var(--violet-glow)');
-            document.documentElement.style.setProperty('--violet', '#8b5cf6');
-            document.documentElement.style.setProperty('--gold', '#f59e0b');
-            document.documentElement.style.setProperty('--teal', '#14b8a6');
-            themeDot.style.background = 'var(--active-accent)';
-            themeDot.style.boxShadow = `0 0 10px var(--active-glow)`;
-            showToast('Accent theme reset');
+            const root = document.documentElement;
+            ['--active-accent', '--active-glow', '--violet', '--gold', '--teal'].forEach(v => root.style.removeProperty(v));
+            themeDot.style.background = '';
+            themeDot.style.boxShadow = '';
+            if (!silent) showToast('Accent theme reset');
         }
 
         // ─── Render Roster ───────────────────────────────────────────────
@@ -1840,18 +1893,6 @@
         }
 
         // ─── Build Filter Chips from JSON data ────────────────────────────
-        const CHIP_ICON_MAP = {
-            'Web Development':        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
-            'Competitive Programming':`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 9 2 12 5 15"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/></svg>`,
-            'Machine Learning':       `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.4 2.1-1.1 2.8C17.3 10 20 13.1 20 17H4c0-3.9 2.7-7 6.1-8.2A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/></svg>`,
-            'Cybersecurity':          `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
-            'UI/UX Design':           `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>`,
-            'App Development':        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`,
-            'Cloud Computing':        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>`,
-            'Data Science':           `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
-            'AI / ML':                `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a13 13 0 0 0 0 17M20.5 3.5a13 13 0 0 1 0 17"/></svg>`,
-            'Open Source':            `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M8 3v3M16 3v3M8 18v3M16 18v3M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>`,
-        };
         // Short display label for each tag
         const CHIP_LABEL_MAP = {
             'Web Development': 'Web Dev', 'Competitive Programming': 'CP',
@@ -1860,7 +1901,12 @@
             'Cloud Computing': 'Cloud', 'Data Science': 'Data Science',
             'AI / ML': 'AI / ML', 'Open Source': 'Open Source',
         };
-        const GENERIC_CHIP_ICON = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+
+        function chipIconFor(tag) {
+            const logo = INTEREST_LOGOS[tag];
+            const key = logo ? logo.iconKey : 'code';
+            return iconMarkup(key, 13);
+        }
 
         function buildFilterChips() {
             const container = document.getElementById('filterChipContainer');
@@ -1881,7 +1927,7 @@
             const allChip = document.createElement('button');
             allChip.className = 'filter-chip active';
             allChip.dataset.tag = 'all';
-            allChip.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> All`;
+            allChip.innerHTML = `${iconMarkup('grid', 13)} All`;
             container.appendChild(allChip);
 
             // One chip per unique interest found in the JSON
@@ -1889,21 +1935,63 @@
                 const chip = document.createElement('button');
                 chip.className = 'filter-chip';
                 chip.dataset.tag = tag;
-                const icon = CHIP_ICON_MAP[tag] || GENERIC_CHIP_ICON;
                 const label = CHIP_LABEL_MAP[tag] || tag;
-                chip.innerHTML = `${icon} ${label}`;
+                chip.innerHTML = `${chipIconFor(tag)} ${label}`;
                 container.appendChild(chip);
             });
+            // Note: click handling for these chips is delegated once, on the
+            // container itself (see near the bottom of this script) — so we
+            // deliberately do NOT attach a second listener per-chip here.
+        }
 
-            // Re-attach click listeners on the fresh chips
-            container.querySelectorAll('.filter-chip').forEach(chip => {
-                chip.addEventListener('click', () => {
-                    container.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                    chip.classList.add('active');
-                    activeTagFilter = chip.dataset.tag;
-                    renderRoster();
-                });
-            });
+        // ─── Skill icon resolution for the profile modal ──────────────────
+        // Normalizes any free-text skill string ("C++", "Node.js", "UI/UX",
+        // "Machine Learning", ...) into a slug and looks it up in ICONS
+        // (icons.json). Aliases map common spellings/variants onto the
+        // canonical slug so the same icon shows up regardless of how the
+        // skill was typed in students.json.
+        const SKILL_ALIASES = {
+            'c++': 'cpp', 'cpp': 'cpp', 'c': 'c',
+            'c#': 'csharp', 'csharp': 'csharp',
+            'js': 'javascript', 'javascript': 'javascript',
+            'ts': 'typescript', 'typescript': 'typescript',
+            'py': 'python', 'python': 'python',
+            'java': 'java', 'html': 'html5', 'html5': 'html5',
+            'css': 'css3', 'css3': 'css3',
+            'node': 'nodejs', 'nodejs': 'nodejs', 'node.js': 'nodejs',
+            'react': 'react', 'reactjs': 'react', 'react.js': 'react',
+            'vue': 'vue', 'vuejs': 'vue', 'angular': 'angular',
+            'next': 'nextjs', 'nextjs': 'nextjs', 'next.js': 'nextjs',
+            'sql': 'sql', 'mysql': 'mysql', 'postgresql': 'postgresql', 'postgres': 'postgresql',
+            'mongodb': 'mongodb', 'mongo': 'mongodb',
+            'firebase': 'firebase', 'git': 'git', 'github': 'github',
+            'docker': 'docker', 'kubernetes': 'kubernetes', 'k8s': 'kubernetes',
+            'aws': 'aws', 'azure': 'azure', 'gcp': 'gcp', 'linux': 'linux',
+            'figma': 'figma', 'photoshop': 'photoshop', 'wordpress': 'wordpress',
+            'tailwind': 'tailwind', 'tailwindcss': 'tailwind', 'bootstrap': 'bootstrap',
+            'flutter': 'flutter', 'kotlin': 'kotlin', 'swift': 'swift',
+            'php': 'php', 'laravel': 'laravel', 'django': 'django', 'flask': 'flask',
+            'numpy': 'numpy', 'pandas': 'pandas', 'tensorflow': 'tensorflow', 'pytorch': 'pytorch',
+            'opencv': 'opencv', 'dsa': 'dsa', 'data structures': 'dsa', 'data structures & algorithms': 'dsa',
+            'oop': 'oop', 'networking': 'networking', 'cybersecurity': 'cybersecurity',
+            'machine learning': 'machine-learning', 'ml': 'machine-learning',
+            'ai / ml': 'ai-ml', 'ai': 'ai-ml', 'deep learning': 'deep-learning',
+            'data science': 'data-science', 'ui/ux': 'ui-ux-design', 'ui/ux design': 'ui-ux-design',
+            'ux': 'ui-ux-design', 'ui': 'ui-ux-design',
+            'cloud computing': 'cloud-computing', 'competitive programming': 'competitive-programming',
+            'cp': 'competitive-programming', 'open source': 'open-source',
+            'app development': 'app-development', 'web development': 'web-development',
+            'redux': 'redux', 'graphql': 'graphql'
+        };
+        function slugifySkill(skill) {
+            const cleaned = String(skill).trim().toLowerCase();
+            if (SKILL_ALIASES[cleaned]) return SKILL_ALIASES[cleaned];
+            return cleaned.replace(/[.\s]+/g, '-').replace(/[^a-z0-9\-+#]/g, '');
+        }
+        function getSkillIconHtml(skill, size) {
+            const slug = slugifySkill(skill);
+            const raw = (ICONS && (ICONS[slug] || ICONS[skill])) || ICON_FALLBACKS['code'];
+            return `<span class="skill-icon-wrap" aria-hidden="true">${raw}</span>`;
         }
 
         // ─── Quick Suggestions ────────────────────────────────────────────
@@ -1916,7 +2004,7 @@
         function highlightMatch(text, query) {
             if (!query) return text;
             const re = new RegExp(`(${escapeRegex(query)})`, 'gi');
-            return text.replace(re, '<mark>$1</mark>');
+            return escapeHtml(text).replace(new RegExp(`(${escapeRegex(escapeHtml(query))})`, 'gi'), '<mark>$1</mark>');
         }
         function showSuggestions(query) {
             const q = query.trim().toLowerCase();
@@ -1932,7 +2020,7 @@
             ).slice(0, MAX_SUGGESTIONS);
 
             if (!matches.length) {
-                suggestionsBox.innerHTML = `<div class="suggestion-no-results">No matches for "<strong>${query}</strong>"</div>`;
+                suggestionsBox.innerHTML = `<div class="suggestion-no-results">No matches for "${escapeHtml(query)}"</div>`;
                 suggestionsBox.classList.add('visible');
                 return;
             }
@@ -1940,10 +2028,10 @@
             const header = `<div class="suggestions-header">Quick suggestions — ${matches.length} result${matches.length > 1 ? 's' : ''}</div>`;
             const items = matches.map(s => {
                 const nameParts = highlightMatch(s.nameEn, q);
-                return `<button class="suggestion-item" data-roll="${s.roll}" role="option" aria-selected="false">
-                    <span class="suggestion-roll">${s.roll}</span>
+                return `<button class="suggestion-item" data-roll="${escapeHtml(s.roll)}" role="option" aria-selected="false">
+                    <span class="suggestion-roll">${escapeHtml(s.roll)}</span>
                     <span class="suggestion-name">${nameParts}</span>
-                    <span class="suggestion-tag">${s.interest}</span>
+                    <span class="suggestion-tag">${escapeHtml(s.interest)}</span>
                 </button>`;
             }).join('');
 
@@ -1974,6 +2062,11 @@
         // Inline SVG paths — no Lucide needed
         const SVG_SUN = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
         const SVG_MOON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+        // Sync the toggle icon + meta color with whatever theme was resolved on load
+        themeSvgIcon.innerHTML = currentTheme === 'light' ? SVG_MOON : SVG_SUN;
+        updateThemeColorMeta(currentTheme);
+
         themeToggleBtn.addEventListener('click', () => {
             if (currentTheme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'light');
@@ -1986,7 +2079,18 @@
                 themeSvgIcon.innerHTML = SVG_SUN;
                 showToast('Dark mode on');
             }
-            resetTheme();
+            try { localStorage.setItem('cse7-theme', currentTheme); } catch (e) {}
+            updateThemeColorMeta(currentTheme);
+
+            // Re-apply theme-correct accent colors to every card, and to the
+            // site-wide accent if a card is currently "active" — this is what
+            // fixes the old bug where switching theme left mismatched colors.
+            document.querySelectorAll('.card').forEach(applyCardAccentVars);
+            if (activeCardElement) {
+                applySiteAccent(activeCardElement.dataset.accentKey);
+            } else {
+                resetTheme(true);
+            }
         });
 
         // ─── Search (debounced) + Quick Suggestions ───────────────────────
@@ -2033,20 +2137,17 @@
             renderRoster();
         });
 
-        // ─── Lightbox ─────────────────────────────────────────────────────
+        // ─── Gallery (dynamic — loaded from gallery.json) ──────────────────
         const lightbox = document.getElementById('galleryLightbox');
         const lightboxImg = document.getElementById('lightboxTargetImage');
+        const galleryGrid = document.getElementById('galleryGrid');
 
-        document.querySelectorAll('.gallery-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const src = item.querySelector('.gallery-img').src;
-                lightboxImg.src = src;
-                lightboxImg.alt = item.getAttribute('aria-label');
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
+        function openLightbox(src, alt) {
+            lightboxImg.src = src;
+            lightboxImg.alt = alt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
         function closeLightbox() {
             lightbox.classList.remove('active');
             document.body.style.overflow = '';
@@ -2054,6 +2155,45 @@
         document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
         lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        function createGalleryItem(moment) {
+            const item = document.createElement('button');
+            item.className = 'gallery-item';
+            item.setAttribute('aria-label', `View larger image: ${moment.title || 'Batch moment'}`);
+
+            const img = document.createElement('img');
+            img.className = 'gallery-img';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.width = 600;
+            img.height = 450;
+            img.src = moment.img;
+            if (moment.imgSrcset) img.srcset = moment.imgSrcset;
+            img.sizes = '(max-width: 600px) 100vw, 280px';
+            img.alt = moment.alt || moment.title || 'Batch moment';
+            img.addEventListener('error', () => { img.style.opacity = '0.15'; });
+
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'gallery-item-title';
+            titleSpan.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> ${escapeHtml(moment.title || '')}`;
+
+            item.append(img, titleSpan);
+            item.addEventListener('click', () => openLightbox(moment.img, moment.alt || moment.title || ''));
+            return item;
+        }
+
+        fetch('gallery.json')
+            .then(r => { if (!r.ok) throw new Error('Failed to load gallery.json'); return r.json(); })
+            .then(momentsData => {
+                galleryGrid.innerHTML = '';
+                const frag = document.createDocumentFragment();
+                momentsData.forEach(m => frag.appendChild(createGalleryItem(m)));
+                galleryGrid.appendChild(frag);
+            })
+            .catch(err => {
+                console.error('gallery.json load error:', err);
+                galleryGrid.innerHTML = `<p style="color:var(--text-muted);font-family:var(--font-mono);grid-column:1/-1;text-align:center;padding:2rem 0;">⚠️ Could not load gallery.json — make sure the file is in the same directory.</p>`;
+            });
 
         // ─── Scroll Effects ───────────────────────────────────────────────
         let ticking = false;
@@ -2063,7 +2203,11 @@
                     const scrollY = window.scrollY;
                     const docH = document.documentElement.scrollHeight - window.innerHeight;
                     scrollBar.style.width = (docH > 0 ? (scrollY / docH) * 100 : 0) + '%';
-                    siteHeader.classList.toggle('scrolled', scrollY > 40);
+                    const isScrolled = scrollY > 40;
+                    siteHeader.classList.toggle('scrolled', isScrolled);
+                    // Keep the root --nav-h in sync too, since scroll-padding-top on
+                    // <html> reads the root variable, not the header's local override.
+                    document.documentElement.style.setProperty('--nav-h', isScrolled ? '58px' : '68px');
                     backToTop.classList.toggle('show', scrollY > 600);
                     updateActiveNavLink();
                     ticking = false;
@@ -2073,7 +2217,7 @@
         });
 
         backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-        resetThemeBtn.addEventListener('click', resetTheme);
+        resetThemeBtn.addEventListener('click', () => resetTheme(false));
 
         // ─── Active Nav Link Highlight ────────────────────────────────────
         function updateActiveNavLink() {
@@ -2122,16 +2266,148 @@
         }, { threshold: 0.12 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // ─── Pause Orbs when off-screen ───────────────────────────────────
-        const orbObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                document.querySelectorAll('.mesh-orb').forEach(orb => {
-                    orb.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
-                });
+        // ─── Pause ambient animations when the tab isn't visible ──────────
+        // (Replaces a previous IntersectionObserver that paused the background
+        // orbs based on the Students section's visibility — which was backwards,
+        // since .gradient-mesh is fixed/full-page decoration, not hero-only.
+        // Pausing on tab-hide is the version that actually saves battery/CPU.)
+        document.addEventListener('visibilitychange', () => {
+            const playState = document.hidden ? 'paused' : 'running';
+            document.querySelectorAll('.mesh-orb, .lang-icon').forEach(el => {
+                el.style.animationPlayState = playState;
             });
-        }, { threshold: 0.1 });
-        const studentsSection = document.getElementById('students');
-        if (studentsSection) orbObserver.observe(studentsSection);
+        });
+
+        // ─── Logo fallback (nav + footer) ──────────────────────────────────
+        const FALLBACK_LOGO_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>'
+        );
+        document.querySelectorAll('#navLogo, #footerLogo').forEach(img => {
+            img.addEventListener('error', function onErr() {
+                this.src = FALLBACK_LOGO_SVG;
+                this.removeEventListener('error', onErr);
+            });
+        });
+
+        // ─── Random Student ─────────────────────────────────────────────── (feature #3)
+        const randomStudentBtn = document.getElementById('randomStudentBtn');
+        randomStudentBtn.addEventListener('click', () => {
+            if (!BATCH_STUDENTS.length) return;
+            // Clear any active filter/search so the picked student is guaranteed visible
+            searchQuery = '';
+            searchInput.value = '';
+            activeTagFilter = 'all';
+            document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => {
+                c.classList.toggle('active', c.dataset.tag === 'all');
+            });
+            renderRoster();
+
+            const randomStudent = BATCH_STUDENTS[Math.floor(Math.random() * BATCH_STUDENTS.length)];
+            requestAnimationFrame(() => {
+                const card = studentGrid.querySelector(`[data-roll="${randomStudent.roll}"]`);
+                if (!card) return;
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.classList.add('card-pulse');
+                setTimeout(() => card.classList.remove('card-pulse'), 1500);
+                showToast(`Meet ${randomStudent.nameEn}! 🎲`);
+                setTimeout(() => openProfileModal(randomStudent, card.dataset.accentKey), 650);
+            });
+        });
+
+        // ─── Student Profile Modal ────────────────────────────────────────── (feature #1)
+        const profileModal = document.getElementById('profileModal');
+        const profileModalContent = document.getElementById('profileModalContent');
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str == null ? '' : String(str);
+            return div.innerHTML;
+        }
+
+        function openProfileModal(student, accentKey) {
+            const key = accentKey || 'violet';
+            const palette = ACCENT_THEMES[key] && ACCENT_THEMES[key][currentTheme];
+            profileModalContent.style.setProperty('--accent-color', palette ? palette.accent : '');
+            profileModalContent.style.setProperty('--glow-color', palette ? palette.glow : '');
+
+            const initials = student.nameEn.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+
+            const skillsHtml = Array.isArray(student.skills) && student.skills.length
+                ? `<div class="profile-section-label">Skills</div><div class="profile-skills">${student.skills.map(s => `<span class="profile-skill-chip">${getSkillIconHtml(s, 14)}${escapeHtml(s)}</span>`).join('')}</div>`
+                : '';
+
+            const factHtml = student.fact
+                ? `<div class="profile-fact">"${escapeHtml(student.fact)}"</div>`
+                : '';
+
+            // Fixed: the cover used to be a hard 190px object-fit:cover crop,
+            // which cut off faces/torsos on portrait photos so the "full
+            // view" of the student never showed. Now we render the full
+            // photo uncropped (object-fit:contain) over a blurred backdrop
+            // made from the same image, inside a taller frame.
+            profileModalContent.innerHTML = `
+                <div class="profile-cover">
+                    <img src="${escapeHtml(student.img)}" alt="" aria-hidden="true" class="profile-cover-bg" id="profileCoverBg">
+                    <img src="${escapeHtml(student.img)}" alt="${escapeHtml(student.nameEn)}" class="profile-cover-main" id="profileCoverImg">
+                    <span class="profile-roll-chip">Roll ${escapeHtml(student.roll)}</span>
+                    <button type="button" class="profile-modal-close" aria-label="Close profile">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="profile-body">
+                    <div class="profile-name-en">${escapeHtml(student.nameEn)}</div>
+                    <div class="profile-name-bn">${escapeHtml(student.nameBn)}</div>
+                    <div class="profile-stats-grid">
+                        <div class="profile-stat-box"><div class="profile-stat-label">Hometown</div><div class="profile-stat-value">${escapeHtml(student.hometown)}</div></div>
+                        <div class="profile-stat-box"><div class="profile-stat-label">Interest</div><div class="profile-stat-value">${escapeHtml(student.interest)}</div></div>
+                        <div class="profile-stat-box"><div class="profile-stat-label">Focus</div><div class="profile-stat-value">${escapeHtml(student.subject)}</div></div>
+                        <div class="profile-stat-box"><div class="profile-stat-label">Roll No.</div><div class="profile-stat-value">${escapeHtml(student.roll)}</div></div>
+                    </div>
+                    <div class="profile-section-label">About</div>
+                    <div class="profile-bio">${escapeHtml(student.bio)}</div>
+                    ${factHtml}
+                    ${skillsHtml}
+                    ${buildProfileSocialsHtml(student)}
+                </div>
+            `;
+
+            profileModalContent.querySelector('.profile-modal-close').addEventListener('click', closeProfileModal);
+            const coverImg = profileModalContent.querySelector('#profileCoverImg');
+            const coverBg = profileModalContent.querySelector('#profileCoverBg');
+            if (coverImg) {
+                coverImg.addEventListener('error', function () {
+                    const fallback = document.createElement('div');
+                    fallback.className = 'avatar-fallback';
+                    fallback.style.position = 'static';
+                    fallback.style.height = '100%';
+                    fallback.textContent = initials;
+                    this.replaceWith(fallback);
+                    if (coverBg) coverBg.style.display = 'none';
+                });
+            }
+            if (coverBg) {
+                coverBg.addEventListener('error', function () { this.style.display = 'none'; });
+            }
+            profileModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function buildProfileSocialsHtml(student) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'profile-socials';
+            appendSocialLinks(wrapper, student, 16);
+            if (!wrapper.children.length) {
+                return '<div class="profile-no-socials">No social links added yet.</div>';
+            }
+            return wrapper.outerHTML;
+        }
+
+        function closeProfileModal() {
+            profileModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        profileModal.addEventListener('click', e => { if (e.target === profileModal) closeProfileModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && profileModal.classList.contains('active')) closeProfileModal(); });
     </script>
 </body>
 </html>
