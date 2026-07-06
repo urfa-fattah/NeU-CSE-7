@@ -105,25 +105,13 @@
             --radius-lg: 20px;
             
             --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
             --speed-fast: 200ms;
             --speed-medium: 400ms;
             --speed-slow: 700ms;
 
-            --shadow-sm: 0 2px 10px -3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 18px -6px rgba(0,0,0,0.4);
-            --shadow-lg: 0 24px 55px -18px rgba(0,0,0,0.5);
-
             /* Navbar height for offset calculations */
             --nav-h: 68px;
         }
-
-        /* ─── Custom Scrollbar ───────────────────────────────────────────── */
-        html { scrollbar-color: var(--bg-surface-raised) var(--bg-base); scrollbar-width: thin; }
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-surface-raised); border-radius: 20px; border: 2px solid var(--bg-base); background-clip: padding-box; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--violet); background-clip: padding-box; }
 
         /* ─── Light Mode Overrides ──────────────────────────────────────── */
         :root[data-theme="light"] {
@@ -283,17 +271,13 @@
         :root[data-theme="light"] nav a:hover,
         :root[data-theme="light"] nav a.active { background: rgba(0,0,0,0.06); }
 
-        /* Nav pill indicator — now a smooth sliding highlight (JS-positioned)
-           instead of a static underline; tracks hover and settles on the
-           active section when the pointer leaves. */
+        /* Nav pill indicator */
         .nav-pill {
-            position: absolute; bottom: 4px; left: 0;
-            height: 2px; width: 0; opacity: 0;
-            background: linear-gradient(90deg, var(--gold), var(--violet));
-            border-radius: 2px;
+            position: absolute; bottom: 0; left: 0;
+            height: 2px; background: var(--gold);
+            border-radius: 2px 2px 0 0;
             transition: left var(--speed-medium) var(--transition-smooth),
-                        width var(--speed-medium) var(--transition-smooth),
-                        opacity var(--speed-fast) ease;
+                        width var(--speed-medium) var(--transition-smooth);
             pointer-events: none;
         }
 
@@ -312,17 +296,14 @@
             color: var(--text-muted); cursor: pointer;
             width: 36px; height: 36px; border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
-            transition: color var(--speed-fast), border-color var(--speed-fast),
-                        background var(--speed-fast), transform var(--speed-fast);
+            transition: all var(--speed-fast);
             position: relative;
         }
-        .icon-btn svg { width: 16px; height: 16px; stroke-width: 2; transition: transform var(--speed-medium) var(--transition-bounce); }
+        .icon-btn svg { width: 16px; height: 16px; stroke-width: 2; }
         .icon-btn:hover {
             color: var(--text-primary); border-color: var(--border-hover);
             background: var(--bg-surface);
         }
-        .icon-btn:hover svg { transform: scale(1.12); }
-        .icon-btn:active { transform: scale(0.92); }
         .icon-btn[title]:hover::after {
             content: attr(title);
             position: absolute; top: calc(100% + 8px); right: 0;
@@ -426,17 +407,7 @@
             font-family: var(--font-display); font-weight: 700;
             font-size: clamp(2.8rem, 8vw, 6.5rem);
             line-height: 1.05; letter-spacing: -2px;
-            margin-bottom: var(--space-4);
-            background: linear-gradient(110deg, var(--text-primary) 35%, var(--gold) 50%, var(--violet) 65%, var(--text-primary) 85%);
-            background-size: 300% auto;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent; color: transparent;
-            animation: heroGradientShift 9s ease-in-out infinite;
-        }
-        @keyframes heroGradientShift {
-            0%   { background-position: 0% center; }
-            50%  { background-position: 100% center; }
-            100% { background-position: 0% center; }
+            color: var(--text-primary); margin-bottom: var(--space-4);
         }
         .hero-bn {
             font-family: var(--font-bn); font-weight: 600;
@@ -453,12 +424,10 @@
             gap: var(--space-12); margin-bottom: var(--space-8);
             flex-wrap: wrap;
         }
-        .stat { text-align: center; transition: transform var(--speed-medium) var(--transition-bounce); }
-        .stat:hover { transform: translateY(-3px); }
+        .stat { text-align: center; }
         .stat-value {
             font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700; color: var(--gold); line-height: 1;
-            font-variant-numeric: tabular-nums;
         }
         .stat-label {
             font-family: var(--font-mono); font-size: 0.7rem;
@@ -473,13 +442,13 @@
             background: linear-gradient(135deg, var(--gold), #fbbf24);
             color: #040714; font-family: var(--font-display); font-weight: 700;
             text-decoration: none; letter-spacing: 0.5px;
-            cursor: pointer; border: none; position: relative; overflow: hidden;
+            cursor: pointer; border: none;
             box-shadow: 0 10px 25px -5px rgba(245,158,11,0.4);
             transition: transform var(--speed-fast), box-shadow var(--speed-fast);
         }
         .btn-primary svg { width: 16px; height: 16px; stroke-width: 2.5; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(245,158,11,0.5); }
-        .btn-primary:active { transform: translateY(1px) scale(0.98); }
+        .btn-primary:active { transform: translateY(1px); }
 
         .btn-ghost {
             display: inline-flex; align-items: center; gap: 8px;
@@ -488,30 +457,15 @@
             border: 1px solid var(--border-hover);
             color: var(--text-primary); font-family: var(--font-display); font-weight: 700;
             text-decoration: none; letter-spacing: 0.5px; cursor: pointer;
-            position: relative; overflow: hidden;
             transition: all var(--speed-fast);
         }
         .btn-ghost svg { width: 16px; height: 16px; stroke-width: 2; }
         .btn-ghost:hover { background: var(--bg-surface); border-color: var(--violet); color: var(--violet); }
-        .btn-ghost:active { transform: scale(0.98); }
-
-        /* Shimmer sweep — shared by the two hero CTAs */
-        .btn-primary::after, .btn-ghost::after {
-            content: ''; position: absolute; top: 0; left: -60%;
-            width: 35%; height: 100%;
-            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-20deg);
-            transition: left 0.65s ease;
-            pointer-events: none;
-        }
-        .btn-primary:hover::after, .btn-ghost:hover::after { left: 130%; }
 
         /* ─── Hero Language Icons Background ────────────────────────────── */
         .hero-lang-icons {
             position: absolute; inset: 0; z-index: 1;
             pointer-events: none; overflow: hidden;
-            transition: transform 0.4s ease-out;
-            will-change: transform;
         }
         .lang-icon {
             position: absolute;
@@ -583,20 +537,12 @@
             box-shadow: 0 0 0 3px var(--violet-glow);
         }
         .sort-select {
-            appearance: none; -webkit-appearance: none; -moz-appearance: none;
-            background-color: var(--bg-surface-raised);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: right 14px center; background-size: 13px;
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary); padding: 12px 36px 12px var(--space-4);
+            background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
+            color: var(--text-primary); padding: 12px var(--space-4);
             border-radius: var(--radius-sm); font-family: var(--font-mono);
             font-size: 0.85rem; cursor: pointer; outline: none;
-            transition: border-color var(--speed-fast), box-shadow var(--speed-fast);
+            transition: border-color var(--speed-fast);
         }
-        :root[data-theme="light"] .sort-select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-        }
-        .sort-select:hover { border-color: var(--border-hover); }
         .sort-select:focus { border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-glow); }
 
         /* ─── Quick Suggestions Dropdown ──────────────────────────────────── */
@@ -657,20 +603,15 @@
             display: inline-flex; align-items: center; gap: 5px;
             background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
             color: var(--text-muted); padding: 5px 12px; border-radius: 20px;
-            font-size: 0.78rem; cursor: pointer;
-            transition: background var(--speed-fast), border-color var(--speed-fast),
-                        color var(--speed-fast), box-shadow var(--speed-fast),
-                        transform var(--speed-medium) var(--transition-bounce);
+            font-size: 0.78rem; cursor: pointer; transition: all var(--speed-fast);
             font-family: var(--font-body);
         }
         .filter-chip svg { width: 13px; height: 13px; }
-        .filter-chip:hover, .filter-chip:focus-visible { border-color: var(--border-hover); color: var(--text-primary); transform: translateY(-1px); }
-        .filter-chip:active { transform: scale(0.95); }
+        .filter-chip:hover, .filter-chip:focus-visible { border-color: var(--border-hover); color: var(--text-primary); }
         .filter-chip.active {
             background-color: var(--active-accent); color: #fff;
             border-color: var(--active-accent);
             box-shadow: 0 4px 12px var(--active-glow);
-            transform: scale(1.05);
         }
 
         .filter-meta {
@@ -728,17 +669,17 @@
             to   { opacity: 1; transform: translateY(0); }
         }
         .card:hover, .card:focus-visible {
-            transform: translateY(-8px) scale(1.015);
+            transform: translateY(-6px);
             border-color: var(--accent-color, var(--violet));
-            box-shadow: 0 6px 18px -8px rgba(0,0,0,0.55), 0 26px 50px -18px var(--glow-color, var(--violet-glow));
+            box-shadow: 0 20px 40px -15px var(--glow-color, var(--violet-glow));
             outline: none;
         }
         .card.active-theme-host {
             border-color: var(--accent-color, var(--violet)) !important;
-            box-shadow: 0 0 0 3px var(--accent-color, var(--violet)), 0 6px 18px -8px rgba(0,0,0,0.55), 0 28px 55px -16px var(--glow-color, var(--violet-glow)) !important;
+            box-shadow: 0 0 0 3px var(--accent-color, var(--violet)), 0 20px 50px -15px var(--glow-color, var(--violet-glow)) !important;
         }
-        .card-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center top; transition: transform var(--speed-slow) var(--transition-smooth), filter var(--speed-slow) var(--transition-smooth); }
-        .card:hover .card-bg, .card:focus-visible .card-bg { transform: scale(1.07); filter: saturate(1.15) brightness(1.04); }
+        .card-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center top; transition: transform var(--speed-slow) var(--transition-smooth); }
+        .card:hover .card-bg, .card:focus-visible .card-bg { transform: scale(1.05); }
         .student-image { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform var(--speed-slow); }
         .card-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(4,7,20,0.1) 0%, rgba(4,7,20,0.6) 45%, rgba(4,7,20,0.98) 100%); }
         :root[data-theme="light"] .card-overlay { background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(4,7,20,0.6) 40%, rgba(4,7,20,0.98) 100%); }
@@ -1000,15 +941,11 @@
         .profile-stat-box {
             background: var(--bg-surface); border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm); padding: var(--space-3);
-            transition: border-color var(--speed-fast), transform var(--speed-fast);
         }
-        .profile-stat-box:hover { border-color: var(--accent-color, var(--border-hover)); transform: translateY(-2px); }
         .profile-stat-label {
-            display: flex; align-items: center; gap: 5px;
             font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);
             text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
         }
-        .profile-stat-label .icon-wrap { color: var(--accent-color, var(--gold)); }
         .profile-stat-value { font-size: 0.9rem; color: var(--text-primary); font-weight: 500; }
         .profile-section-label {
             font-family: var(--font-mono); font-size: 0.68rem; color: var(--accent-color, var(--gold));
@@ -1026,9 +963,7 @@
             background: var(--gold-glow); color: var(--accent-color, var(--gold));
             border: 1px solid var(--border-subtle); font-family: var(--font-mono);
             font-size: 0.7rem; padding: 4px 11px 4px 8px; border-radius: 20px;
-            transition: transform var(--speed-fast) var(--transition-bounce), background var(--speed-fast), border-color var(--speed-fast);
         }
-        .profile-skill-chip:hover { transform: translateY(-2px) scale(1.04); background: rgba(255,255,255,0.08); border-color: var(--accent-color, var(--border-hover)); }
         .profile-skill-chip .skill-icon-wrap { display: flex; width: 14px; height: 14px; flex-shrink: 0; }
         .profile-skill-chip .skill-icon-wrap svg { width: 14px !important; height: 14px !important; }
         .profile-socials {
@@ -1055,14 +990,10 @@
             background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
             color: var(--text-primary); font-family: var(--font-mono); font-size: 0.85rem;
             padding: 12px 18px; border-radius: var(--radius-sm); cursor: pointer;
-            transition: border-color var(--speed-fast), color var(--speed-fast),
-                        box-shadow var(--speed-fast), transform var(--speed-fast);
-            white-space: nowrap;
+            transition: all var(--speed-fast); white-space: nowrap;
         }
-        .random-btn svg { width: 15px; height: 15px; transition: transform var(--speed-medium) var(--transition-bounce); }
+        .random-btn svg { width: 15px; height: 15px; }
         .random-btn:hover { border-color: var(--gold); color: var(--gold); box-shadow: 0 4px 14px -4px var(--gold-glow); }
-        .random-btn:hover svg { transform: rotate(90deg); }
-        .random-btn:active { transform: scale(0.96); }
 
         /* ─── About Section ──────────────────────────────────────────────── */
         .about-wrapper { max-width: 900px; margin: 0 auto; text-align: center; }
@@ -1105,27 +1036,17 @@
         /* ─── Back to Top ─────────────────────────────────────────────────── */
         .back-to-top {
             position: fixed; bottom: 28px; right: 28px; z-index: 99;
-            width: 46px; height: 46px; border-radius: 50%;
+            width: 46px; height: 46px; border-radius: 12px;
             background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
             color: var(--text-primary); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            opacity: 0; transform: translateY(12px) scale(0.9); pointer-events: none;
-            transition: opacity var(--speed-fast), transform var(--speed-fast), border-color var(--speed-fast), color var(--speed-fast), box-shadow var(--speed-fast);
+            opacity: 0; transform: translateY(12px); pointer-events: none;
+            transition: all var(--speed-fast);
             box-shadow: 0 4px 16px -4px rgba(0,0,0,0.3);
         }
-        .back-to-top-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-        .back-to-top-ring circle { fill: none; stroke-width: 2.5; }
-        .back-to-top-ring .ring-track { stroke: var(--border-subtle); }
-        .back-to-top-ring .ring-fill {
-            stroke: var(--gold); stroke-linecap: round;
-            stroke-dasharray: 125.6; stroke-dashoffset: 125.6;
-            transition: stroke-dashoffset 0.1s linear, stroke var(--speed-fast);
-        }
-        .back-to-top-arrow { position: relative; z-index: 1; width: 18px; height: 18px; }
-        .back-to-top.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-        .back-to-top:hover { border-color: var(--violet); color: var(--violet); transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 24px -4px rgba(139,92,246,0.3); }
-        .back-to-top:hover .ring-fill { stroke: var(--violet); }
-        .back-to-top:active { transform: translateY(0) scale(0.94); }
+        .back-to-top svg { width: 18px; height: 18px; }
+        .back-to-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .back-to-top:hover { border-color: var(--violet); color: var(--violet); transform: translateY(-2px); box-shadow: 0 8px 24px -4px rgba(139,92,246,0.3); }
 
         /* ─── Toast Notifications ────────────────────────────────────────── */
         .toast-container { position: fixed; bottom: 80px; right: 28px; z-index: 200; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
@@ -1209,7 +1130,6 @@
             <a href="journey.html" class="nav-link" data-section="journey" data-icon="compass">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg> Our Journey
             </a>
-            <span class="nav-pill" id="navPill" aria-hidden="true"></span>
         </nav>
 
         <div class="nav-actions">
@@ -1317,11 +1237,11 @@
                 <p class="hero-tag">৪০ জন স্বপ্নবাজ, একটি যাত্রা। চল্লিশটি ভিন্ন গল্প, একটাই লক্ষ্য — কোডিং, সৃজনশীলতা আর উদ্ভাবনের পথে একসাথে এগিয়ে চলা।</p>
                 <div class="hero-stats">
                     <div class="stat">
-                        <div class="stat-value" data-count-to="40">40</div>
+                        <div class="stat-value">40</div>
                         <div class="stat-label">Students</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-value" data-count-to="1" data-pad="2">01</div>
+                        <div class="stat-value">01</div>
                         <div class="stat-label">Department</div>
                     </div>
                     <div class="stat">
@@ -1448,15 +1368,15 @@
                         <div class="counter-label">Students</div>
                     </div>
                     <div class="counter-card">
-                        <div class="counter-number" data-count-to="1" data-pad="2">01</div>
+                        <div class="counter-number">01</div>
                         <div class="counter-label">Department</div>
                     </div>
                     <div class="counter-card">
-                        <div class="counter-number" data-count-to="4" data-pad="2">04</div>
+                        <div class="counter-number">04</div>
                         <div class="counter-label">Years Ahead</div>
                     </div>
                     <div class="counter-card">
-                        <div class="counter-number" data-count-to="1" data-pad="2">01</div>
+                        <div class="counter-number">01</div>
                         <div class="counter-label">Dream</div>
                     </div>
                 </div>
@@ -1495,11 +1415,7 @@
 
     <!-- Back to Top -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <svg class="back-to-top-ring" viewBox="0 0 46 46" aria-hidden="true">
-            <circle class="ring-track" cx="23" cy="23" r="20"/>
-            <circle class="ring-fill" id="backToTopRing" cx="23" cy="23" r="20"/>
-        </svg>
-        <svg class="back-to-top-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
     </button>
 
     <script>
@@ -1537,17 +1453,13 @@
             'instagram': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
             'linkedin': `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
             'github': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
-            'email': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>`,
-            'hash': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>`
+            'email': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>`
         };
 
-        function wrapIcon(raw, size) {
-            if (!raw) return '';
-            return `<span class="icon-wrap" style="display:inline-flex;width:${size}px;height:${size}px;flex-shrink:0;" aria-hidden="true">${raw}</span>`;
-        }
         function iconMarkup(key, size) {
             const raw = (ICONS && ICONS[key]) || ICON_FALLBACKS[key];
-            return wrapIcon(raw, size);
+            if (!raw) return '';
+            return `<span class="icon-wrap" style="display:inline-flex;width:${size}px;height:${size}px;flex-shrink:0;" aria-hidden="true">${raw}</span>`;
         }
 
         function loadIcons() {
@@ -1573,10 +1485,7 @@
                 buildFilterChips();   // build chips from real interest values
                 renderRoster();
                 const numStudentsEl = document.getElementById('numStudents');
-                if (numStudentsEl) {
-                    numStudentsEl.dataset.countTo = data.length;
-                    animateCount(numStudentsEl);
-                }
+                if (numStudentsEl) numStudentsEl.textContent = data.length;
             })
             .catch(err => {
                 console.error('students.json load error:', err);
@@ -1626,60 +1535,6 @@
         requestAnimationFrame(() => requestAnimationFrame(() => {
             document.body.classList.add('theme-ready');
         }));
-
-        // ─── Count-up Animation (hero stats + About counters) ─────────────
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        function animateCount(el, duration) {
-            const target = parseInt(el.dataset.countTo, 10);
-            if (isNaN(target)) return;
-            const pad = parseInt(el.dataset.pad || '1', 10);
-            if (prefersReducedMotion) {
-                el.textContent = String(target).padStart(pad, '0');
-                return;
-            }
-            const dur = duration || 1200;
-            const start = performance.now();
-            function tick(now) {
-                const progress = Math.min((now - start) / dur, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                el.textContent = Math.round(eased * target).toString().padStart(pad, '0');
-                if (progress < 1) requestAnimationFrame(tick);
-                else el.textContent = String(target).padStart(pad, '0');
-            }
-            requestAnimationFrame(tick);
-        }
-        // Hero stats are visible immediately on load
-        document.querySelectorAll('.hero-stats [data-count-to]').forEach(el => animateCount(el));
-        // About counters animate once they scroll into view
-        const countObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCount(entry.target);
-                    countObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.4 });
-        document.querySelectorAll('.counter-number[data-count-to]').forEach(el => countObserver.observe(el));
-
-        // ─── Hero Icon Layer Parallax (desktop pointer only) ───────────────
-        const heroLangIcons = document.querySelector('.hero-lang-icons');
-        const heroSection = document.getElementById('home');
-        const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
-        if (heroLangIcons && heroSection && !prefersReducedMotion && !isCoarsePointer) {
-            let parallaxRaf = null;
-            heroSection.addEventListener('mousemove', (e) => {
-                if (parallaxRaf) return;
-                parallaxRaf = requestAnimationFrame(() => {
-                    const x = (e.clientX / window.innerWidth - 0.5) * 2;
-                    const y = (e.clientY / window.innerHeight - 0.5) * 2;
-                    heroLangIcons.style.transform = `translate(${x * -10}px, ${y * -10}px)`;
-                    parallaxRaf = null;
-                });
-            });
-            heroSection.addEventListener('mouseleave', () => {
-                heroLangIcons.style.transform = 'translate(0, 0)';
-            });
-        }
 
         let activeTagFilter = 'all';
         let searchQuery = '';
@@ -2341,19 +2196,13 @@
             });
 
         // ─── Scroll Effects ───────────────────────────────────────────────
-        const backToTopRing = document.getElementById('backToTopRing');
-        const RING_CIRCUMFERENCE = 2 * Math.PI * 20; // r=20 from the SVG circle
         let ticking = false;
         window.addEventListener('scroll', () => {
             if (!ticking) {
                 requestAnimationFrame(() => {
                     const scrollY = window.scrollY;
                     const docH = document.documentElement.scrollHeight - window.innerHeight;
-                    const scrollPct = docH > 0 ? Math.min(scrollY / docH, 1) : 0;
-                    scrollBar.style.width = (scrollPct * 100) + '%';
-                    if (backToTopRing) {
-                        backToTopRing.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - scrollPct));
-                    }
+                    scrollBar.style.width = (docH > 0 ? (scrollY / docH) * 100 : 0) + '%';
                     const isScrolled = scrollY > 40;
                     siteHeader.classList.toggle('scrolled', isScrolled);
                     // Keep the root --nav-h in sync too, since scroll-padding-top on
@@ -2370,29 +2219,7 @@
         backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         resetThemeBtn.addEventListener('click', () => resetTheme(false));
 
-        // ─── Active Nav Link Highlight + Sliding Pill ─────────────────────
-        const navPillEl = document.getElementById('navPill');
-        const navLinkEls = Array.from(document.querySelectorAll('#mainNav .nav-link'));
-
-        function movePillTo(el) {
-            if (!navPillEl || !el) return;
-            navPillEl.style.left = el.offsetLeft + 'px';
-            navPillEl.style.width = el.offsetWidth + 'px';
-            navPillEl.style.opacity = '1';
-        }
-        function movePillToActive() {
-            const active = document.querySelector('#mainNav .nav-link.active');
-            if (active) movePillTo(active);
-            else if (navPillEl) navPillEl.style.opacity = '0';
-        }
-        navLinkEls.forEach(link => {
-            link.addEventListener('mouseenter', () => movePillTo(link));
-            link.addEventListener('mouseleave', movePillToActive);
-            link.addEventListener('focus', () => movePillTo(link));
-            link.addEventListener('blur', movePillToActive);
-        });
-        window.addEventListener('resize', movePillToActive);
-
+        // ─── Active Nav Link Highlight ────────────────────────────────────
         function updateActiveNavLink() {
             const sections = ['home','students','moments','about'];
             const scrollY = window.scrollY + 120;
@@ -2404,14 +2231,8 @@
             document.querySelectorAll('.nav-link').forEach(a => {
                 a.classList.toggle('active', a.dataset.section === current);
             });
-            movePillToActive();
         }
         updateActiveNavLink();
-        // Fonts loading async can shift link widths after the first paint —
-        // resync the pill once webfonts have settled.
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(movePillToActive).catch(() => {});
-        }
 
         // ─── Mobile Drawer ────────────────────────────────────────────────
         function openDrawer() {
@@ -2519,9 +2340,6 @@
                 ? `<div class="profile-fact">"${escapeHtml(student.fact)}"</div>`
                 : '';
 
-            const interestLogoData = INTEREST_LOGOS[student.interest] || DEFAULT_LOGO;
-            const interestIconHtml = wrapIcon(resolveInterestIcon(interestLogoData), 11);
-
             // Fixed: the cover used to be a hard 190px object-fit:cover crop,
             // which cut off faces/torsos on portrait photos so the "full
             // view" of the student never showed. Now we render the full
@@ -2540,10 +2358,10 @@
                     <div class="profile-name-en">${escapeHtml(student.nameEn)}</div>
                     <div class="profile-name-bn">${escapeHtml(student.nameBn)}</div>
                     <div class="profile-stats-grid">
-                        <div class="profile-stat-box"><div class="profile-stat-label">${iconMarkup('map-pin', 11)}Hometown</div><div class="profile-stat-value">${escapeHtml(student.hometown)}</div></div>
-                        <div class="profile-stat-box"><div class="profile-stat-label">${interestIconHtml}Interest</div><div class="profile-stat-value">${escapeHtml(student.interest)}</div></div>
-                        <div class="profile-stat-box"><div class="profile-stat-label">${iconMarkup('code', 11)}Focus</div><div class="profile-stat-value">${escapeHtml(student.subject)}</div></div>
-                        <div class="profile-stat-box"><div class="profile-stat-label">${iconMarkup('hash', 11)}Roll No.</div><div class="profile-stat-value">${escapeHtml(student.roll)}</div></div>
+                        <div class="profile-stat-box"><div class="profile-stat-label">Hometown</div><div class="profile-stat-value">${escapeHtml(student.hometown)}</div></div>
+                        <div class="profile-stat-box"><div class="profile-stat-label">Interest</div><div class="profile-stat-value">${escapeHtml(student.interest)}</div></div>
+                        <div class="profile-stat-box"><div class="profile-stat-label">Focus</div><div class="profile-stat-value">${escapeHtml(student.subject)}</div></div>
+                        <div class="profile-stat-box"><div class="profile-stat-label">Roll No.</div><div class="profile-stat-value">${escapeHtml(student.roll)}</div></div>
                     </div>
                     <div class="profile-section-label">About</div>
                     <div class="profile-bio">${escapeHtml(student.bio)}</div>
@@ -2591,8 +2409,5 @@
         profileModal.addEventListener('click', e => { if (e.target === profileModal) closeProfileModal(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape' && profileModal.classList.contains('active')) closeProfileModal(); });
     </script>
-
-    <!-- Generates a per-student PNG ID card and adds a download button to each card -->
-    <script src="idcard-generator.js" defer></script>
 </body>
 </html>
