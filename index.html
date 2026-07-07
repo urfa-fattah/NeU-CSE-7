@@ -97,6 +97,7 @@
             --space-2: 0.5rem;
             --space-3: 0.75rem;
             --space-4: 1rem;
+            --space-5: 1.25rem;
             --space-6: 1.5rem;
             --space-8: 2rem;
             --space-12: 3rem;
@@ -115,6 +116,7 @@
             --shadow-md: 0 12px 32px -10px rgba(0,0,0,0.35);
             --shadow-lg: 0 24px 60px -16px rgba(0,0,0,0.45);
             --glass-blur: blur(18px) saturate(160%);
+            --glass-fade: rgba(8,11,24,0.94);
             --hairline: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
 
             /* Navbar height for offset calculations */
@@ -142,6 +144,7 @@
             --shadow-sm: 0 2px 10px -2px rgba(15,23,42,0.10);
             --shadow-md: 0 12px 32px -10px rgba(15,23,42,0.14);
             --shadow-lg: 0 24px 60px -16px rgba(15,23,42,0.18);
+            --glass-fade: rgba(255,255,255,0.9);
             --hairline: linear-gradient(90deg, transparent, rgba(15,23,42,0.15), transparent);
         }
 
@@ -506,6 +509,114 @@
             letter-spacing: 2px; margin-top: var(--space-2);
         }
 
+        /* ─── Liquid Glass (reusable) ────────────────────────────────────── */
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 65%);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.14);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 32px rgba(255,255,255,0.025), 0 20px 45px -20px rgba(0,0,0,0.55);
+        }
+        :root[data-theme="light"] .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.72), rgba(255,255,255,0.32) 65%);
+            border: 1px solid rgba(255,255,255,0.65);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), 0 20px 45px -20px rgba(15,23,42,0.20);
+        }
+
+        /* ─── Hero Spotlight — compact card cycling through the roster ─────
+           Fixed height + clipped overflow so cycling never causes the card
+           (and everything below it) to grow/shrink and jump around while
+           scrolling. Every sub-element that could vary in length (hometown,
+           interest chip, quote) is locked to a single line or a reserved
+           two-line box instead of reflowing the layout. */
+        .hero-spotlight {
+            position: relative; overflow: hidden;
+            max-width: 420px; width: 100%; height: 178px;
+            margin: 0 auto var(--space-8); text-align: left;
+            border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5);
+            cursor: pointer; transition: border-color var(--speed-fast), transform var(--speed-fast), box-shadow var(--speed-fast);
+        }
+        .hero-spotlight::before {
+            content: ''; position: absolute; top: -30%; left: -10%; width: 60%; height: 90%; z-index: 0;
+            background: radial-gradient(circle, var(--glow-color, var(--teal-glow)), transparent 70%);
+            opacity: 0.6; pointer-events: none;
+        }
+        .hero-spotlight:hover, .hero-spotlight:focus-visible {
+            border-color: rgba(255,255,255,0.32); transform: translateY(-3px);
+            box-shadow: 0 22px 40px -18px rgba(0,0,0,0.5); outline: none;
+        }
+        .spotlight-eyebrow {
+            position: relative; z-index: 1;
+            display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-3);
+            font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 2.5px;
+            text-transform: uppercase; color: var(--text-muted); white-space: nowrap;
+        }
+        .spotlight-dot { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: var(--teal); box-shadow: 0 0 8px var(--teal); }
+        .spotlight-index {
+            margin-left: auto; font-size: 0.62rem; letter-spacing: 1px; color: var(--text-muted);
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            padding: 2px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+        }
+        .spotlight-body {
+            position: relative; z-index: 1;
+            display: flex; align-items: flex-start; gap: var(--space-4); height: 108px; overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
+        }
+        .spotlight-body.spotlight-sliding-out { transform: translateX(-22px); opacity: 0; }
+        .spotlight-body.spotlight-sliding-in { transform: translateX(22px); opacity: 0; transition: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .spotlight-body, .spotlight-body.spotlight-sliding-out, .spotlight-body.spotlight-sliding-in { transition: none; transform: none; opacity: 1; }
+        }
+        .spotlight-avatar {
+            position: relative; width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%;
+            overflow: hidden; border: 2px solid var(--ring-color, var(--border-hover));
+            background: var(--bg-surface-raised);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--ring-color, var(--teal)) 14%, transparent);
+        }
+        .spotlight-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .spotlight-avatar-fallback {
+            position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .hero-spotlight .show-fallback .spotlight-avatar-fallback { display: flex; }
+        .spotlight-info { min-width: 0; flex: 1; }
+        .spotlight-name {
+            font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
+            color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .spotlight-meta {
+            display: flex; flex-wrap: nowrap; align-items: center; gap: 7px; margin-top: 6px;
+            font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-muted);
+            overflow: hidden;
+        }
+        .spotlight-meta > span { display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
+        .spotlight-meta-text {
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+        }
+        .spotlight-chip {
+            padding: 2px 10px; border-radius: 20px; flex-shrink: 0; white-space: nowrap;
+            background: color-mix(in srgb, var(--chip-color, var(--teal)) 16%, transparent);
+            color: var(--chip-color, var(--teal));
+            border: 1px solid color-mix(in srgb, var(--chip-color, var(--teal)) 35%, transparent);
+            max-width: 45%; overflow: hidden; text-overflow: ellipsis;
+        }
+        .spotlight-quote {
+            margin-top: 9px; font-size: 0.79rem; color: var(--text-accent); line-height: 1.5;
+            font-style: italic; opacity: 0.92; min-height: 2.4em;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        @media (max-width: 480px) {
+            .hero-spotlight { max-width: 96%; padding: var(--space-4); height: 178px; }
+        }
+        @media (max-width: 380px) {
+            .hero-spotlight { height: 168px; }
+            .spotlight-avatar { width: 46px; height: 46px; }
+            .spotlight-name { font-size: 0.95rem; }
+            .spotlight-body { gap: var(--space-3); height: 98px; }
+            .spotlight-quote { font-size: 0.74rem; -webkit-line-clamp: 2; }
+        }
+
+
         .hero-cta { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
         .btn-primary, .btn-ghost { position: relative; overflow: hidden; isolation: isolate; }
         .btn-primary::before, .btn-ghost::before {
@@ -782,32 +893,41 @@
         @media (hover: none) { .card::before { display: none; } }
         .card-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center top; transition: transform var(--speed-slow) var(--transition-smooth); }
         .card:hover .card-bg, .card:focus-visible .card-bg { transform: scale(1.05); }
-        .student-image { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform var(--speed-slow); }
+        .student-image { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform var(--speed-slow), opacity 0.5s ease; opacity: 0; }
+        .student-image.img-loaded { opacity: 1; }
         .card-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(4,7,20,0.1) 0%, rgba(4,7,20,0.6) 45%, rgba(4,7,20,0.98) 100%); }
         :root[data-theme="light"] .card-overlay { background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(4,7,20,0.6) 40%, rgba(4,7,20,0.98) 100%); }
 
         .roll-badge {
             position: absolute; top: 16px; left: 16px; z-index: 3;
             width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-            background: rgba(4,7,20,0.85); border: 1px solid var(--accent-color, var(--gold));
+            background: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.03) 65%), rgba(4,7,20,0.55);
+            backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%);
+            border: 1px solid rgba(255,255,255,0.22);
             border-radius: 50%; font-family: var(--font-mono); font-weight: 700;
             font-size: 0.8rem; color: var(--accent-color, var(--gold));
-            box-shadow: 0 4px 14px -4px var(--glow-color, rgba(0,0,0,0.4));
-            transition: transform var(--speed-medium) var(--transition-bounce);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 4px 14px -4px var(--glow-color, rgba(0,0,0,0.4));
+            transition: transform var(--speed-medium) var(--transition-bounce), border-color var(--speed-fast), box-shadow var(--speed-fast);
         }
-        .card:hover .roll-badge { transform: scale(1.08) rotate(-4deg); }
+        .card:hover .roll-badge {
+            transform: scale(1.08) rotate(-4deg);
+            border-color: var(--accent-color, var(--gold));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 6px 18px -4px var(--glow-color, rgba(0,0,0,0.4));
+        }
 
         /* Interest tag badge on card */
         .card-interest-badge {
             position: absolute; top: 16px; right: 16px; z-index: 3;
-            background: rgba(4,7,20,0.75); backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(150deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02) 65%), rgba(4,7,20,0.5);
+            backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%);
+            border: 1px solid rgba(255,255,255,0.16);
             border-radius: 20px; padding: 4px 10px;
             font-family: var(--font-mono); font-size: 0.65rem;
             color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
-            transition: border-color var(--speed-medium), color var(--speed-medium);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+            transition: border-color var(--speed-medium), color var(--speed-medium), background var(--speed-medium);
         }
-        .card:hover .card-interest-badge { border-color: var(--accent-color, rgba(255,255,255,0.1)); color: var(--text-accent); }
+        .card:hover .card-interest-badge { border-color: var(--accent-color, rgba(255,255,255,0.1)); color: var(--text-accent); background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04) 65%), rgba(4,7,20,0.5); }
 
         /* ─── Card Skill Badges (one per interest, stacked) ─────────────────
            Fixed pixel top + fixed side so the stack NEVER collides with
@@ -822,12 +942,13 @@
         .card-skill-badge {
             width: 38px; height: 38px;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(4, 7, 20, 0.6);
-            backdrop-filter: blur(10px) saturate(140%);
-            -webkit-backdrop-filter: blur(10px) saturate(140%);
-            border: 1px solid rgba(255,255,255,0.14);
+            background: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02) 65%), rgba(4, 7, 20, 0.55);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            border: 1px solid rgba(255,255,255,0.16);
             border-radius: 11px;
             opacity: 0.82;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
             transition: opacity var(--speed-medium) var(--transition-smooth),
                         transform var(--speed-fast) var(--transition-bounce),
                         border-color var(--speed-fast),
@@ -906,9 +1027,12 @@
         }
         .profile-btn {
             display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.15);
+            background: linear-gradient(150deg, rgba(255,255,255,0.09), rgba(255,255,255,0.01) 65%);
+            backdrop-filter: blur(8px) saturate(150%); -webkit-backdrop-filter: blur(8px) saturate(150%);
+            border: 1px solid rgba(255,255,255,0.15);
             color: var(--text-accent); font-family: var(--font-mono); font-size: 0.7rem;
             padding: 7px 12px; border-radius: 20px; cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.16);
             transition: color var(--speed-fast), border-color var(--speed-fast),
                         background var(--speed-fast), box-shadow var(--speed-fast),
                         transform var(--speed-fast) var(--transition-bounce);
@@ -917,8 +1041,8 @@
         .profile-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
         .profile-btn:hover, .profile-btn:focus-visible {
             color: #fff; border-color: var(--accent-color, var(--violet));
-            background: rgba(255,255,255,0.09);
-            box-shadow: 0 6px 16px -3px var(--glow-color, var(--violet-glow));
+            background: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02) 65%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 16px -3px var(--glow-color, var(--violet-glow));
             outline: none; transform: translateY(-2px);
         }
         .profile-btn:active { transform: translateY(0) scale(0.96); }
@@ -949,46 +1073,318 @@
         }
         .no-results svg { display: block; margin: 0 auto var(--space-4); opacity: 0.3; width: 48px; height: 48px; }
 
-        /* ─── Gallery ────────────────────────────────────────────────────── */
-        .moments-container { max-width: 1200px; margin: 0 auto; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-4); }
-        .gallery-item {
-            position: relative; aspect-ratio: 4/3; border-radius: var(--radius-md);
-            overflow: hidden; border: 1px solid var(--border-subtle);
-            cursor: zoom-in; background-color: var(--bg-surface-raised);
-            transition: border-color var(--speed-fast), transform var(--speed-medium) var(--transition-smooth), box-shadow var(--speed-medium);
-        }
-        .gallery-item:hover { border-color: var(--violet); transform: translateY(-5px); box-shadow: var(--shadow-md); }
-        .gallery-img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--speed-slow) var(--transition-smooth); }
-        .gallery-item:hover .gallery-img { transform: scale(1.08); }
-        .gallery-item-title {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            padding: var(--space-4); background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-            color: #fff; font-family: var(--font-display); font-size: 0.85rem;
-            opacity: 0; transition: opacity var(--speed-fast); display: flex; align-items: center; gap: 6px;
-        }
-        .gallery-item-title svg { width: 14px; height: 14px; flex-shrink: 0; }
-        .gallery-item:hover .gallery-item-title { opacity: 1; }
+        /* ─── Gallery — Liquid Glass Album ──────────────────────────────────
+           A single "album" tile (a frosted-glass card with a fanned photo
+           stack) replaces the old flat grid. Clicking it opens a full
+           liquid-glass viewer with prev/next navigation, a thumbnail
+           filmstrip, and a per-image download action. */
+        .moments-container { max-width: 640px; margin: 0 auto; }
 
-        /* Lightbox */
+        .album-cover {
+            position: relative; width: 100%; border: none; cursor: pointer;
+            border-radius: var(--radius-lg); padding: clamp(1.1rem, 3vw, var(--space-6));
+            display: flex; align-items: center; gap: clamp(var(--space-4), 4vw, var(--space-6));
+            text-align: left; font-family: inherit; color: inherit;
+            overflow: hidden; isolation: isolate;
+            transition: transform var(--speed-medium) var(--transition-smooth),
+                        box-shadow var(--speed-medium) var(--transition-smooth),
+                        border-color var(--speed-medium);
+        }
+        .album-cover::after {
+            content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+            background: radial-gradient(480px circle at var(--mx, 20%) var(--my, 30%), rgba(255,255,255,0.14), transparent 55%);
+            opacity: 0; transition: opacity var(--speed-medium); pointer-events: none;
+        }
+        .album-cover:hover, .album-cover:focus-visible {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 55px -18px var(--violet-glow), var(--shadow-lg);
+            outline: none;
+        }
+        .album-cover:active { transform: translateY(-2px) scale(0.995); }
+        .album-cover:hover::after, .album-cover:focus-visible::after { opacity: 1; }
+        @media (hover: none) { .album-cover::after { display: none; } }
+
+        /* Fanned stack of photo thumbnails — the "album" visual cue */
+        .album-cover-stack {
+            position: relative; width: clamp(88px, 22vw, 128px); height: clamp(72px, 18vw, 104px); flex-shrink: 0;
+        }
+        .album-stack-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; border-radius: var(--radius-sm);
+            border: 2px solid rgba(255,255,255,0.18);
+            box-shadow: 0 10px 24px -8px rgba(0,0,0,0.55);
+            opacity: 0; transition: transform var(--speed-medium) var(--transition-bounce), opacity 0.4s ease;
+        }
+        .album-stack-img.img-loaded { opacity: 1; }
+        .album-stack-img:nth-child(1) { transform: rotate(-9deg) translate(-8px, 4px); z-index: 1; }
+        .album-stack-img:nth-child(2) { transform: rotate(5deg) translate(10px, 0px); z-index: 2; }
+        .album-stack-img:nth-child(3) { transform: rotate(-2deg) translate(1px, -6px); z-index: 3; }
+        .album-cover:hover .album-stack-img:nth-child(1) { transform: rotate(-14deg) translate(-16px, 8px); }
+        .album-cover:hover .album-stack-img:nth-child(2) { transform: rotate(10deg) translate(18px, 2px); }
+        .album-cover:hover .album-stack-img:nth-child(3) { transform: rotate(-3deg) translate(1px, -10px) scale(1.03); }
+
+        .album-cover-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+        .album-cover-eyebrow {
+            display: flex; align-items: center; gap: 6px;
+            font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+        }
+        .album-cover-eyebrow svg { width: 13px; height: 13px; color: var(--violet); flex-shrink: 0; }
+        .album-cover-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.1rem, 4vw, 1.35rem); color: var(--text-primary); }
+        .album-cover-count { margin-top: 4px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+        .album-cover-cta {
+            margin-top: var(--space-4); display: inline-flex; align-items: center; gap: 7px;
+            padding: 9px 16px; border-radius: 20px;
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16);
+            font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-accent);
+            transition: background var(--speed-fast), border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce);
+        }
+        .album-cover-cta svg { width: 14px; height: 14px; transition: transform var(--speed-fast) var(--transition-bounce); flex-shrink: 0; }
+        .album-cover:hover .album-cover-cta { background: rgba(255,255,255,0.12); border-color: var(--violet); }
+        .album-cover:hover .album-cover-cta svg { transform: translateX(4px); }
+        @media (max-width: 560px) {
+            .album-cover { flex-direction: column; text-align: center; }
+            .album-cover-stack { margin-bottom: var(--space-2); }
+            .album-cover-eyebrow { justify-content: center; }
+            .album-cover-cta { margin-left: auto; margin-right: auto; }
+        }
+        @media (max-width: 360px) {
+            .album-cover-title { font-size: 1.05rem; }
+            .album-cover-count { font-size: 0.7rem; }
+        }
+
+        /* ─── Liquid Glass Album Viewer (lightbox) ───────────────────────────
+           Fully fluid: the frame never exceeds the viewport, the image area
+           flexes to fill remaining space, and controls reflow for touch. */
         .lightbox {
-            position: fixed; inset: 0; background: rgba(4,7,20,0.96);
-            z-index: 1000; display: none; align-items: center; justify-content: center; padding: var(--space-4);
+            position: fixed; inset: 0; background: rgba(4,7,20,0.88);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
+            padding: clamp(0.5rem, 2.5vw, var(--space-4));
             animation: fadeIn 0.2s ease;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .lightbox.active { display: flex; }
-        .lightbox-content { position: relative; max-width: 90%; max-height: 80vh; }
-        .lightbox-img { max-width: 100%; max-height: 80vh; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.15); }
-        .lightbox-close {
-            position: absolute; top: -50px; right: 0;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px; color: #fff; width: 40px; height: 40px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: background var(--speed-fast);
+
+        .lightbox-glass-frame {
+            position: relative; width: 100%; max-width: 980px;
+            max-height: 96dvh; max-height: 96vh;
+            display: flex; flex-direction: column; min-height: 0;
+            border-radius: var(--radius-lg); overflow: hidden;
+            background: linear-gradient(165deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 60%), var(--glass-fade);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.16);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), var(--shadow-lg);
+            animation: modalPop 0.35s var(--transition-bounce);
         }
-        .lightbox-close:hover { background: rgba(255,255,255,0.2); }
-        .lightbox-close svg { width: 20px; height: 20px; }
+        :root[data-theme="light"] .lightbox-glass-frame {
+            background: linear-gradient(165deg, rgba(255,255,255,0.75), rgba(255,255,255,0.35) 60%), var(--glass-fade);
+            border: 1px solid rgba(255,255,255,0.65);
+        }
+
+        .lightbox-topbar {
+            display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+            padding: 12px clamp(var(--space-3), 3vw, var(--space-5)); flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .lightbox-counter {
+            font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 1px; color: var(--text-muted);
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+            padding: 5px 12px; border-radius: 20px; flex-shrink: 0;
+        }
+        .lightbox-title-mobile {
+            flex: 1; min-width: 0; text-align: center; font-family: var(--font-display); font-size: 0.85rem;
+            color: var(--text-accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 var(--space-2);
+        }
+        .lightbox-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .lightbox-icon-btn {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
+            border-radius: 10px; color: #fff; width: 38px; height: 38px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: background var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), border-color var(--speed-fast);
+        }
+        .lightbox-icon-btn svg { width: 17px; height: 17px; }
+        .lightbox-icon-btn:hover { background: rgba(255,255,255,0.16); border-color: var(--violet); transform: translateY(-2px); }
+        #lightboxClose:hover { border-color: #f87171; }
+        #lightboxDownload:hover { border-color: var(--teal); }
+
+        .lightbox-content {
+            position: relative; flex: 1; min-height: 0;
+            display: flex; align-items: center; justify-content: center;
+            padding: var(--space-3) var(--space-2); gap: 0;
+        }
+        .lightbox-image-wrap {
+            position: relative; flex: 1; min-width: 0; height: 100%;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            border-radius: var(--radius-sm); touch-action: pan-y;
+        }
+        .lightbox-img {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+            border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 50px -15px rgba(0,0,0,0.6);
+            animation: lightboxImgIn 0.28s var(--transition-smooth);
+            user-select: none; -webkit-user-drag: none;
+        }
+        @keyframes lightboxImgIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+
+        .lightbox-nav {
+            flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; z-index: 2;
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
+            color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), border-color var(--speed-fast);
+            margin: 0 var(--space-2);
+        }
+        .lightbox-nav svg { width: 20px; height: 20px; }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.16); border-color: var(--violet); transform: scale(1.08); }
+        .lightbox-nav:active { transform: scale(0.96); }
+
+        .lightbox-filmstrip {
+            display: flex; gap: 9px; flex-shrink: 0;
+            padding: var(--space-3) clamp(var(--space-3), 3vw, var(--space-5)) var(--space-4);
+            overflow-x: auto; scrollbar-width: thin;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .lightbox-filmstrip::-webkit-scrollbar { height: 6px; }
+        .film-thumb {
+            flex-shrink: 0; width: 58px; height: 58px; border-radius: 10px; overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.14); cursor: pointer; padding: 0; background: none;
+            opacity: 0.55; transition: opacity var(--speed-fast), border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce);
+        }
+        .film-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .film-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
+        .film-thumb.active { opacity: 1; border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-glow); }
+
+        /* Tablet: tighten spacing a touch, nav stays inline */
+        @media (max-width: 768px) {
+            .lightbox-nav { width: 40px; height: 40px; }
+            .film-thumb { width: 52px; height: 52px; }
+        }
+        /* Phone: reclaim horizontal space by floating nav arrows over the
+           image edges instead of squeezing it between two 40px buttons. */
+        @media (max-width: 640px) {
+            .lightbox-title-mobile { display: none; }
+            .lightbox-content { padding: var(--space-2) 0; }
+            .lightbox-nav {
+                position: absolute; top: 50%; transform: translateY(-50%);
+                margin: 0; width: 38px; height: 38px;
+                background: rgba(4,7,20,0.55); border-color: rgba(255,255,255,0.24);
+            }
+            .lightbox-nav:hover { transform: translateY(-50%) scale(1.08); }
+            .lightbox-nav:active { transform: translateY(-50%) scale(0.96); }
+            .lightbox-prev { left: 8px; }
+            .lightbox-next { right: 8px; }
+            .lightbox-image-wrap { width: 100%; }
+            .lightbox-img { max-width: calc(100% - 16px); }
+            .film-thumb { width: 46px; height: 46px; }
+        }
+        /* Short / landscape viewports: shrink the filmstrip so the photo
+           itself always has room to breathe. */
+        @media (max-height: 560px) {
+            .lightbox-topbar { padding-top: 8px; padding-bottom: 8px; }
+            .lightbox-filmstrip { padding-top: 6px; padding-bottom: 8px; }
+            .film-thumb { width: 40px; height: 40px; }
+        }
+        @media (max-height: 420px) {
+            .lightbox-filmstrip { display: none; }
+        }
+
+        /* ─── "Our Journey" CTA — liquid glass, animated gradient border ───
+           A rotating conic-gradient ring lives behind the button; the button
+           itself is a solid liquid-glass pane offset by ~2.5px, so only a
+           thin glowing edge of the rotating gradient peeks through. */
+        .journey-cta-frame {
+            position: relative; margin: var(--space-8) auto 0; max-width: 640px;
+            border-radius: 26px; padding: 2.5px; overflow: hidden; isolation: isolate;
+        }
+        .journey-cta-frame::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 220%; height: 220%; z-index: 0; transform-origin: center;
+            background: conic-gradient(from 0deg, var(--violet), var(--teal) 33%, var(--gold) 66%, var(--violet) 100%);
+            animation: journeySpin 5s linear infinite;
+            opacity: 0.55; transition: opacity var(--speed-medium);
+        }
+        .journey-cta-frame:hover::before, .journey-cta-frame:focus-within::before { opacity: 1; }
+        @keyframes journeySpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        .journey-cta {
+            position: relative; z-index: 1; width: 100%; overflow: hidden; isolation: isolate;
+            display: flex; align-items: center; gap: var(--space-5);
+            padding: 1.15rem 1.7rem; border-radius: 24px;
+            text-decoration: none; color: inherit; cursor: pointer;
+            background: linear-gradient(165deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02) 60%), var(--glass-fade);
+            backdrop-filter: blur(26px) saturate(180%);
+            -webkit-backdrop-filter: blur(26px) saturate(180%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+            transition: transform var(--speed-medium) var(--transition-bounce), box-shadow var(--speed-medium);
+        }
+        :root[data-theme="light"] .journey-cta {
+            background: linear-gradient(165deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4) 60%), var(--glass-fade);
+        }
+        .journey-cta-frame:hover .journey-cta, .journey-cta:focus-visible {
+            transform: translateY(-4px); outline: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.24), 0 24px 50px -16px var(--violet-glow);
+        }
+        .journey-cta-frame:active .journey-cta { transform: translateY(-1px) scale(0.99); }
+
+        /* Shimmer sweep across the glass on hover */
+        .journey-cta::after {
+            content: ''; position: absolute; inset: 0; z-index: 0;
+            background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,0.4) 50%, transparent 75%);
+            transform: translateX(-130%); transition: transform 0.7s var(--transition-smooth);
+            pointer-events: none;
+        }
+        .journey-cta-frame:hover .journey-cta::after { transform: translateX(130%); }
+
+        .journey-cta-icon {
+            position: relative; z-index: 1; flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.03) 65%), rgba(139,92,246,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+            color: var(--gold);
+            transition: transform 0.6s var(--transition-bounce), color var(--speed-medium);
+        }
+        .journey-cta-icon svg { width: 24px; height: 24px; }
+        .journey-cta-frame:hover .journey-cta-icon { transform: rotate(224deg) scale(1.08); color: var(--teal); }
+
+        .journey-cta-text { position: relative; z-index: 1; flex: 1; min-width: 0; }
+        .journey-cta-title {
+            display: block; font-family: var(--font-display); font-weight: 700;
+            font-size: clamp(1.05rem, 3vw, 1.25rem); color: var(--text-primary);
+            letter-spacing: 0.2px;
+        }
+        .journey-cta-sub {
+            display: block; margin-top: 4px; font-family: var(--font-body); font-size: 0.83rem;
+            color: var(--text-muted); line-height: 1.4;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        .journey-cta-arrow {
+            position: relative; z-index: 1; flex-shrink: 0;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);
+            color: var(--text-accent);
+            transition: transform var(--speed-medium) var(--transition-bounce),
+                        background var(--speed-medium), border-color var(--speed-medium), color var(--speed-medium);
+        }
+        .journey-cta-arrow svg { width: 17px; height: 17px; }
+        .journey-cta-frame:hover .journey-cta-arrow {
+            transform: translateX(6px); background: var(--violet); border-color: var(--violet); color: #fff;
+        }
+
+        @media (max-width: 560px) {
+            .journey-cta { gap: var(--space-3); padding: 1rem 1.2rem; }
+            .journey-cta-icon { width: 44px; height: 44px; }
+            .journey-cta-icon svg { width: 20px; height: 20px; }
+            .journey-cta-sub { white-space: normal; }
+            .journey-cta-arrow { width: 34px; height: 34px; }
+        }
+
 
         /* ─── Card Pulse (Random Student highlight) ─────────────────────── */
         @keyframes cardPulseGlow {
@@ -1022,10 +1418,18 @@
 
         .profile-modal-content {
             position: relative; z-index: 1; width: 100%; max-height: 88vh;
-            overflow-y: auto; overflow-x: hidden; background: var(--bg-surface-raised);
-            border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.04);
+            overflow-y: auto; overflow-x: hidden;
+            background: linear-gradient(165deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02) 55%), var(--glass-fade);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.16); border-radius: var(--radius-lg);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.04);
             animation: modalPop 0.4s var(--transition-bounce);
+        }
+        :root[data-theme="light"] .profile-modal-content {
+            background: linear-gradient(165deg, rgba(255,255,255,0.7), rgba(255,255,255,0.3) 55%), var(--glass-fade);
+            border: 1px solid rgba(255,255,255,0.65);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), var(--shadow-lg);
         }
         @keyframes modalPop {
             from { opacity: 0; transform: scale(0.92) translateY(14px); }
@@ -1033,12 +1437,13 @@
         }
         .profile-modal-close {
             position: absolute; top: 14px; right: 14px; z-index: 5;
-            background: rgba(4,7,20,0.6); border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22);
+            backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
             border-radius: 9px; color: #fff; width: 36px; height: 36px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: background var(--speed-fast), transform var(--speed-fast) var(--transition-bounce);
         }
-        .profile-modal-close:hover { background: rgba(0,0,0,0.8); transform: rotate(90deg); }
+        .profile-modal-close:hover { background: rgba(0,0,0,0.5); transform: rotate(90deg); }
         .profile-modal-close svg { width: 18px; height: 18px; }
 
         /* Cover: full uncropped photo (object-fit:contain) over a blurred
@@ -1061,23 +1466,15 @@
         @keyframes coverImgIn { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
         .profile-cover::after {
             content: ''; position: absolute; inset: 0; z-index: 1;
-            background: linear-gradient(180deg, rgba(4,7,20,0) 55%, var(--bg-surface-raised) 100%);
+            background: linear-gradient(180deg, rgba(4,7,20,0) 55%, var(--glass-fade) 100%);
             pointer-events: none;
         }
         .profile-cover-topbar {
             position: absolute; top: 14px; left: 14px; right: 60px; z-index: 3;
-            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            display: flex; align-items: center; justify-content: flex-end; gap: 8px;
         }
-        .profile-roll-chip {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: rgba(4,7,20,0.75); border: 1px solid var(--accent-color, var(--gold));
-            color: var(--accent-color, var(--gold)); font-family: var(--font-mono);
-            font-weight: 700; font-size: 0.75rem; padding: 5px 12px; border-radius: 20px;
-            backdrop-filter: blur(6px);
-        }
-        .profile-roll-chip svg { width: 12px; height: 12px; }
         .profile-position-pill {
-            background: rgba(4,7,20,0.6); border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22);
             color: #fff; font-family: var(--font-mono); font-size: 0.68rem;
             padding: 5px 11px; border-radius: 20px; backdrop-filter: blur(6px);
             letter-spacing: 0.5px; white-space: nowrap;
@@ -1113,8 +1510,20 @@
         @keyframes profileFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @media (prefers-reduced-motion: reduce) { .profile-body > * { animation: none; } }
 
+        /* Pitch-deck style masthead: small branded eyebrow, then the name
+           treated as a headline — this is the "master pitch" framing that
+           sits above every profile, batch after batch, student after student. */
+        .profile-eyebrow {
+            display: inline-flex; align-items: center; gap: 7px;
+            font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--accent-color, var(--gold));
+            background: color-mix(in srgb, var(--accent-color, var(--gold)) 12%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent-color, var(--gold)) 30%, transparent);
+            padding: 4px 12px; border-radius: 20px; margin-bottom: var(--space-3);
+        }
         .profile-name-en {
-            font-family: var(--font-display); font-size: 1.7rem; font-weight: 700;
+            font-family: var(--font-display); font-size: clamp(1.6rem, 5vw, 2.1rem); font-weight: 700;
+            letter-spacing: -0.5px;
             background: linear-gradient(100deg, var(--text-primary) 40%, var(--accent-color, var(--gold)) 60%, var(--text-primary) 80%);
             background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
             -webkit-text-fill-color: transparent; color: transparent;
@@ -1124,14 +1533,18 @@
             display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);
             margin-bottom: var(--space-5);
         }
-        .profile-stats-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-        @media (max-width: 560px) { .profile-stats-grid-3 { grid-template-columns: 1fr 1fr; } }
         .profile-stat-box {
-            background: var(--bg-surface); border: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.015));
+            backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%);
+            border: 1px solid rgba(255,255,255,0.12);
             border-top: 2px solid transparent;
             border-radius: var(--radius-sm); padding: var(--space-3);
             display: flex; align-items: flex-start; gap: 10px;
             transition: border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast);
+        }
+        :root[data-theme="light"] .profile-stat-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(255,255,255,0.25));
+            border: 1px solid rgba(15,23,42,0.1);
         }
         .profile-stat-box:hover {
             border-top-color: var(--accent-color, var(--gold));
@@ -1157,16 +1570,20 @@
         }
         .profile-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
         .profile-bio { color: var(--text-muted); font-size: 0.92rem; line-height: 1.7; }
+        /* Pull-quote treatment for the "fun fact" — a glass card of its own,
+           the one moment in the profile that reads like a pitch tagline. */
         .profile-fact {
-            position: relative; font-style: italic; color: var(--text-accent); font-size: 0.9rem;
-            background: var(--gold-glow); border-left: 3px solid var(--accent-color, var(--gold));
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-            padding: 10px 14px 10px 20px; margin-top: var(--space-4); line-height: 1.6;
+            position: relative; font-style: italic; color: var(--text-accent); font-size: 0.94rem;
+            background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color, var(--gold)) 16%, transparent), rgba(255,255,255,0.02));
+            backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%);
+            border: 1px solid color-mix(in srgb, var(--accent-color, var(--gold)) 30%, transparent);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px 16px 30px; margin-top: var(--space-4); line-height: 1.65;
         }
         .profile-fact::before {
-            content: '“'; position: absolute; left: 4px; top: -6px;
-            font-family: Georgia, serif; font-size: 2.2rem; color: var(--accent-color, var(--gold));
-            opacity: 0.45; line-height: 1;
+            content: '“'; position: absolute; left: 8px; top: 2px;
+            font-family: Georgia, serif; font-size: 2.4rem; color: var(--accent-color, var(--gold));
+            opacity: 0.5; line-height: 1;
         }
         /* Interests — one colorful chip per interest, each tinted with that
            interest's own icon color (--chip-color, set inline per chip) so
@@ -1175,6 +1592,7 @@
         .profile-interest-chip {
             display: inline-flex; align-items: center; gap: 6px;
             background: color-mix(in srgb, var(--chip-color, var(--gold)) 14%, transparent);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             color: var(--chip-color, var(--gold));
             border: 1px solid color-mix(in srgb, var(--chip-color, var(--gold)) 35%, transparent);
             font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
@@ -1189,8 +1607,10 @@
         .profile-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .profile-skill-chip {
             display: inline-flex; align-items: center; gap: 6px;
-            background: var(--gold-glow); color: var(--accent-color, var(--gold));
-            border: 1px solid var(--border-subtle); font-family: var(--font-mono);
+            background: color-mix(in srgb, var(--gold) 12%, transparent);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            color: var(--accent-color, var(--gold));
+            border: 1px solid rgba(255,255,255,0.14); font-family: var(--font-mono);
             font-size: 0.7rem; padding: 4px 11px 4px 8px; border-radius: 20px;
             transition: transform var(--speed-fast) var(--transition-bounce), border-color var(--speed-fast), box-shadow var(--speed-fast);
         }
@@ -1204,9 +1624,15 @@
         .profile-socials a {
             color: var(--text-muted); text-decoration: none;
             width: 38px; height: 38px; border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.14);
+            background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.01));
+            backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
             display: flex; align-items: center; justify-content: center;
             transition: color var(--speed-fast), border-color var(--speed-fast), background var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast);
+        }
+        :root[data-theme="light"] .profile-socials a {
+            background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
+            border: 1px solid rgba(15,23,42,0.12);
         }
         .profile-socials a svg { width: 16px; height: 16px; }
         .profile-socials a:hover {
@@ -1499,6 +1925,19 @@
                         <div class="stat-label">Possibilities</div>
                     </div>
                 </div>
+                <div class="hero-spotlight liquid-glass" id="heroSpotlight" role="button" tabindex="0" aria-label="View a random student's profile">
+                    <div class="spotlight-eyebrow">
+                        <span class="spotlight-dot" aria-hidden="true"></span>Batch Spotlight
+                        <span class="spotlight-index" id="spotlightIndex"></span>
+                    </div>
+                    <div class="spotlight-body" id="spotlightBody">
+                        <div class="spotlight-avatar"><span class="spotlight-avatar-fallback">…</span></div>
+                        <div class="spotlight-info">
+                            <div class="spotlight-name">Loading roster…</div>
+                            <div class="spotlight-meta"><span>CSE 7th Batch · Netrokona University</span></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="hero-cta">
                     <a href="#students" class="btn-primary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Meet the Batch
@@ -1580,21 +2019,68 @@
                 <p>ক্যাম্পাসের চিরস্মরণীয় কিছু মুহূর্ত ও আমাদের একসঙ্গে পথচলার সুন্দর কিছু ছবি।</p>
             </div>
             <div class="moments-container reveal">
-                <div class="gallery-grid" id="galleryGrid">
-                    <div class="skeleton-card" style="min-height:auto;aspect-ratio:4/3;" aria-hidden="true"></div>
-                    <div class="skeleton-card" style="min-height:auto;aspect-ratio:4/3;" aria-hidden="true"></div>
-                    <div class="skeleton-card" style="min-height:auto;aspect-ratio:4/3;" aria-hidden="true"></div>
+                <button class="album-cover liquid-glass" id="albumCoverBtn" aria-haspopup="dialog" aria-label="Open Batch Moments album">
+                    <div class="album-cover-stack" id="albumCoverStack" aria-hidden="true">
+                        <div class="skeleton-card" style="position:absolute;inset:0;border-radius:8px;"></div>
+                    </div>
+                    <div class="album-cover-info">
+                        <div class="album-cover-eyebrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                            Photo Album
+                        </div>
+                        <div class="album-cover-title">Batch Moments</div>
+                        <div class="album-cover-count" id="albumCoverCount">Loading photos…</div>
+                        <div class="album-cover-cta">
+                            View Album
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </div>
+                    </div>
+                </button>
+
+                <div class="journey-cta-frame">
+                    <a href="journey.html" class="journey-cta" aria-label="Explore Our Journey — the story of CSE 7th Batch">
+                        <span class="journey-cta-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                        </span>
+                        <span class="journey-cta-text">
+                            <span class="journey-cta-title">Explore Our Journey</span>
+                            <span class="journey-cta-sub">প্রথম দিন থেকে আজ — CSE 7th Batch-এর পথচলার পুরো গল্প দেখুন।</span>
+                        </span>
+                        <span class="journey-cta-arrow" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </span>
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- Gallery Lightbox -->
-        <div class="lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Image Preview">
-            <div class="lightbox-content">
-                <button class="lightbox-close" id="lightboxClose" aria-label="Close image preview">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-                <img src="" alt="" class="lightbox-img" id="lightboxTargetImage">
+        <!-- Gallery Album Viewer (Liquid Glass) -->
+        <div class="lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Batch Moments album viewer">
+            <div class="lightbox-glass-frame liquid-glass" id="lightboxFrame">
+                <div class="lightbox-topbar">
+                    <span class="lightbox-counter" id="lightboxCounter">1 / 1</span>
+                    <span class="lightbox-title-mobile" id="lightboxImgTitle"></span>
+                    <div class="lightbox-actions">
+                        <a class="lightbox-icon-btn" id="lightboxDownload" href="#" download aria-label="Download this photo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </a>
+                        <button class="lightbox-icon-btn" id="lightboxClose" aria-label="Close album viewer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="lightbox-content">
+                    <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <div class="lightbox-image-wrap" id="lightboxImageWrap">
+                        <img src="" alt="" class="lightbox-img" id="lightboxTargetImage">
+                    </div>
+                    <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next photo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+                <div class="lightbox-filmstrip" id="lightboxFilmstrip"></div>
             </div>
         </div>
 
@@ -1740,6 +2226,104 @@
             return `<span class="icon-wrap" style="display:inline-flex;width:${size}px;height:${size}px;flex-shrink:0;" aria-hidden="true">${raw}</span>`;
         }
 
+        // ─── Hero Spotlight — cycles a short glass card through the roster.
+        // Each change slides the old content out and the next one in from
+        // the opposite side (a deliberate, triggered transition — not an
+        // idle looping animation). Clicking/pressing the card opens that
+        // student's full profile. Hovering/focusing pauses the rotation so
+        // it never changes out from under someone reading it.
+        let spotlightTimer = null;
+        let spotlightIdx = 0;
+        const SPOTLIGHT_INTERVAL = 3000;
+        const SPOTLIGHT_SLIDE_MS = 320;
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function spotlightContentHtml(student) {
+            const initials = student.nameEn.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+            const badges = getInterestBadges(student);
+            const primary = badges[0] || { text: 'CSE', slug: 'code', meta: DEFAULT_INTEREST_META };
+            const line = student.fact || student.bio || '';
+            return `
+                <div class="spotlight-avatar" style="--ring-color:${primary.meta.color}">
+                    <img src="${escapeHtml(student.img)}" alt="" onerror="this.remove(); this.parentElement.classList.add('show-fallback')">
+                    <span class="spotlight-avatar-fallback">${escapeHtml(initials)}</span>
+                </div>
+                <div class="spotlight-info">
+                    <div class="spotlight-name">${escapeHtml(student.nameEn)}</div>
+                    <div class="spotlight-meta">
+                        <span>${iconMarkup('map-pin', 12)}<span class="spotlight-meta-text">${escapeHtml(student.hometown)}</span></span>
+                        <span class="spotlight-chip" style="--chip-color:${primary.meta.color}">${resolveInterestIcon(primary.slug)}${escapeHtml(primary.text)}</span>
+                    </div>
+                    <div class="spotlight-quote">${escapeHtml(line)}</div>
+                </div>
+            `;
+        }
+
+        function paintSpotlight(student) {
+            const body = document.getElementById('spotlightBody');
+            const indexEl = document.getElementById('spotlightIndex');
+            if (!body || !student) return;
+            body.innerHTML = spotlightContentHtml(student);
+            if (indexEl && BATCH_STUDENTS.length) {
+                indexEl.textContent = `${String(spotlightIdx + 1).padStart(2, '0')} / ${BATCH_STUDENTS.length}`;
+            }
+        }
+
+        // Slides the current content out to the left, swaps it, then slides
+        // the new content in from the right — a single deliberate transition
+        // per change, not a continuous animation.
+        function slideSpotlight(student) {
+            const body = document.getElementById('spotlightBody');
+            if (!body || !student) return;
+            if (prefersReducedMotion) { paintSpotlight(student); return; }
+            body.classList.add('spotlight-sliding-out');
+            window.setTimeout(() => {
+                paintSpotlight(student);
+                body.classList.remove('spotlight-sliding-out');
+                body.classList.add('spotlight-sliding-in');
+                void body.offsetWidth; // force reflow so the entry position registers
+                body.classList.remove('spotlight-sliding-in');
+            }, SPOTLIGHT_SLIDE_MS);
+        }
+
+        function cycleHeroSpotlight() {
+            if (!BATCH_STUDENTS.length) return;
+            spotlightIdx = (spotlightIdx + 1) % BATCH_STUDENTS.length;
+            slideSpotlight(BATCH_STUDENTS[spotlightIdx]);
+        }
+
+        function startSpotlightTimer() {
+            if (spotlightTimer) clearInterval(spotlightTimer);
+            spotlightTimer = setInterval(cycleHeroSpotlight, SPOTLIGHT_INTERVAL);
+        }
+        function stopSpotlightTimer() {
+            if (spotlightTimer) clearInterval(spotlightTimer);
+            spotlightTimer = null;
+        }
+
+        function initHeroSpotlight() {
+            if (!BATCH_STUDENTS.length) return;
+            const spotlightEl = document.getElementById('heroSpotlight');
+            spotlightIdx = Math.floor(Math.random() * BATCH_STUDENTS.length);
+            paintSpotlight(BATCH_STUDENTS[spotlightIdx]);
+            startSpotlightTimer();
+            if (spotlightEl && !spotlightEl.dataset.wired) {
+                spotlightEl.dataset.wired = '1';
+                const openCurrent = () => {
+                    const s = BATCH_STUDENTS[spotlightIdx];
+                    if (s) openProfileModal(s, ACCENT_KEYS[spotlightIdx % ACCENT_KEYS.length]);
+                };
+                spotlightEl.addEventListener('click', openCurrent);
+                spotlightEl.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCurrent(); }
+                });
+                spotlightEl.addEventListener('mouseenter', stopSpotlightTimer);
+                spotlightEl.addEventListener('mouseleave', startSpotlightTimer);
+                spotlightEl.addEventListener('focusin', stopSpotlightTimer);
+                spotlightEl.addEventListener('focusout', startSpotlightTimer);
+            }
+        }
+
         function loadIcons() {
             return fetch('icons.json')
                 .then(r => { if (!r.ok) throw new Error('icons.json not found'); return r.json(); })
@@ -1764,6 +2348,7 @@
                 renderRoster();
                 const numStudentsEl = document.getElementById('numStudents');
                 if (numStudentsEl) numStudentsEl.textContent = data.length;
+                initHeroSpotlight();
             })
             .catch(err => {
                 console.error('students.json load error:', err);
@@ -1986,6 +2571,8 @@
             img.width = 400;
             img.height = 480;
             img.src = student.img;
+            img.addEventListener('load', () => img.classList.add('img-loaded'));
+            if (img.complete && img.naturalWidth) img.classList.add('img-loaded');
             img.addEventListener('error', function() {
                 img.style.display = 'none';
                 const fallback = document.createElement('div');
@@ -2491,14 +3078,64 @@
             renderRoster();
         });
 
-        // ─── Gallery (dynamic — loaded from gallery.json) ──────────────────
+        // ─── Gallery Album (dynamic — loaded from gallery.json) ────────────
+        // A single "album" tile opens a full liquid-glass viewer with
+        // prev/next navigation, a thumbnail filmstrip, and per-image download.
         const lightbox = document.getElementById('galleryLightbox');
         const lightboxImg = document.getElementById('lightboxTargetImage');
-        const galleryGrid = document.getElementById('galleryGrid');
+        const lightboxCounter = document.getElementById('lightboxCounter');
+        const lightboxImgTitle = document.getElementById('lightboxImgTitle');
+        const lightboxDownload = document.getElementById('lightboxDownload');
+        const lightboxFilmstrip = document.getElementById('lightboxFilmstrip');
+        const lightboxImageWrap = document.getElementById('lightboxImageWrap');
+        const albumCoverBtn = document.getElementById('albumCoverBtn');
+        const albumCoverStack = document.getElementById('albumCoverStack');
+        const albumCoverCount = document.getElementById('albumCoverCount');
 
-        function openLightbox(src, alt) {
-            lightboxImg.src = src;
-            lightboxImg.alt = alt;
+        let albumPhotos = [];
+        let albumIndex = 0;
+
+        function suggestedFilename(moment, idx) {
+            const base = (moment.title || `batch-moment-${idx + 1}`).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            const ext = (moment.img.split('.').pop() || 'jpg').split(/[?#]/)[0];
+            return `${base || 'batch-moment'}.${ext}`;
+        }
+
+        function renderFilmstrip() {
+            lightboxFilmstrip.innerHTML = '';
+            const frag = document.createDocumentFragment();
+            albumPhotos.forEach((m, i) => {
+                const thumb = document.createElement('button');
+                thumb.className = 'film-thumb' + (i === albumIndex ? ' active' : '');
+                thumb.setAttribute('aria-label', `View photo ${i + 1}: ${m.title || 'Batch moment'}`);
+                const img = document.createElement('img');
+                img.src = m.img; img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
+                thumb.appendChild(img);
+                thumb.addEventListener('click', () => showAlbumPhoto(i));
+                frag.appendChild(thumb);
+            });
+            lightboxFilmstrip.appendChild(frag);
+        }
+
+        function showAlbumPhoto(idx) {
+            if (!albumPhotos.length) return;
+            albumIndex = (idx + albumPhotos.length) % albumPhotos.length;
+            const moment = albumPhotos[albumIndex];
+            lightboxImg.src = moment.img;
+            lightboxImg.alt = moment.alt || moment.title || 'Batch moment';
+            lightboxImgTitle.textContent = moment.title || '';
+            lightboxCounter.textContent = `${albumIndex + 1} / ${albumPhotos.length}`;
+            lightboxDownload.href = moment.img;
+            lightboxDownload.download = suggestedFilename(moment, albumIndex);
+            lightboxFilmstrip.querySelectorAll('.film-thumb').forEach((t, i) => t.classList.toggle('active', i === albumIndex));
+            const activeThumb = lightboxFilmstrip.children[albumIndex];
+            if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        function openLightbox(idx) {
+            if (!albumPhotos.length) return;
+            renderFilmstrip();
+            showAlbumPhoto(idx || 0);
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2507,46 +3144,63 @@
             document.body.style.overflow = '';
         }
         document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+        document.getElementById('lightboxPrev').addEventListener('click', () => showAlbumPhoto(albumIndex - 1));
+        document.getElementById('lightboxNext').addEventListener('click', () => showAlbumPhoto(albumIndex + 1));
         lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+        document.addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowLeft') showAlbumPhoto(albumIndex - 1);
+            else if (e.key === 'ArrowRight') showAlbumPhoto(albumIndex + 1);
+        });
+        // Swipe left/right on the main image to change photos on touch devices
+        (function enableSwipe() {
+            let startX = 0, startY = 0, tracking = false;
+            lightboxImageWrap.addEventListener('touchstart', e => {
+                if (!e.touches.length) return;
+                startX = e.touches[0].clientX; startY = e.touches[0].clientY; tracking = true;
+            }, { passive: true });
+            lightboxImageWrap.addEventListener('touchend', e => {
+                if (!tracking) return;
+                tracking = false;
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                    showAlbumPhoto(albumIndex + (dx < 0 ? 1 : -1));
+                }
+            }, { passive: true });
+        })();
 
-        function createGalleryItem(moment) {
-            const item = document.createElement('button');
-            item.className = 'gallery-item';
-            item.setAttribute('aria-label', `View larger image: ${moment.title || 'Batch moment'}`);
-
-            const img = document.createElement('img');
-            img.className = 'gallery-img';
-            img.loading = 'lazy';
-            img.decoding = 'async';
-            img.width = 600;
-            img.height = 450;
-            img.src = moment.img;
-            if (moment.imgSrcset) img.srcset = moment.imgSrcset;
-            img.sizes = '(max-width: 600px) 100vw, 280px';
-            img.alt = moment.alt || moment.title || 'Batch moment';
-            img.addEventListener('error', () => { img.style.opacity = '0.15'; });
-
-            const titleSpan = document.createElement('span');
-            titleSpan.className = 'gallery-item-title';
-            titleSpan.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> ${escapeHtml(moment.title || '')}`;
-
-            item.append(img, titleSpan);
-            item.addEventListener('click', () => openLightbox(moment.img, moment.alt || moment.title || ''));
-            return item;
-        }
+        albumCoverBtn.addEventListener('click', () => openLightbox(0));
+        albumCoverBtn.addEventListener('mousemove', e => {
+            const r = albumCoverBtn.getBoundingClientRect();
+            albumCoverBtn.style.setProperty('--mx', `${e.clientX - r.left}px`);
+            albumCoverBtn.style.setProperty('--my', `${e.clientY - r.top}px`);
+        });
 
         fetch('gallery.json')
             .then(r => { if (!r.ok) throw new Error('Failed to load gallery.json'); return r.json(); })
             .then(momentsData => {
-                galleryGrid.innerHTML = '';
-                const frag = document.createDocumentFragment();
-                momentsData.forEach(m => frag.appendChild(createGalleryItem(m)));
-                galleryGrid.appendChild(frag);
+                albumPhotos = momentsData || [];
+                albumCoverStack.innerHTML = '';
+                albumPhotos.slice(0, 3).forEach(m => {
+                    const img = document.createElement('img');
+                    img.className = 'album-stack-img';
+                    img.src = m.img; img.loading = 'lazy'; img.decoding = 'async';
+                    img.alt = ''; img.setAttribute('aria-hidden', 'true');
+                    img.addEventListener('load', () => img.classList.add('img-loaded'));
+                    if (img.complete && img.naturalWidth) img.classList.add('img-loaded');
+                    albumCoverStack.appendChild(img);
+                });
+                albumCoverCount.textContent = albumPhotos.length
+                    ? `${albumPhotos.length} photo${albumPhotos.length === 1 ? '' : 's'} · tap to view`
+                    : 'No photos yet';
+                if (!albumPhotos.length) albumCoverBtn.setAttribute('aria-disabled', 'true');
             })
             .catch(err => {
                 console.error('gallery.json load error:', err);
-                galleryGrid.innerHTML = `<p style="color:var(--text-muted);font-family:var(--font-mono);grid-column:1/-1;text-align:center;padding:2rem 0;">⚠️ Could not load gallery.json — make sure the file is in the same directory.</p>`;
+                albumCoverStack.innerHTML = '';
+                albumCoverCount.textContent = 'Could not load gallery.json';
             });
 
         // ─── Scroll Effects ───────────────────────────────────────────────
@@ -2727,7 +3381,6 @@
                     <img src="${escapeHtml(student.img)}" alt="" aria-hidden="true" class="profile-cover-bg" id="profileCoverBg">
                     <img src="${escapeHtml(student.img)}" alt="${escapeHtml(student.nameEn)}" class="profile-cover-main" id="profileCoverImg">
                     <div class="profile-cover-topbar">
-                        <span class="profile-roll-chip">${iconMarkup('hash', 12)}${escapeHtml(student.roll)}</span>
                         ${positionHtml}
                     </div>
                     ${navZonesHtml}
@@ -2736,12 +3389,12 @@
                     </button>
                 </div>
                 <div class="profile-body">
+                    <div class="profile-eyebrow">${iconMarkup('hash', 11)}CSE 7th Batch · Netrokona University</div>
                     <div class="profile-name-en">${escapeHtml(student.nameEn)}</div>
                     <div class="profile-name-bn">${escapeHtml(student.nameBn)}</div>
-                    <div class="profile-stats-grid profile-stats-grid-3">
+                    <div class="profile-stats-grid">
                         <div class="profile-stat-box"><span class="profile-stat-icon">${iconMarkup('map-pin', 15)}</span><div><div class="profile-stat-label">Hometown</div><div class="profile-stat-value">${escapeHtml(student.hometown)}</div></div></div>
                         <div class="profile-stat-box"><span class="profile-stat-icon">${getSkillIconHtml(student.subject, 15)}</span><div><div class="profile-stat-label">Focus</div><div class="profile-stat-value">${escapeHtml(student.subject)}</div></div></div>
-                        <div class="profile-stat-box"><span class="profile-stat-icon">${iconMarkup('hash', 15)}</span><div><div class="profile-stat-label">Roll No.</div><div class="profile-stat-value">${escapeHtml(student.roll)}</div></div></div>
                     </div>
                     ${interestsHtml}
                     <div class="profile-section-label">About</div>

@@ -224,18 +224,18 @@
     "nameEn": "Student 08",
     "nameBn": "শিক্ষার্থী ০৮",
     "hometown": "Comilla",
-    "interest": "AI / ML",
+    "interest": "ai-ml",
     "subject": "Database Systems",
     "fact": "Always has 30 browser tabs open",
     "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/12.png",
+    "img": "https://via.placeholder.com/150/CCCCCC/000000?text=Student+08",
     "facebook": "",
     "github": "",
     "linkedin": "",
     "email": "",
     "skills": [
-      "Python",
-      "Machine Learning Basics"
+      "python",
+      "machine-learning"
     ]
   },
   {
@@ -243,18 +243,18 @@
     "nameEn": "Student 09",
     "nameBn": "শিক্ষার্থী ০৯",
     "hometown": "Sherpur",
-    "interest": "Open Source",
+    "interest": "open-source",
     "subject": "Database Systems",
     "fact": "Coffee-powered coder",
     "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/13.png",
+    "img": "https://via.placeholder.com/150/CCCCCC/000000?text=Student+09",
     "facebook": "",
     "github": "",
     "linkedin": "",
     "email": "",
     "skills": [
-      "Git & GitHub",
-      "Collaboration"
+      "git",
+      "github"
     ]
   },
   {
@@ -262,18 +262,18 @@
     "nameEn": "Student 10",
     "nameBn": "শিক্ষার্থী ১০",
     "hometown": "Narsingdi",
-    "interest": "AI / ML",
+    "interest": "ai-ml",
     "subject": "Database Systems",
     "fact": "Once fixed a bug in their sleep",
     "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/14.png",
+    "img": "https://via.placeholder.com/150/CCCCCC/000000?text=Student+10",
     "facebook": "",
     "github": "",
     "linkedin": "",
     "email": "",
     "skills": [
-      "Python",
-      "Machine Learning Basics"
+      "python",
+      "machine-learning"
     ]
   },
   {
@@ -281,569 +281,18 @@
     "nameEn": "Student 11",
     "nameBn": "শিক্ষার্থী ১১",
     "hometown": "Dhaka",
-    "interest": "Open Source",
+    "interest": "open-source",
     "subject": "Database Systems",
     "fact": "Sketches UI on napkins",
     "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/15.png",
+    "img": "https://via.placeholder.com/150/CCCCCC/000000?text=Student+11",
     "facebook": "",
     "github": "",
     "linkedin": "",
     "email": "",
     "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "16",
-    "nameEn": "Student 12",
-    "nameBn": "শিক্ষার্থী ১২",
-    "hometown": "Rajshahi",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/16.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "17",
-    "nameEn": "Student 13",
-    "nameBn": "শিক্ষার্থী ১৩",
-    "hometown": "Rangpur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Coffee-powered coder",
-    "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/17.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "18",
-    "nameEn": "Student 14",
-    "nameBn": "শিক্ষার্থী ১৪",
-    "hometown": "Kishoreganj",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/18.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "19",
-    "nameEn": "Student 15",
-    "nameBn": "শিক্ষার্থী ১৫",
-    "hometown": "Gazipur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/19.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "20",
-    "nameEn": "Student 16",
-    "nameBn": "শিক্ষার্থী ১৬",
-    "hometown": "Mymensingh",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/20.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "21",
-    "nameEn": "Student 17",
-    "nameBn": "শিক্ষার্থী ১৭",
-    "hometown": "Chattogram",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Coffee-powered coder",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/21.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "22",
-    "nameEn": "Student 18",
-    "nameBn": "শিক্ষার্থী ১৮",
-    "hometown": "Barishal",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/22.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "23",
-    "nameEn": "Student 19",
-    "nameBn": "শিক্ষার্থী ১৯",
-    "hometown": "Jamalpur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/23.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "24",
-    "nameEn": "Student 20",
-    "nameBn": "শিক্ষার্থী ২০",
-    "hometown": "Tangail",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/24.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "25",
-    "nameEn": "Student 21",
-    "nameBn": "শিক্ষার্থী ২১",
-    "hometown": "Netrokona",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Coffee-powered coder",
-    "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/25.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "26",
-    "nameEn": "Student 22",
-    "nameBn": "শিক্ষার্থী ২২",
-    "hometown": "Sylhet",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/26.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "27",
-    "nameEn": "Student 23",
-    "nameBn": "শিক্ষার্থী ২৩",
-    "hometown": "Khulna",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/27.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "28",
-    "nameEn": "Student 24",
-    "nameBn": "শিক্ষার্থী ২৪",
-    "hometown": "Comilla",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/28.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "29",
-    "nameEn": "Student 25",
-    "nameBn": "শিক্ষার্থী ২৫",
-    "hometown": "Sherpur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Coffee-powered coder",
-    "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/29.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "30",
-    "nameEn": "Student 26",
-    "nameBn": "শিক্ষার্থী ২৬",
-    "hometown": "Narsingdi",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/30.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "31",
-    "nameEn": "Student 27",
-    "nameBn": "শিক্ষার্থী ২৭",
-    "hometown": "Dhaka",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/31.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "32",
-    "nameEn": "Student 28",
-    "nameBn": "শিক্ষার্থী ২৮",
-    "hometown": "Rajshahi",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/32.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "33",
-    "nameEn": "Student 29",
-    "nameBn": "শিক্ষার্থী ২৯",
-    "hometown": "Rangpur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Coffee-powered coder",
-    "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/33.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "34",
-    "nameEn": "Student 30",
-    "nameBn": "শিক্ষার্থী ৩০",
-    "hometown": "Kishoreganj",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/34.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "35",
-    "nameEn": "Student 31",
-    "nameBn": "শিক্ষার্থী ৩১",
-    "hometown": "Gazipur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/35.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "36",
-    "nameEn": "Student 32",
-    "nameBn": "শিক্ষার্থী ৩২",
-    "hometown": "Mymensingh",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/36.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "37",
-    "nameEn": "Student 33",
-    "nameBn": "শিক্ষার্থী ৩৩",
-    "hometown": "Chattogram",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Coffee-powered coder",
-    "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/37.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "38",
-    "nameEn": "Student 34",
-    "nameBn": "শিক্ষার্থী ৩৪",
-    "hometown": "Barishal",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/38.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "39",
-    "nameEn": "Student 35",
-    "nameBn": "শিক্ষার্থী ৩৫",
-    "hometown": "Jamalpur",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/39.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "40",
-    "nameEn": "Student 36",
-    "nameBn": "শিক্ষার্থী ৩৬",
-    "hometown": "Tangail",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "Believes every bug is just a puzzle waiting to be solved — armed with patience and strong coffee.",
-    "img": "images/40.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "41",
-    "nameEn": "Student 37",
-    "nameBn": "শিক্ষার্থী ৩৭",
-    "hometown": "Netrokona",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Coffee-powered coder",
-    "bio": "Passionate about building things that matter, from clean code to clean UI.",
-    "img": "images/41.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "42",
-    "nameEn": "Student 38",
-    "nameBn": "শিক্ষার্থী ৩৮",
-    "hometown": "Sylhet",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Once fixed a bug in their sleep",
-    "bio": "Driven by curiosity, fueled by deadlines, and forever debugging life one semester at a time.",
-    "img": "images/42.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
-    ]
-  },
-  {
-    "roll": "43",
-    "nameEn": "Student 39",
-    "nameBn": "শিক্ষার্থী ৩৯",
-    "hometown": "Khulna",
-    "interest": "Open Source",
-    "subject": "Database Systems",
-    "fact": "Sketches UI on napkins",
-    "bio": "Finds beauty in algorithms and balance in late-night study sessions with friends.",
-    "img": "images/43.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Git & GitHub",
-      "Collaboration"
-    ]
-  },
-  {
-    "roll": "44",
-    "nameEn": "Student 40",
-    "nameBn": "শিক্ষার্থী ৪০",
-    "hometown": "Comilla",
-    "interest": "AI / ML",
-    "subject": "Database Systems",
-    "fact": "Always has 30 browser tabs open",
-    "bio": "A curious mind exploring the intersection of logic and creativity, one line of code at a time.",
-    "img": "images/44.png",
-    "facebook": "",
-    "github": "",
-    "linkedin": "",
-    "email": "",
-    "skills": [
-      "Python",
-      "Machine Learning Basics"
+      "git",
+      "github"
     ]
   }
 ]
