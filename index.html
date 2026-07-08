@@ -1,4 +1,15 @@
 <!DOCTYPE html>
+<!--
+    Maintainer note: this page fetch()es students.json / icons.json /
+    gallery.json / manifest.json at runtime. Opening index.html directly
+    from disk (a "file://" URL) will fail silently in most browsers because
+    fetch() is blocked by CORS for local files — the grid will show the
+    "Could not load students.json" error state even though the file exists.
+    Always serve this folder over http(s), e.g.:
+        python3 -m http.server 8000        (then open http://localhost:8000)
+        npx serve .
+    or upload it to real static hosting (GitHub Pages, Netlify, Vercel, etc).
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +20,11 @@
     <meta name="description" content="Official student directory and portfolio portal of B.Sc. in CSE 7th Batch, Netrokona University. Exploring code, creativity, and technological innovation.">
     <meta name="theme-color" content="#060918" id="themeColorMeta">
     <meta name="keywords" content="Netrokona University, CSE, Computer Science, Bangladesh, 7th Batch, Software Engineers">
+    <meta name="robots" content="index, follow">
+    <meta name="color-scheme" content="dark light">
     <link rel="icon" href="logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="manifest" href="manifest.json">
 
     <!-- Early theme init — runs before first paint to avoid a flash of the wrong theme.
          Priority: saved user choice > OS preference > dark (default). -->
@@ -810,6 +825,7 @@
             font-family: var(--font-body);
         }
         .filter-chip svg { width: 13px; height: 13px; }
+        .chip-count { font-family: var(--font-mono); opacity: 0.85; }
         .filter-chip:hover, .filter-chip:focus-visible { border-color: var(--border-hover); color: var(--text-primary); transform: translateY(-2px); }
         .filter-chip.active {
             background-color: var(--active-accent); color: #fff;
@@ -928,6 +944,24 @@
             transition: border-color var(--speed-medium), color var(--speed-medium), background var(--speed-medium);
         }
         .card:hover .card-interest-badge { border-color: var(--accent-color, rgba(255,255,255,0.1)); color: var(--text-accent); background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04) 65%), rgba(4,7,20,0.5); }
+
+        /* Favorite (bookmark) toggle — sits beside the roll badge, top-left */
+        .card-favorite-btn {
+            position: absolute; top: 16px; left: 58px; z-index: 3;
+            width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.03) 65%), rgba(4,7,20,0.55);
+            backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%);
+            border: 1px solid rgba(255,255,255,0.22); border-radius: 50%;
+            color: var(--text-muted); cursor: pointer; padding: 0;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 4px 14px -4px rgba(0,0,0,0.4);
+            transition: transform var(--speed-medium) var(--transition-bounce), color var(--speed-fast), border-color var(--speed-fast);
+        }
+        .card-favorite-btn svg { width: 16px; height: 16px; }
+        .card-favorite-btn:hover { transform: scale(1.1); color: var(--gold); border-color: var(--gold); }
+        .card-favorite-btn.is-favorite { color: var(--gold); border-color: var(--gold); }
+        .card-favorite-btn.is-favorite svg { fill: var(--gold); }
+        .card-favorite-btn.favorite-pop { animation: favoritePop 0.4s var(--transition-bounce); }
+        @keyframes favoritePop { 0% { transform: scale(1); } 45% { transform: scale(1.35); } 100% { transform: scale(1); } }
 
         /* ─── Card Skill Badges (one per interest, stacked) ─────────────────
            Fixed pixel top + fixed side so the stack NEVER collides with
@@ -1072,6 +1106,14 @@
             padding: var(--space-12) 0; font-family: var(--font-mono); font-size: 1rem; display: none;
         }
         .no-results svg { display: block; margin: 0 auto var(--space-4); opacity: 0.3; width: 48px; height: 48px; }
+        .no-results-clear-btn {
+            display: block; margin: var(--space-5) auto 0;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-hover);
+            color: var(--text-primary); padding: 9px 20px; border-radius: 20px;
+            font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer;
+            transition: border-color var(--speed-fast), color var(--speed-fast), transform var(--speed-fast);
+        }
+        .no-results-clear-btn:hover { border-color: var(--violet); color: var(--violet); transform: translateY(-2px); }
 
         /* ─── Gallery — Liquid Glass Album ──────────────────────────────────
            A single "album" tile (a frosted-glass card with a fanned photo
@@ -1445,6 +1487,20 @@
         }
         .profile-modal-close:hover { background: rgba(0,0,0,0.5); transform: rotate(90deg); }
         .profile-modal-close svg { width: 18px; height: 18px; }
+
+        /* Share / Favorite action buttons — sit inline in the cover topbar,
+           to the left of the position pill and close button. */
+        .profile-action-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22);
+            backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
+            border-radius: 9px; color: #fff; width: 34px; height: 34px; flex-shrink: 0;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), color var(--speed-fast);
+        }
+        .profile-action-btn svg { width: 16px; height: 16px; }
+        .profile-action-btn:hover { background: rgba(0,0,0,0.5); transform: translateY(-2px); }
+        .profile-action-btn.is-favorite { color: var(--gold); border-color: var(--gold); }
+        .profile-action-btn.is-favorite svg { fill: var(--gold); }
 
         /* Cover: full uncropped photo (object-fit:contain) over a blurred
            backdrop made from the same image, inside a taller frame. */
@@ -1909,8 +1965,8 @@
             <div class="hero-content">
                 <div class="eyebrow">B.Sc. in CSE · 7th Batch · Est. 2026</div>
                 <h1>CSE 7TH BATCH</h1>
-                <div class="hero-bn">নেত্রকোনা বিশ্ববিদ্যালয়</div>
-                <p class="hero-tag">৪০ জন স্বপ্নবাজ, একটি যাত্রা। চল্লিশটি ভিন্ন গল্প, একটাই লক্ষ্য — কোডিং, সৃজনশীলতা আর উদ্ভাবনের পথে একসাথে এগিয়ে চলা।</p>
+                <div class="hero-bn" lang="bn">নেত্রকোনা বিশ্ববিদ্যালয়</div>
+                <p class="hero-tag" lang="bn">৪০ জন স্বপ্নবাজ, একটি যাত্রা। চল্লিশটি ভিন্ন গল্প, একটাই লক্ষ্য — কোডিং, সৃজনশীলতা আর উদ্ভাবনের পথে একসাথে এগিয়ে চলা।</p>
                 <div class="hero-stats">
                     <div class="stat">
                         <div class="stat-value">40</div>
@@ -1958,7 +2014,7 @@
             <div class="section-head reveal">
                 <div class="eyebrow">The Roster</div>
                 <h2>Meet the Students</h2>
-                <p>প্রতিটি কার্ড একজন শিক্ষার্থীর পরিচয় বহন করে। একটি কার্ডে ক্লিক করলে পুরো ওয়েবসাইটের ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট বদলে যাবে — প্রতিটি কার্ডের নিজস্ব রঙের থিম আছে।</p>
+                <p lang="bn">প্রতিটি কার্ড একজন শিক্ষার্থীর পরিচয় বহন করে। একটি কার্ডে ক্লিক করলে পুরো ওয়েবসাইটের ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট বদলে যাবে — প্রতিটি কার্ডের নিজস্ব রঙের থিম আছে।</p>
             </div>
 
             <div class="controls-panel reveal">
@@ -2008,6 +2064,7 @@
             <div class="no-results" id="noResults">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
                 No student matches your search. Try a different query.
+                <button type="button" class="no-results-clear-btn" id="clearFiltersBtn">Clear search &amp; filters</button>
             </div>
         </section>
 
@@ -2016,7 +2073,7 @@
             <div class="section-head reveal">
                 <div class="eyebrow">The Gallery</div>
                 <h2>Batch Moments</h2>
-                <p>ক্যাম্পাসের চিরস্মরণীয় কিছু মুহূর্ত ও আমাদের একসঙ্গে পথচলার সুন্দর কিছু ছবি।</p>
+                <p lang="bn">ক্যাম্পাসের চিরস্মরণীয় কিছু মুহূর্ত ও আমাদের একসঙ্গে পথচলার সুন্দর কিছু ছবি।</p>
             </div>
             <div class="moments-container reveal">
                 <button class="album-cover liquid-glass" id="albumCoverBtn" aria-haspopup="dialog" aria-label="Open Batch Moments album">
@@ -2098,7 +2155,7 @@
             <div class="about-wrapper reveal">
                 <div class="eyebrow">Who We Are</div>
                 <h2>About the Batch</h2>
-                <div class="about-quote">আমরা নেত্রকোনা বিশ্ববিদ্যালয়ের কম্পিউটার সায়েন্স অ্যান্ড ইঞ্জিনিয়ারিং বিভাগের ৭ম ব্যাচ।</div>
+                <div class="about-quote" lang="bn">আমরা নেত্রকোনা বিশ্ববিদ্যালয়ের কম্পিউটার সায়েন্স অ্যান্ড ইঞ্জিনিয়ারিং বিভাগের ৭ম ব্যাচ।</div>
                 <p class="about-desc">From competitive programmers to web builders, from AI enthusiasts to cybersecurity hopefuls — this batch is a mix of forty distinct minds united by one department and one mission: to learn, build, and grow together through every semester ahead.</p>
                 <div class="counters-grid">
                     <div class="counter-card">
@@ -2128,15 +2185,23 @@
             <img src="logo.png" alt="Netrokona University" id="footerLogo" width="36" height="36" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
             <div class="brand-text">Netrokona University <span class="brand-accent">· CSE 7th Batch</span></div>
         </div>
-        <div class="footer-motto">নতুন যাত্রার শুরু, একসাথে এগিয়ে চলা</div>
-        <div class="footer-socials">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <div class="footer-motto" lang="bn">নতুন যাত্রার শুরু, একসাথে এগিয়ে চলা</div>
+        <!--
+            Batch-level social links: hrefs are populated at runtime from the
+            SITE_SOCIALS config near the top of the main <script> below, so
+            there's one place to edit them instead of hunting through markup.
+            Any platform left blank in that config is hidden automatically —
+            same "don't link to a generic homepage" rule the student cards
+            already follow.
+        -->
+        <div class="footer-socials" id="footerSocials">
+            <a href="#" data-social="facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href="#" data-social="instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <a href="#" data-social="linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             </a>
         </div>
@@ -2195,6 +2260,8 @@
             'hash': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="19" y2="15"/><line x1="10" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="14" y2="20"/></svg>`,
             'chevron-left': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`,
             'chevron-right': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`,
+            'star': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+            'share': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>`,
             /* Interest-category icons — duplicated here (not just in
                icons.json) so every card badge / filter chip / profile stat
                still gets a real icon even if icons.json fails to fetch. */
@@ -2349,6 +2416,7 @@
                 const numStudentsEl = document.getElementById('numStudents');
                 if (numStudentsEl) numStudentsEl.textContent = data.length;
                 initHeroSpotlight();
+                openProfileFromUrlIfPresent();
             })
             .catch(err => {
                 console.error('students.json load error:', err);
@@ -2374,6 +2442,62 @@
                       light:{ accent:'#9d174d', glow:'rgba(157,23,77,0.22)',  v:'#9d174d', g:'#831843', t:'#500724' } }
         };
         const ACCENT_KEYS = ['amber','violet','teal','red','blue','pink'];
+
+        // ─── Batch-level social links (footer) ─────────────────────────
+        // Fill in real URLs here when the batch sets up its official pages.
+        // Anything left empty is hidden rather than linking to a generic
+        // facebook.com/instagram.com homepage.
+        const SITE_SOCIALS = {
+            facebook: '',
+            instagram: '',
+            linkedin: ''
+        };
+        (function wireFooterSocials() {
+            const wrap = document.getElementById('footerSocials');
+            if (!wrap) return;
+            wrap.querySelectorAll('a[data-social]').forEach(a => {
+                const url = SITE_SOCIALS[a.dataset.social];
+                if (url) { a.href = url; }
+                else { a.style.display = 'none'; }
+            });
+        })();
+
+        // ─── Favorites (bookmark a student, persisted locally) ─────────────
+        // Stored as an array of roll numbers in localStorage so the list
+        // survives reloads but never leaves the person's own device.
+        const FAVORITES_KEY = 'cse7-favorites';
+        function loadFavorites() {
+            try {
+                const raw = localStorage.getItem(FAVORITES_KEY);
+                const arr = raw ? JSON.parse(raw) : [];
+                return new Set(Array.isArray(arr) ? arr : []);
+            } catch (e) { return new Set(); }
+        }
+        let favoriteRolls = loadFavorites();
+        function isFavorite(roll) { return favoriteRolls.has(String(roll)); }
+        function toggleFavorite(roll) {
+            roll = String(roll);
+            if (favoriteRolls.has(roll)) favoriteRolls.delete(roll);
+            else favoriteRolls.add(roll);
+            try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favoriteRolls])); } catch (e) {}
+            updateFavoritesChipCount();
+            return favoriteRolls.has(roll);
+        }
+        // Keeps the "Favorites" filter chip's count badge in sync; also
+        // auto-clears the active filter back to "All" if the person is
+        // viewing Favorites and just unstarred their last one (otherwise
+        // they'd be stuck staring at a permanently-empty grid).
+        function updateFavoritesChipCount() {
+            const chip = document.querySelector('#filterChipContainer [data-tag="favorites"]');
+            if (chip) {
+                const countEl = chip.querySelector('.chip-count');
+                if (countEl) countEl.textContent = favoriteRolls.size ? ` (${favoriteRolls.size})` : '';
+            }
+            if (activeTagFilter === 'favorites' && favoriteRolls.size === 0) {
+                activeTagFilter = 'all';
+                document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => c.classList.toggle('active', c.dataset.tag === 'all'));
+            }
+        }
 
         // ─── DOM Cache ───────────────────────────────────────────────────
         const studentGrid   = document.getElementById('studentGrid');
@@ -2451,6 +2575,25 @@
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 400);
             }, 2500);
+        }
+
+        // ─── Focus Trapping (accessibility) ────────────────────────────────
+        // Shared by the profile modal, the gallery lightbox, and the mobile
+        // drawer: keeps Tab/Shift+Tab cycling *inside* whichever overlay is
+        // open (instead of leaking focus into the page behind it), and
+        // returns focus to whatever triggered the overlay once it closes.
+        const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
+        function getFocusable(container) {
+            return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
+                .filter(el => el.offsetWidth || el.offsetHeight || el === document.activeElement);
+        }
+        function trapTabKey(e, container) {
+            if (e.key !== 'Tab') return;
+            const focusables = getFocusable(container);
+            if (!focusables.length) return;
+            const first = focusables[0], last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
         }
 
         // ─── Interest Metadata (keyed by icon slug, not by exact display
@@ -2589,6 +2732,30 @@
             rollBadge.className = 'roll-badge';
             rollBadge.textContent = student.roll;
 
+            // Favorite (bookmark) toggle — persisted in localStorage so a
+            // student can keep a personal shortlist across visits.
+            const favBtn = document.createElement('button');
+            favBtn.type = 'button';
+            favBtn.className = 'card-favorite-btn';
+            const favActive = isFavorite(student.roll);
+            favBtn.classList.toggle('is-favorite', favActive);
+            favBtn.setAttribute('aria-pressed', String(favActive));
+            favBtn.setAttribute('aria-label', `${favActive ? 'Remove' : 'Add'} ${student.nameEn} ${favActive ? 'from' : 'to'} favorites`);
+            favBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="${favActive ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            favBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const nowActive = toggleFavorite(student.roll);
+                favBtn.classList.toggle('is-favorite', nowActive);
+                favBtn.setAttribute('aria-pressed', String(nowActive));
+                favBtn.setAttribute('aria-label', `${nowActive ? 'Remove' : 'Add'} ${student.nameEn} ${nowActive ? 'from' : 'to'} favorites`);
+                favBtn.querySelector('svg').setAttribute('fill', nowActive ? 'currentColor' : 'none');
+                favBtn.classList.remove('favorite-pop');
+                void favBtn.offsetWidth;
+                favBtn.classList.add('favorite-pop');
+                showToast(nowActive ? `Added ${student.nameEn} to favorites ★` : `Removed ${student.nameEn} from favorites`);
+                if (activeTagFilter === 'favorites') renderRoster();
+            });
+
             // Interest badge (top-right) — shows the primary interest, plus
             // a "+N" count when the student has more than one.
             const interestBadge = document.createElement('div');
@@ -2687,7 +2854,7 @@
                 badgeStack.appendChild(b);
             }
 
-            card.append(cardBg, overlay, rollBadge, interestBadge, badgeStack, content);
+            card.append(cardBg, overlay, rollBadge, favBtn, interestBadge, badgeStack, content);
 
             // Cursor-tracked spotlight sheen (skipped on touch devices via the
             // `(hover: none)` media query in CSS, so this is harmless there).
@@ -2698,7 +2865,7 @@
             });
 
             const handleActivate = (e) => {
-                if (e.target.closest('.card-socials') || e.target.closest('.profile-btn')) return;
+                if (e.target.closest('.card-socials') || e.target.closest('.profile-btn') || e.target.closest('.card-favorite-btn')) return;
                 toggleCardTheme(card, accentKey);
             };
             card.addEventListener('click', handleActivate);
@@ -2708,7 +2875,7 @@
                 // nested "Profile" button relies on for keyboard users —
                 // making the Profile button unreachable via keyboard. Now we
                 // bail out first for any click-through target.
-                if (e.target.closest('.card-socials') || e.target.closest('.profile-btn')) return;
+                if (e.target.closest('.card-socials') || e.target.closest('.profile-btn') || e.target.closest('.card-favorite-btn')) return;
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     toggleCardTheme(card, accentKey);
@@ -2793,12 +2960,17 @@
             let filtered = BATCH_STUDENTS.filter(s => {
                 const q = searchQuery;
                 const interestTexts = getInterestList(s);
-                const matchesSearch = s.nameEn.toLowerCase().includes(q) ||
-                                      s.roll.includes(q) ||
+                const skillTexts = Array.isArray(s.skills) ? s.skills : [];
+                const matchesSearch = !q ||
+                                      s.nameEn.toLowerCase().includes(q) ||
+                                      String(s.roll).includes(q) ||
                                       s.hometown.toLowerCase().includes(q) ||
-                                      interestTexts.some(t => t.toLowerCase().includes(q));
+                                      (s.subject || '').toLowerCase().includes(q) ||
+                                      interestTexts.some(t => t.toLowerCase().includes(q)) ||
+                                      skillTexts.some(t => t.toLowerCase().includes(q));
                 const matchesTag = (activeTagFilter === 'all') ||
-                                    interestTexts.some(t => slugifySkill(t) === activeTagFilter);
+                                    (activeTagFilter === 'favorites' ? isFavorite(s.roll) :
+                                    interestTexts.some(t => slugifySkill(t) === activeTagFilter));
                 return matchesSearch && matchesTag;
             });
 
@@ -2848,6 +3020,14 @@
             allChip.dataset.tag = 'all';
             allChip.innerHTML = `${iconMarkup('grid', 13)} All`;
             container.appendChild(allChip);
+
+            // "Favorites" chip — always present (not derived from JSON data)
+            // so bookmarking works even before any interests are tagged.
+            const favChip = document.createElement('button');
+            favChip.className = 'filter-chip';
+            favChip.dataset.tag = 'favorites';
+            favChip.innerHTML = `${iconMarkup('star', 13)} Favorites<span class="chip-count">${favoriteRolls.size ? ` (${favoriteRolls.size})` : ''}</span>`;
+            container.appendChild(favChip);
 
             // One chip per unique interest category found in the JSON
             tags.forEach(({ slug, label }) => {
@@ -2940,7 +3120,6 @@
         }
         function highlightMatch(text, query) {
             if (!query) return text;
-            const re = new RegExp(`(${escapeRegex(query)})`, 'gi');
             return escapeHtml(text).replace(new RegExp(`(${escapeRegex(escapeHtml(query))})`, 'gi'), '<mark>$1</mark>');
         }
         function showSuggestions(query) {
@@ -3067,6 +3246,20 @@
             setTimeout(() => searchInput.focus(), 600);
         });
 
+        // "/" jumps straight to search — a common shortcut on content-heavy
+        // sites. Ignored while typing in a field, or while any overlay
+        // (profile modal / lightbox / drawer) is open, so it never steals
+        // a literal "/" character from another input.
+        document.addEventListener('keydown', e => {
+            if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+            const tag = document.activeElement.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+            if (profileModal.classList.contains('active') || lightbox.classList.contains('active') || mobileDrawer.classList.contains('open')) return;
+            e.preventDefault();
+            document.getElementById('students').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => searchInput.focus(), 400);
+        });
+
         // ─── Filter Chips ─── (built dynamically by buildFilterChips() after fetch)
         // Static "All" chip listener as fallback (dynamic chips get listeners inside buildFilterChips)
         document.getElementById('filterChipContainer').addEventListener('click', e => {
@@ -3077,6 +3270,19 @@
             activeTagFilter = chip.dataset.tag;
             renderRoster();
         });
+
+        // "Clear search & filters" button inside the empty (no-results) state
+        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => {
+                searchQuery = '';
+                searchInput.value = '';
+                activeTagFilter = 'all';
+                document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => c.classList.toggle('active', c.dataset.tag === 'all'));
+                renderRoster();
+                searchInput.focus();
+            });
+        }
 
         // ─── Gallery Album (dynamic — loaded from gallery.json) ────────────
         // A single "album" tile opens a full liquid-glass viewer with
@@ -3132,16 +3338,21 @@
             if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
+        let lightboxTrigger = null;
         function openLightbox(idx) {
             if (!albumPhotos.length) return;
+            lightboxTrigger = document.activeElement;
             renderFilmstrip();
             showAlbumPhoto(idx || 0);
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => document.getElementById('lightboxClose').focus());
         }
         function closeLightbox() {
             lightbox.classList.remove('active');
             document.body.style.overflow = '';
+            if (lightboxTrigger && document.body.contains(lightboxTrigger)) lightboxTrigger.focus();
+            lightboxTrigger = null;
         }
         document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
         document.getElementById('lightboxPrev').addEventListener('click', () => showAlbumPhoto(albumIndex - 1));
@@ -3152,6 +3363,7 @@
             if (e.key === 'Escape') closeLightbox();
             else if (e.key === 'ArrowLeft') showAlbumPhoto(albumIndex - 1);
             else if (e.key === 'ArrowRight') showAlbumPhoto(albumIndex + 1);
+            else trapTabKey(e, lightbox);
         });
         // Swipe left/right on the main image to change photos on touch devices
         (function enableSwipe() {
@@ -3248,12 +3460,14 @@
             mobileHamburger.setAttribute('aria-expanded', 'true');
             mobileDrawer.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => drawerClose.focus());
         }
         function closeDrawer() {
             mobileDrawer.classList.remove('open');
             mobileHamburger.setAttribute('aria-expanded', 'false');
             mobileDrawer.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
+            mobileHamburger.focus();
         }
         mobileHamburger.addEventListener('click', () => {
             mobileDrawer.classList.contains('open') ? closeDrawer() : openDrawer();
@@ -3261,6 +3475,10 @@
         drawerClose.addEventListener('click', closeDrawer);
         document.querySelectorAll('.drawer-link').forEach(link => {
             link.addEventListener('click', closeDrawer);
+        });
+        mobileDrawer.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeDrawer();
+            else trapTabKey(e, mobileDrawer);
         });
 
         // ─── Scroll Reveal ────────────────────────────────────────────────
@@ -3325,6 +3543,7 @@
         // ─── Student Profile Modal ────────────────────────────────────────── (feature #1)
         const profileModal = document.getElementById('profileModal');
         const profileModalContent = document.getElementById('profileModalContent');
+        let profileModalTrigger = null;
 
         function escapeHtml(str) {
             const div = document.createElement('div');
@@ -3335,6 +3554,12 @@
         const profileModalFrame = document.getElementById('profileModalFrame');
 
         function openProfileModal(student, accentKey) {
+            // Remember whatever had focus before the FIRST open so we can
+            // return it there on close — but not while browsing prev/next,
+            // since that would overwrite it with the nav-zone button itself.
+            if (!profileModal.classList.contains('active')) {
+                profileModalTrigger = document.activeElement;
+            }
             const key = accentKey || 'violet';
             const palette = ACCENT_THEMES[key] && ACCENT_THEMES[key][currentTheme];
             // Set on the FRAME (not the content) so the animated glow-ring
@@ -3376,11 +3601,18 @@
             // Cover renders the FULL photo uncropped (object-fit:contain) over
             // a blurred backdrop made from the same image, inside a taller
             // frame — never cropping faces/torsos on portrait shots.
+            const profileFavActive = isFavorite(student.roll);
             profileModalContent.innerHTML = `
                 <div class="profile-cover">
                     <img src="${escapeHtml(student.img)}" alt="" aria-hidden="true" class="profile-cover-bg" id="profileCoverBg">
                     <img src="${escapeHtml(student.img)}" alt="${escapeHtml(student.nameEn)}" class="profile-cover-main" id="profileCoverImg">
                     <div class="profile-cover-topbar">
+                        <button type="button" class="profile-action-btn${profileFavActive ? ' is-favorite' : ''}" id="profileFavBtn" aria-pressed="${profileFavActive}" aria-label="${profileFavActive ? 'Remove from' : 'Add to'} favorites">
+                            <svg viewBox="0 0 24 24" fill="${profileFavActive ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </button>
+                        <button type="button" class="profile-action-btn" id="profileShareBtn" aria-label="Share ${escapeHtml(student.nameEn)}'s profile">
+                            ${iconMarkup('share', 16)}
+                        </button>
                         ${positionHtml}
                     </div>
                     ${navZonesHtml}
@@ -3406,6 +3638,28 @@
             `;
 
             profileModalContent.querySelector('.profile-modal-close').addEventListener('click', closeProfileModal);
+            const favBtnEl = profileModalContent.querySelector('#profileFavBtn');
+            if (favBtnEl) {
+                favBtnEl.addEventListener('click', () => {
+                    const nowActive = toggleFavorite(student.roll);
+                    favBtnEl.classList.toggle('is-favorite', nowActive);
+                    favBtnEl.setAttribute('aria-pressed', String(nowActive));
+                    favBtnEl.setAttribute('aria-label', `${nowActive ? 'Remove from' : 'Add to'} favorites`);
+                    favBtnEl.querySelector('svg').setAttribute('fill', nowActive ? 'currentColor' : 'none');
+                    showToast(nowActive ? `Added ${student.nameEn} to favorites ★` : `Removed ${student.nameEn} from favorites`);
+                    // Keep the grid's own star button (if this card is on screen) in sync
+                    const gridCard = studentGrid.querySelector(`[data-roll="${CSS.escape(String(student.roll))}"] .card-favorite-btn`);
+                    if (gridCard) {
+                        gridCard.classList.toggle('is-favorite', nowActive);
+                        gridCard.setAttribute('aria-pressed', String(nowActive));
+                        gridCard.querySelector('svg').setAttribute('fill', nowActive ? 'currentColor' : 'none');
+                    }
+                });
+            }
+            const shareBtnEl = profileModalContent.querySelector('#profileShareBtn');
+            if (shareBtnEl) {
+                shareBtnEl.addEventListener('click', () => shareStudentProfile(student));
+            }
             const prevZone = profileModalContent.querySelector('.profile-nav-zone-prev');
             const nextZone = profileModalContent.querySelector('.profile-nav-zone-next');
             if (prevZone) prevZone.addEventListener('click', () => navigateProfile(-1));
@@ -3428,6 +3682,10 @@
             }
             profileModal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => {
+                const closeBtn = profileModalContent.querySelector('.profile-modal-close');
+                if (closeBtn) closeBtn.focus();
+            });
         }
 
         // Browse to the previous/next student in whatever roster is
@@ -3452,16 +3710,61 @@
             return wrapper.outerHTML;
         }
 
+        // Share a student's profile via the native share sheet where
+        // available (mostly mobile), falling back to copying a deep link
+        // (page URL + ?roll=xx) to the clipboard on desktop browsers.
+        function studentProfileUrl(student) {
+            const url = new URL(window.location.href);
+            url.hash = '';
+            url.searchParams.set('roll', student.roll);
+            return url.toString();
+        }
+        function shareStudentProfile(student) {
+            const url = studentProfileUrl(student);
+            const shareData = {
+                title: `${student.nameEn} — CSE 7th Batch, Netrokona University`,
+                text: `Check out ${student.nameEn}'s profile in the CSE 7th Batch directory.`,
+                url
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+                return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url)
+                    .then(() => showToast('Profile link copied to clipboard'))
+                    .catch(() => showToast('Could not copy link'));
+            } else {
+                showToast('Copy not supported on this browser');
+            }
+        }
+
+        // If the page was opened via a shared deep link (?roll=xx), jump
+        // straight to that student's profile once the roster has loaded.
+        function openProfileFromUrlIfPresent() {
+            const params = new URLSearchParams(window.location.search);
+            const roll = params.get('roll');
+            if (!roll || !BATCH_STUDENTS.length) return;
+            const student = BATCH_STUDENTS.find(s => String(s.roll) === roll);
+            if (student) {
+                const idx = BATCH_STUDENTS.indexOf(student);
+                openProfileModal(student, ACCENT_KEYS[idx % ACCENT_KEYS.length]);
+            }
+        }
+
         function closeProfileModal() {
             profileModal.classList.remove('active');
             document.body.style.overflow = '';
+            if (profileModalTrigger && document.body.contains(profileModalTrigger)) profileModalTrigger.focus();
+            profileModalTrigger = null;
         }
         profileModal.addEventListener('click', e => { if (e.target === profileModal) closeProfileModal(); });
         document.addEventListener('keydown', e => {
             if (!profileModal.classList.contains('active')) return;
             if (e.key === 'Escape') closeProfileModal();
-            else if (e.key === 'ArrowRight') navigateProfile(1);
-            else if (e.key === 'ArrowLeft') navigateProfile(-1);
+            else if (e.key === 'ArrowRight' && document.activeElement.tagName !== 'INPUT') navigateProfile(1);
+            else if (e.key === 'ArrowLeft' && document.activeElement.tagName !== 'INPUT') navigateProfile(-1);
+            else trapTabKey(e, profileModalContent);
         });
     </script>
 </body>

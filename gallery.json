@@ -1,23 +1,44 @@
 [
   {
     "id": "g1",
-    "img": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop",
-    "imgSrcset": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400&auto=format&fit=crop 400w, https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop 600w, https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=900&auto=format&fit=crop 900w",
+    "img": "gallery/1.png",
+    "imgSrcset": "",
     "alt": "Campus and classroom gatherings",
     "title": "Inaugural Classroom Gatherings"
   },
   {
     "id": "g2",
-    "img": "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop",
-    "imgSrcset": "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=400&auto=format&fit=crop 400w, https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop 600w, https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=900&auto=format&fit=crop 900w",
+    "img": "gallery/2.png",
+    "imgSrcset": "",
     "alt": "First team hackathon group session",
     "title": "First Hackathon Jam Session"
   },
   {
     "id": "g3",
-    "img": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=600&auto=format&fit=crop",
-    "imgSrcset": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=400&auto=format&fit=crop 400w, https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=600&auto=format&fit=crop 600w, https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=900&auto=format&fit=crop 900w",
+    "img": "gallery/3.png",
+    "imgSrcset": "",
     "alt": "Annual batch orientation retreat",
     "title": "Batch Freshers Celebration Day"
-  }
+  },
+   {
+   "id": "g4",
+   "img": "gallery/4.png",
+   "imgSrcset": "",
+   "alt": "Annual batch orientation retreat",
+   "title": "Batch Freshers Celebration Day"
+ },
+  {
+   "id": "g5",
+   "img": "gallery/5.png",
+   "imgSrcset": "",
+   "alt": "Annual batch orientation retreat",
+   "title": "Batch Freshers Celebration Day"
+ },
+  {
+   "id": "g6",
+   "img": "gallery/6.png",
+   "imgSrcset": "",
+   "alt": "Annual batch orientation retreat",
+   "title": "Batch Freshers Celebration Day"
+ }
 ]
