@@ -1,15 +1,5 @@
 <!DOCTYPE html>
-<!--
-    Maintainer note: this page fetch()es students.json / icons.json /
-    gallery.json / manifest.json at runtime. Opening index.html directly
-    from disk (a "file://" URL) will fail silently in most browsers because
-    fetch() is blocked by CORS for local files — the grid will show the
-    "Could not load students.json" error state even though the file exists.
-    Always serve this folder over http(s), e.g.:
-        python3 -m http.server 8000        (then open http://localhost:8000)
-        npx serve .
-    or upload it to real static hosting (GitHub Pages, Netlify, Vercel, etc).
--->
+<!-- Serve over http(s) (e.g. `python3 -m http.server 8000`) — opening this file directly via file:// blocks the students.json/icons.json/gallery.json fetch() calls with CORS errors. -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -26,8 +16,7 @@
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="manifest" href="manifest.json">
 
-    <!-- Early theme init — runs before first paint to avoid a flash of the wrong theme.
-         Priority: saved user choice > OS preference > dark (default). -->
+    <!-- Set theme before first paint to avoid a flash of the wrong theme -->
     <script>
     (function () {
         try {
@@ -100,9 +89,15 @@
             --violet-glow: rgba(139, 92, 246, 0.15);
             --teal: #14b8a6;
             --teal-glow: rgba(20, 184, 166, 0.15);
+            --neutral-glow: rgba(255, 255, 255, 0.15);
 
             --active-accent: var(--violet);
             --active-glow: var(--violet-glow);
+
+            /* Fixed tokens for text on the always-dark photo overlay (doesn't flip with theme) */
+            --oncard-bright: #f8fafc;
+            --oncard-text: #e2e8f0;
+            --oncard-muted: #94a3b8;
 
             --font-display: 'Space Grotesk', sans-serif;
             --font-body: 'Inter', sans-serif;
@@ -131,7 +126,13 @@
             --shadow-md: 0 12px 32px -10px rgba(0,0,0,0.35);
             --shadow-lg: 0 24px 60px -16px rgba(0,0,0,0.45);
             --glass-blur: blur(18px) saturate(160%);
-            --glass-fade: rgba(8,11,24,0.94);
+            /* Base tint (rgb triplet, no alpha) behind every liquid-glass surface.
+               Swappable at runtime so a student's accent colour can "stain" the
+               whole glass system while every layer keeps its own authored alpha —
+               see applyGlassTint() / resetTheme() in the script below. */
+            --glass-fade-rgb: 8,11,24;
+            --glass-fade: rgba(var(--glass-fade-rgb), 0.94);
+            --glass-tint-rgb: 255,255,255;
             --hairline: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
 
             /* Navbar height for offset calculations */
@@ -140,11 +141,11 @@
 
         /* ─── Light Mode Overrides ──────────────────────────────────────── */
         :root[data-theme="light"] {
-            --bg-base: #f8fafc;
-            --bg-surface: rgba(255, 255, 255, 0.8);
+            --bg-base: #eef1f6;
+            --bg-surface: rgba(255, 255, 255, 0.86);
             --bg-surface-raised: #ffffff;
-            --border-subtle: rgba(0, 0, 0, 0.08);
-            --border-hover: rgba(0, 0, 0, 0.18);
+            --border-subtle: rgba(15, 23, 42, 0.11);
+            --border-hover: rgba(15, 23, 42, 0.26);
             --text-primary: #0f172a;
             --text-muted: #475569;
             --text-accent: #1e293b;
@@ -154,12 +155,14 @@
             --violet-glow: rgba(109, 40, 217, 0.12);
             --teal: #0f766e;
             --teal-glow: rgba(15, 118, 110, 0.12);
+            --neutral-glow: rgba(15, 23, 42, 0.12);
             --active-accent: var(--violet);
             --active-glow: var(--violet-glow);
-            --shadow-sm: 0 2px 10px -2px rgba(15,23,42,0.10);
-            --shadow-md: 0 12px 32px -10px rgba(15,23,42,0.14);
-            --shadow-lg: 0 24px 60px -16px rgba(15,23,42,0.18);
-            --glass-fade: rgba(255,255,255,0.9);
+            --shadow-sm: 0 2px 10px -2px rgba(15,23,42,0.12);
+            --shadow-md: 0 12px 32px -10px rgba(15,23,42,0.16);
+            --shadow-lg: 0 24px 60px -16px rgba(15,23,42,0.20);
+            --glass-fade-rgb: 255,255,255;
+            --glass-fade: rgba(var(--glass-fade-rgb), 0.9);
             --hairline: linear-gradient(90deg, transparent, rgba(15,23,42,0.15), transparent);
         }
 
@@ -526,111 +529,18 @@
 
         /* ─── Liquid Glass (reusable) ────────────────────────────────────── */
         .liquid-glass {
-            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 65%);
+            background: linear-gradient(135deg, rgba(var(--glass-tint-rgb),0.10), rgba(var(--glass-tint-rgb),0.02) 65%);
             backdrop-filter: blur(24px) saturate(180%);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
             border: 1px solid rgba(255,255,255,0.14);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 32px rgba(255,255,255,0.025), 0 20px 45px -20px rgba(0,0,0,0.55);
+            transition: background var(--speed-slow) var(--transition-smooth);
         }
         :root[data-theme="light"] .liquid-glass {
-            background: linear-gradient(135deg, rgba(255,255,255,0.72), rgba(255,255,255,0.32) 65%);
+            background: linear-gradient(135deg, rgba(var(--glass-tint-rgb),0.72), rgba(var(--glass-tint-rgb),0.32) 65%);
             border: 1px solid rgba(255,255,255,0.65);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), 0 20px 45px -20px rgba(15,23,42,0.20);
         }
-
-        /* ─── Hero Spotlight — compact card cycling through the roster ─────
-           Fixed height + clipped overflow so cycling never causes the card
-           (and everything below it) to grow/shrink and jump around while
-           scrolling. Every sub-element that could vary in length (hometown,
-           interest chip, quote) is locked to a single line or a reserved
-           two-line box instead of reflowing the layout. */
-        .hero-spotlight {
-            position: relative; overflow: hidden;
-            max-width: 420px; width: 100%; height: 178px;
-            margin: 0 auto var(--space-8); text-align: left;
-            border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5);
-            cursor: pointer; transition: border-color var(--speed-fast), transform var(--speed-fast), box-shadow var(--speed-fast);
-        }
-        .hero-spotlight::before {
-            content: ''; position: absolute; top: -30%; left: -10%; width: 60%; height: 90%; z-index: 0;
-            background: radial-gradient(circle, var(--glow-color, var(--teal-glow)), transparent 70%);
-            opacity: 0.6; pointer-events: none;
-        }
-        .hero-spotlight:hover, .hero-spotlight:focus-visible {
-            border-color: rgba(255,255,255,0.32); transform: translateY(-3px);
-            box-shadow: 0 22px 40px -18px rgba(0,0,0,0.5); outline: none;
-        }
-        .spotlight-eyebrow {
-            position: relative; z-index: 1;
-            display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-3);
-            font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 2.5px;
-            text-transform: uppercase; color: var(--text-muted); white-space: nowrap;
-        }
-        .spotlight-dot { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: var(--teal); box-shadow: 0 0 8px var(--teal); }
-        .spotlight-index {
-            margin-left: auto; font-size: 0.62rem; letter-spacing: 1px; color: var(--text-muted);
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-            padding: 2px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
-        }
-        .spotlight-body {
-            position: relative; z-index: 1;
-            display: flex; align-items: flex-start; gap: var(--space-4); height: 108px; overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
-        }
-        .spotlight-body.spotlight-sliding-out { transform: translateX(-22px); opacity: 0; }
-        .spotlight-body.spotlight-sliding-in { transform: translateX(22px); opacity: 0; transition: none; }
-        @media (prefers-reduced-motion: reduce) {
-            .spotlight-body, .spotlight-body.spotlight-sliding-out, .spotlight-body.spotlight-sliding-in { transition: none; transform: none; opacity: 1; }
-        }
-        .spotlight-avatar {
-            position: relative; width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%;
-            overflow: hidden; border: 2px solid var(--ring-color, var(--border-hover));
-            background: var(--bg-surface-raised);
-            box-shadow: 0 0 0 4px color-mix(in srgb, var(--ring-color, var(--teal)) 14%, transparent);
-        }
-        .spotlight-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .spotlight-avatar-fallback {
-            position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
-            font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--text-muted);
-        }
-        .hero-spotlight .show-fallback .spotlight-avatar-fallback { display: flex; }
-        .spotlight-info { min-width: 0; flex: 1; }
-        .spotlight-name {
-            font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
-            color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .spotlight-meta {
-            display: flex; flex-wrap: nowrap; align-items: center; gap: 7px; margin-top: 6px;
-            font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-muted);
-            overflow: hidden;
-        }
-        .spotlight-meta > span { display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
-        .spotlight-meta-text {
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
-        }
-        .spotlight-chip {
-            padding: 2px 10px; border-radius: 20px; flex-shrink: 0; white-space: nowrap;
-            background: color-mix(in srgb, var(--chip-color, var(--teal)) 16%, transparent);
-            color: var(--chip-color, var(--teal));
-            border: 1px solid color-mix(in srgb, var(--chip-color, var(--teal)) 35%, transparent);
-            max-width: 45%; overflow: hidden; text-overflow: ellipsis;
-        }
-        .spotlight-quote {
-            margin-top: 9px; font-size: 0.79rem; color: var(--text-accent); line-height: 1.5;
-            font-style: italic; opacity: 0.92; min-height: 2.4em;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-        }
-        @media (max-width: 480px) {
-            .hero-spotlight { max-width: 96%; padding: var(--space-4); height: 178px; }
-        }
-        @media (max-width: 380px) {
-            .hero-spotlight { height: 168px; }
-            .spotlight-avatar { width: 46px; height: 46px; }
-            .spotlight-name { font-size: 0.95rem; }
-            .spotlight-body { gap: var(--space-3); height: 98px; }
-            .spotlight-quote { font-size: 0.74rem; -webkit-line-clamp: 2; }
-        }
-
 
         .hero-cta { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
         .btn-primary, .btn-ghost { position: relative; overflow: hidden; isolation: isolate; }
@@ -882,7 +792,6 @@
                         border-color var(--speed-medium) var(--transition-smooth),
                         box-shadow var(--speed-medium) var(--transition-smooth);
             text-decoration: none; color: inherit;
-            /* Entrance animation */
             opacity: 0; animation: cardEnter 0.5s var(--transition-smooth) forwards;
         }
         @keyframes cardEnter {
@@ -899,7 +808,6 @@
             border-color: var(--accent-color, var(--violet)) !important;
             box-shadow: 0 0 0 3px var(--accent-color, var(--violet)), 0 20px 50px -15px var(--glow-color, var(--violet-glow)) !important;
         }
-        /* Cursor-tracked spotlight — subtle premium sheen that follows the pointer */
         .card::before {
             content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit;
             background: radial-gradient(500px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,0.09), transparent 45%);
@@ -913,6 +821,13 @@
         .student-image.img-loaded { opacity: 1; }
         .card-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(4,7,20,0.1) 0%, rgba(4,7,20,0.6) 45%, rgba(4,7,20,0.98) 100%); }
         :root[data-theme="light"] .card-overlay { background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(4,7,20,0.6) 40%, rgba(4,7,20,0.98) 100%); }
+
+        /* Resting shadow so cards read as elevated in light mode too, not just on hover */
+        :root[data-theme="light"] .card,
+        :root[data-theme="light"] .skeleton-card {
+            box-shadow: 0 6px 20px -10px rgba(15,23,42,0.18);
+            border-color: rgba(15,23,42,0.10);
+        }
 
         .roll-badge {
             position: absolute; top: 16px; left: 16px; z-index: 3;
@@ -939,11 +854,11 @@
             border: 1px solid rgba(255,255,255,0.16);
             border-radius: 20px; padding: 4px 10px;
             font-family: var(--font-mono); font-size: 0.65rem;
-            color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--oncard-muted); text-transform: uppercase; letter-spacing: 0.5px;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
             transition: border-color var(--speed-medium), color var(--speed-medium), background var(--speed-medium);
         }
-        .card:hover .card-interest-badge { border-color: var(--accent-color, rgba(255,255,255,0.1)); color: var(--text-accent); background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04) 65%), rgba(4,7,20,0.5); }
+        .card:hover .card-interest-badge { border-color: var(--accent-color, rgba(255,255,255,0.1)); color: var(--oncard-text); background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04) 65%), rgba(4,7,20,0.5); }
 
         /* Favorite (bookmark) toggle — sits beside the roll badge, top-left */
         .card-favorite-btn {
@@ -952,7 +867,7 @@
             background: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.03) 65%), rgba(4,7,20,0.55);
             backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%);
             border: 1px solid rgba(255,255,255,0.22); border-radius: 50%;
-            color: var(--text-muted); cursor: pointer; padding: 0;
+            color: var(--oncard-muted); cursor: pointer; padding: 0;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 4px 14px -4px rgba(0,0,0,0.4);
             transition: transform var(--speed-medium) var(--transition-bounce), color var(--speed-fast), border-color var(--speed-fast);
         }
@@ -991,17 +906,14 @@
         .card-skill-badge svg { width: 20px !important; height: 20px !important; display: block; }
         .card-skill-badge-more {
             font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
-            color: var(--text-muted);
+            color: var(--oncard-muted);
         }
         .card:hover .card-skill-badge,
         .card:focus-visible .card-skill-badge,
         .card.active-theme-host .card-skill-badge {
             opacity: 1;
         }
-        /* Each badge carries its OWN interest color (set inline), so an
-           individual hover glows in that badge's specific color rather
-           than the card's shared accent — makes each icon identifiable
-           at a glance, which matters more now that there can be several. */
+        /* Each badge keeps its own interest color on hover, not the card's shared accent */
         .card-skill-badge:hover {
             transform: scale(1.15) rotate(-4deg);
             border-color: currentColor;
@@ -1016,6 +928,8 @@
             font-family: var(--font-display); font-size: 4rem;
             font-weight: 700; color: rgba(255,255,255,0.1);
         }
+        /* Dark tint instead of near-white so fallback initials stay visible on white */
+        :root[data-theme="light"] .avatar-fallback { color: rgba(15,23,42,0.14); }
         .card-content { position: relative; z-index: 3; padding: var(--space-6); }
         .stu-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff; line-height: 1.2; }
         .stu-name-bn { font-family: var(--font-bn); font-size: 1rem; color: var(--accent-color, var(--gold)); margin-top: 2px; }
@@ -1023,11 +937,10 @@
         .stu-hometown {
             display: flex; align-items: center; gap: 5px;
             font-family: var(--font-mono); font-size: 0.74rem;
-            color: var(--text-muted); margin-top: 6px;
+            color: var(--oncard-muted); margin-top: 6px;
         }
         .stu-hometown .icon-wrap { color: var(--accent-color, var(--gold)); }
-        /* Interest / Focus — revealed only on hover, keyboard focus, or when
-           the card is the active theme host (click) — same behavior as before */
+        /* Interest / Focus — revealed on hover, focus, or active theme */
         .card-stats-rows {
             display: flex; flex-direction: column; gap: 4px;
             border-left: 2px solid var(--accent-color, var(--violet));
@@ -1045,11 +958,11 @@
         .stat-row {
             display: flex; justify-content: space-between;
             font-size: 0.7rem; font-family: var(--font-mono);
-            color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--oncard-muted); text-transform: uppercase; letter-spacing: 0.5px;
         }
         .stat-row b { color: #fff; font-weight: 500; }
         .stu-bio {
-            font-size: 0.8rem; color: var(--text-muted); margin-top: var(--space-3);
+            font-size: 0.8rem; color: var(--oncard-muted); margin-top: var(--space-3);
             line-height: 1.5; max-height: 0; opacity: 0; overflow: hidden;
             transition: max-height var(--speed-medium) var(--transition-smooth), opacity var(--speed-medium);
         }
@@ -1064,7 +977,7 @@
             background: linear-gradient(150deg, rgba(255,255,255,0.09), rgba(255,255,255,0.01) 65%);
             backdrop-filter: blur(8px) saturate(150%); -webkit-backdrop-filter: blur(8px) saturate(150%);
             border: 1px solid rgba(255,255,255,0.15);
-            color: var(--text-accent); font-family: var(--font-mono); font-size: 0.7rem;
+            color: var(--oncard-text); font-family: var(--font-mono); font-size: 0.7rem;
             padding: 7px 12px; border-radius: 20px; cursor: pointer;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.16);
             transition: color var(--speed-fast), border-color var(--speed-fast),
@@ -1083,7 +996,7 @@
         .card-socials { display: flex; gap: 8px; align-items: center; }
         .card-socials:empty { display: none; }
         .card-socials a {
-            color: var(--text-muted); text-decoration: none;
+            color: var(--oncard-muted); text-decoration: none;
             width: 30px; height: 30px; border-radius: 9px;
             border: 1px solid rgba(255,255,255,0.12);
             display: flex; align-items: center; justify-content: center;
@@ -1184,6 +1097,9 @@
         .album-cover-cta svg { width: 14px; height: 14px; transition: transform var(--speed-fast) var(--transition-bounce); flex-shrink: 0; }
         .album-cover:hover .album-cover-cta { background: rgba(255,255,255,0.12); border-color: var(--violet); }
         .album-cover:hover .album-cover-cta svg { transform: translateX(4px); }
+        :root[data-theme="light"] .album-cover {
+            box-shadow: 0 6px 20px -10px rgba(15,23,42,0.15);
+        }
         @media (max-width: 560px) {
             .album-cover { flex-direction: column; text-align: center; }
             .album-cover-stack { margin-bottom: var(--space-2); }
@@ -1213,15 +1129,16 @@
             max-height: 96dvh; max-height: 96vh;
             display: flex; flex-direction: column; min-height: 0;
             border-radius: var(--radius-lg); overflow: hidden;
-            background: linear-gradient(165deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 60%), var(--glass-fade);
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.10), rgba(var(--glass-tint-rgb),0.02) 60%), var(--glass-fade);
             backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px) saturate(180%);
             border: 1px solid rgba(255,255,255,0.16);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), var(--shadow-lg);
             animation: modalPop 0.35s var(--transition-bounce);
+            transition: background var(--speed-slow) var(--transition-smooth);
         }
         :root[data-theme="light"] .lightbox-glass-frame {
-            background: linear-gradient(165deg, rgba(255,255,255,0.75), rgba(255,255,255,0.35) 60%), var(--glass-fade);
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.75), rgba(var(--glass-tint-rgb),0.35) 60%), var(--glass-fade);
             border: 1px solid rgba(255,255,255,0.65);
         }
 
@@ -1283,6 +1200,20 @@
         .lightbox-nav:hover { background: rgba(255,255,255,0.16); border-color: var(--violet); transform: scale(1.08); }
         .lightbox-nav:active { transform: scale(0.96); }
 
+        /* Flip icon buttons to a dark tint in light mode so they stay visible on the light glass frame */
+        :root[data-theme="light"] .lightbox-icon-btn,
+        :root[data-theme="light"] .lightbox-nav {
+            background: rgba(15,23,42,0.06);
+            border: 1px solid rgba(15,23,42,0.16);
+            color: #1e293b;
+        }
+        :root[data-theme="light"] .lightbox-icon-btn:hover,
+        :root[data-theme="light"] .lightbox-nav:hover {
+            background: rgba(15,23,42,0.1);
+            border-color: var(--violet);
+            color: #0f172a;
+        }
+
         .lightbox-filmstrip {
             display: flex; gap: 9px; flex-shrink: 0;
             padding: var(--space-3) clamp(var(--space-3), 3vw, var(--space-5)) var(--space-4);
@@ -1298,14 +1229,14 @@
         .film-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .film-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
         .film-thumb.active { opacity: 1; border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-glow); }
+        :root[data-theme="light"] .film-thumb { border-color: rgba(15,23,42,0.14); }
 
         /* Tablet: tighten spacing a touch, nav stays inline */
         @media (max-width: 768px) {
             .lightbox-nav { width: 40px; height: 40px; }
             .film-thumb { width: 52px; height: 52px; }
         }
-        /* Phone: reclaim horizontal space by floating nav arrows over the
-           image edges instead of squeezing it between two 40px buttons. */
+        /* Phone: float nav arrows over the image edges */
         @media (max-width: 640px) {
             .lightbox-title-mobile { display: none; }
             .lightbox-content { padding: var(--space-2) 0; }
@@ -1313,6 +1244,7 @@
                 position: absolute; top: 50%; transform: translateY(-50%);
                 margin: 0; width: 38px; height: 38px;
                 background: rgba(4,7,20,0.55); border-color: rgba(255,255,255,0.24);
+                color: #fff;
             }
             .lightbox-nav:hover { transform: translateY(-50%) scale(1.08); }
             .lightbox-nav:active { transform: translateY(-50%) scale(0.96); }
@@ -1322,8 +1254,6 @@
             .lightbox-img { max-width: calc(100% - 16px); }
             .film-thumb { width: 46px; height: 46px; }
         }
-        /* Short / landscape viewports: shrink the filmstrip so the photo
-           itself always has room to breathe. */
         @media (max-height: 560px) {
             .lightbox-topbar { padding-top: 8px; padding-bottom: 8px; }
             .lightbox-filmstrip { padding-top: 6px; padding-bottom: 8px; }
@@ -1333,18 +1263,15 @@
             .lightbox-filmstrip { display: none; }
         }
 
-        /* ─── "Our Journey" CTA — liquid glass, animated gradient border ───
-           A rotating conic-gradient ring lives behind the button; the button
-           itself is a solid liquid-glass pane offset by ~2.5px, so only a
-           thin glowing edge of the rotating gradient peeks through. */
+        /* ─── "Our Journey" CTA (sits in the hero, between stats and buttons) ─── */
         .journey-cta-frame {
-            position: relative; margin: var(--space-8) auto 0; max-width: 640px;
+            position: relative; margin: 0 auto var(--space-8); max-width: 640px;
             border-radius: 26px; padding: 2.5px; overflow: hidden; isolation: isolate;
         }
         .journey-cta-frame::before {
             content: ''; position: absolute; top: 50%; left: 50%;
             width: 220%; height: 220%; z-index: 0; transform-origin: center;
-            background: conic-gradient(from 0deg, var(--violet), var(--teal) 33%, var(--gold) 66%, var(--violet) 100%);
+            background: conic-gradient(from 0deg, var(--text-primary), var(--text-muted) 33%, var(--text-accent) 66%, var(--text-primary) 100%);
             animation: journeySpin 5s linear infinite;
             opacity: 0.55; transition: opacity var(--speed-medium);
         }
@@ -1356,18 +1283,18 @@
             display: flex; align-items: center; gap: var(--space-5);
             padding: 1.15rem 1.7rem; border-radius: 24px;
             text-decoration: none; color: inherit; cursor: pointer;
-            background: linear-gradient(165deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02) 60%), var(--glass-fade);
+            background: linear-gradient(165deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02) 60%), rgba(8,11,24,0.94);
             backdrop-filter: blur(26px) saturate(180%);
             -webkit-backdrop-filter: blur(26px) saturate(180%);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
-            transition: transform var(--speed-medium) var(--transition-bounce), box-shadow var(--speed-medium);
+            transition: transform var(--speed-medium) var(--transition-bounce), box-shadow var(--speed-medium), background var(--speed-slow) var(--transition-smooth);
         }
         :root[data-theme="light"] .journey-cta {
-            background: linear-gradient(165deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4) 60%), var(--glass-fade);
+            background: linear-gradient(165deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4) 60%), rgba(255,255,255,0.9);
         }
         .journey-cta-frame:hover .journey-cta, .journey-cta:focus-visible {
             transform: translateY(-4px); outline: none;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.24), 0 24px 50px -16px var(--violet-glow);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.24), 0 24px 50px -16px var(--neutral-glow);
         }
         .journey-cta-frame:active .journey-cta { transform: translateY(-1px) scale(0.99); }
 
@@ -1384,14 +1311,14 @@
             position: relative; z-index: 1; flex-shrink: 0;
             width: 52px; height: 52px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.03) 65%), rgba(139,92,246,0.14);
+            background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.03) 65%), rgba(255,255,255,0.14);
             border: 1px solid rgba(255,255,255,0.22);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-            color: var(--gold);
+            color: var(--text-primary);
             transition: transform 0.6s var(--transition-bounce), color var(--speed-medium);
         }
         .journey-cta-icon svg { width: 24px; height: 24px; }
-        .journey-cta-frame:hover .journey-cta-icon { transform: rotate(224deg) scale(1.08); color: var(--teal); }
+        .journey-cta-frame:hover .journey-cta-icon { transform: rotate(224deg) scale(1.08); color: var(--text-accent); }
 
         .journey-cta-text { position: relative; z-index: 1; flex: 1; min-width: 0; }
         .journey-cta-title {
@@ -1416,7 +1343,7 @@
         }
         .journey-cta-arrow svg { width: 17px; height: 17px; }
         .journey-cta-frame:hover .journey-cta-arrow {
-            transform: translateX(6px); background: var(--violet); border-color: var(--violet); color: #fff;
+            transform: translateX(6px); background: var(--text-primary); border-color: var(--text-primary); color: var(--bg-base);
         }
 
         @media (max-width: 560px) {
@@ -1444,9 +1371,6 @@
         }
         .profile-modal.active { display: flex; }
 
-        /* Frame wraps the scrolling content card so the ambient glow
-           (a decorative pseudo-element) is never clipped by the content's
-           own overflow-y:auto. */
         .profile-modal-frame {
             position: relative; width: 100%; max-width: 560px;
             border-radius: var(--radius-lg);
@@ -1461,15 +1385,16 @@
         .profile-modal-content {
             position: relative; z-index: 1; width: 100%; max-height: 88vh;
             overflow-y: auto; overflow-x: hidden;
-            background: linear-gradient(165deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02) 55%), var(--glass-fade);
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.09), rgba(var(--glass-tint-rgb),0.02) 55%), var(--glass-fade);
             backdrop-filter: blur(28px) saturate(180%);
             -webkit-backdrop-filter: blur(28px) saturate(180%);
             border: 1px solid rgba(255,255,255,0.16); border-radius: var(--radius-lg);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.04);
             animation: modalPop 0.4s var(--transition-bounce);
+            transition: background var(--speed-slow) var(--transition-smooth);
         }
         :root[data-theme="light"] .profile-modal-content {
-            background: linear-gradient(165deg, rgba(255,255,255,0.7), rgba(255,255,255,0.3) 55%), var(--glass-fade);
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.7), rgba(var(--glass-tint-rgb),0.3) 55%), var(--glass-fade);
             border: 1px solid rgba(255,255,255,0.65);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), var(--shadow-lg);
         }
@@ -1488,8 +1413,6 @@
         .profile-modal-close:hover { background: rgba(0,0,0,0.5); transform: rotate(90deg); }
         .profile-modal-close svg { width: 18px; height: 18px; }
 
-        /* Share / Favorite action buttons — sit inline in the cover topbar,
-           to the left of the position pill and close button. */
         .profile-action-btn {
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22);
             backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
@@ -1502,8 +1425,7 @@
         .profile-action-btn.is-favorite { color: var(--gold); border-color: var(--gold); }
         .profile-action-btn.is-favorite svg { fill: var(--gold); }
 
-        /* Cover: full uncropped photo (object-fit:contain) over a blurred
-           backdrop made from the same image, inside a taller frame. */
+        /* Cover buttons stay light on the blurred photo backdrop in both themes on purpose */
         .profile-cover {
             position: relative; height: 300px; overflow: hidden;
             border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -1535,9 +1457,7 @@
             padding: 5px 11px; border-radius: 20px; backdrop-filter: blur(6px);
             letter-spacing: 0.5px; white-space: nowrap;
         }
-        /* Tap zones over the left/right of the cover photo for quick
-           prev/next browsing — chevrons reveal on hover, always faintly
-           visible on touch devices where hover isn't available. */
+        /* Prev/next tap zones over the cover photo */
         .profile-nav-zone {
             position: absolute; top: 54px; bottom: 0; z-index: 2;
             width: 40%; border: none; cursor: pointer; background: none;
@@ -1566,9 +1486,6 @@
         @keyframes profileFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @media (prefers-reduced-motion: reduce) { .profile-body > * { animation: none; } }
 
-        /* Pitch-deck style masthead: small branded eyebrow, then the name
-           treated as a headline — this is the "master pitch" framing that
-           sits above every profile, batch after batch, student after student. */
         .profile-eyebrow {
             display: inline-flex; align-items: center; gap: 7px;
             font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 2px;
@@ -1626,8 +1543,6 @@
         }
         .profile-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
         .profile-bio { color: var(--text-muted); font-size: 0.92rem; line-height: 1.7; }
-        /* Pull-quote treatment for the "fun fact" — a glass card of its own,
-           the one moment in the profile that reads like a pitch tagline. */
         .profile-fact {
             position: relative; font-style: italic; color: var(--text-accent); font-size: 0.94rem;
             background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color, var(--gold)) 16%, transparent), rgba(255,255,255,0.02));
@@ -1641,9 +1556,6 @@
             font-family: Georgia, serif; font-size: 2.4rem; color: var(--accent-color, var(--gold));
             opacity: 0.5; line-height: 1;
         }
-        /* Interests — one colorful chip per interest, each tinted with that
-           interest's own icon color (--chip-color, set inline per chip) so
-           multiple interests stay visually distinct at a glance. */
         .profile-interests { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; margin-bottom: var(--space-2); }
         .profile-interest-chip {
             display: inline-flex; align-items: center; gap: 6px;
@@ -1713,6 +1625,120 @@
         .random-btn:hover svg { transform: rotate(180deg); }
         .random-btn:active { transform: translateY(0) scale(0.97); }
 
+        /* ─── Student Album (auto-rotating card, manual prev/next) ─────────── */
+        .student-album-wrap { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
+        .student-album-stage {
+            position: relative; width: 100%; border-radius: var(--radius-lg);
+            padding: var(--space-5); cursor: pointer; overflow: hidden; isolation: isolate;
+            transition: transform var(--speed-medium) var(--transition-smooth), box-shadow var(--speed-medium) var(--transition-smooth), border-color var(--speed-medium);
+        }
+        .student-album-stage::before {
+            content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+            width: 140%; height: 70%; z-index: -1; pointer-events: none;
+            background: radial-gradient(circle, var(--glow-color, var(--violet-glow)), transparent 70%);
+            opacity: 0.6; transition: opacity var(--speed-medium);
+        }
+        .student-album-stage::after {
+            content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit;
+            background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,0.08), transparent 45%);
+            opacity: 0; transition: opacity var(--speed-medium); pointer-events: none;
+        }
+        .student-album-stage:hover {
+            transform: translateY(-4px); border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 28px 55px -18px var(--violet-glow), var(--shadow-lg);
+        }
+        .student-album-stage:hover::before { opacity: 0.9; }
+        .student-album-stage:hover::after { opacity: 1; }
+        @media (hover: none) { .student-album-stage::after { display: none; } }
+
+        .album-stage-eyebrow {
+            position: relative; z-index: 1;
+            display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-3);
+            font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 2.5px;
+            text-transform: uppercase; color: var(--text-muted); white-space: nowrap;
+        }
+        .album-stage-dot { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: var(--violet); box-shadow: 0 0 8px var(--violet); }
+        .album-stage-index {
+            margin-left: auto; font-size: 0.62rem; letter-spacing: 1px; color: var(--text-muted);
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            padding: 2px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+        }
+        .album-stage-body { position: relative; z-index: 1; }
+        .album-stage-card-slot { position: relative; max-width: 300px; min-height: 480px; margin: var(--space-3) auto 0; }
+        .album-stage-card-slot .card { margin: 0; }
+        .album-stage-nav {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(4,7,20,0.55); border: 1px solid rgba(255,255,255,0.22);
+            backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
+            color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), border-color var(--speed-fast);
+        }
+        .album-stage-nav svg { width: 16px; height: 16px; }
+        .album-stage-nav:hover { background: rgba(0,0,0,0.7); border-color: var(--violet); transform: translateY(-50%) scale(1.08); }
+        .album-stage-nav:active { transform: translateY(-50%) scale(0.96); }
+        .album-stage-prev { left: 8px; }
+        .album-stage-next { right: 8px; }
+        .album-stage-hint {
+            position: relative; z-index: 1;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+            text-align: center; margin-top: var(--space-3);
+            font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.5px;
+            color: var(--text-muted); text-transform: uppercase;
+        }
+        .album-stage-hint svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .view-all-students-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
+            color: var(--text-primary); font-family: var(--font-mono); font-size: 0.85rem;
+            padding: 12px 20px; border-radius: var(--radius-sm); cursor: pointer;
+            transition: border-color var(--speed-fast), color var(--speed-fast),
+                        box-shadow var(--speed-fast), transform var(--speed-fast) var(--transition-bounce);
+        }
+        .view-all-students-btn svg { width: 15px; height: 15px; }
+        .view-all-students-btn:hover { border-color: var(--violet); color: var(--violet); box-shadow: 0 6px 18px -4px var(--violet-glow); transform: translateY(-2px); }
+        .view-all-students-btn:active { transform: translateY(0) scale(0.97); }
+        .view-all-count {
+            font-family: var(--font-mono); font-size: 0.72rem;
+            background: var(--violet-glow); color: var(--violet);
+            padding: 1px 9px; border-radius: 12px;
+        }
+
+        /* ─── All Students Popup ──────────────────────────────────────────── */
+        .students-modal {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(4,7,20,0.82); backdrop-filter: blur(10px) saturate(140%);
+            display: none; align-items: center; justify-content: center;
+            padding: var(--space-4); animation: fadeIn 0.25s ease;
+        }
+        .students-modal.active { display: flex; }
+        .students-modal-frame {
+            position: relative; width: 100%; max-width: 1280px;
+            max-height: 92dvh; max-height: 92vh;
+            display: flex; flex-direction: column; min-height: 0;
+            border-radius: var(--radius-lg); overflow: hidden;
+            animation: modalPop 0.35s var(--transition-bounce);
+        }
+        .students-modal-topbar {
+            display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+            padding: 14px var(--space-6); flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .students-modal-title {
+            display: flex; align-items: center; gap: 8px;
+            font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--text-primary);
+        }
+        .students-modal-title svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
+        .students-modal-scroll {
+            flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
+            padding: var(--space-6);
+        }
+        .students-modal-scroll .controls-panel { margin-bottom: var(--space-8); }
+        @media (max-width: 640px) {
+            .students-modal-scroll { padding: var(--space-4); }
+            .students-modal-topbar { padding: 12px var(--space-4); }
+        }
+
         /* ─── About Section ──────────────────────────────────────────────── */
         .about-wrapper { max-width: 900px; margin: 0 auto; text-align: center; }
         .about-quote { font-family: var(--font-bn); font-size: 1.5rem; line-height: 1.8; margin-bottom: var(--space-6); color: var(--text-primary); }
@@ -1727,10 +1753,29 @@
         }
         .counter-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: var(--space-2); }
 
-        /* ─── Footer ─────────────────────────────────────────────────────── */
+        /* ─── Footer — Liquid Glass ─────────────────────────────────────────
+           Footer now floats as a frosted glass panel (same recipe as
+           .liquid-glass) instead of an opaque block, so the animated
+           gradient-mesh orbs drifting behind the page (they're position:
+           fixed, so still present at scroll-bottom) show through faintly. */
         footer {
-            background: var(--bg-surface-raised); border-top: 1px solid var(--border-subtle);
+            position: relative; overflow: hidden;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.015) 55%), rgba(8,11,24,0.94);
+            backdrop-filter: blur(26px) saturate(180%);
+            -webkit-backdrop-filter: blur(26px) saturate(180%);
+            border-top: 1px solid rgba(255,255,255,0.12);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 -20px 45px -30px rgba(0,0,0,0.4);
             padding: var(--space-12) var(--space-8) var(--space-8); text-align: center;
+            transition: background var(--speed-slow) var(--transition-smooth);
+        }
+        :root[data-theme="light"] footer {
+            background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.22) 55%), rgba(255,255,255,0.9);
+            border-top: 1px solid rgba(15,23,42,0.1);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.75), 0 -20px 45px -30px rgba(15,23,42,0.12);
+        }
+        footer::before {
+            content: ''; position: absolute; top: 0; left: 6%; right: 6%; height: 1px;
+            background: var(--hairline); pointer-events: none;
         }
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: var(--space-4); }
         .footer-motto { font-family: var(--font-bn); color: var(--text-muted); font-size: 1rem; margin-bottom: var(--space-6); }
@@ -1738,12 +1783,15 @@
         .footer-socials a {
             width: 42px; height: 42px; border-radius: 11px;
             border: 1px solid var(--border-subtle);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(8px) saturate(150%); -webkit-backdrop-filter: blur(8px) saturate(150%);
             display: flex; align-items: center; justify-content: center;
             color: var(--text-muted); text-decoration: none;
-            transition: color var(--speed-fast), border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast);
+            transition: color var(--speed-fast), border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast), background var(--speed-fast);
         }
+        :root[data-theme="light"] .footer-socials a { background: rgba(255,255,255,0.5); }
         .footer-socials a svg { width: 18px; height: 18px; }
-        .footer-socials a:hover { color: var(--gold); border-color: var(--gold); transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px -4px rgba(245,158,11,0.35); }
+        .footer-socials a:hover { color: var(--text-primary); border-color: var(--border-hover); transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px -4px rgba(255,255,255,0.35); }
         .footer-links { display: flex; justify-content: center; gap: var(--space-8); margin-bottom: var(--space-8); flex-wrap: wrap; }
         .footer-links a {
             color: var(--text-muted); text-decoration: none; font-size: 0.85rem;
@@ -1753,7 +1801,7 @@
         .footer-links a svg { width: 14px; height: 14px; }
         .footer-links a::after {
             content: ''; position: absolute; left: 0; right: 100%; bottom: -2px; height: 1px;
-            background: var(--gold); transition: right var(--speed-medium) var(--transition-smooth);
+            background: var(--text-primary); transition: right var(--speed-medium) var(--transition-smooth);
         }
         .footer-links a:hover { color: var(--text-primary); }
         .footer-links a:hover::after { right: 0; }
@@ -1981,18 +2029,19 @@
                         <div class="stat-label">Possibilities</div>
                     </div>
                 </div>
-                <div class="hero-spotlight liquid-glass" id="heroSpotlight" role="button" tabindex="0" aria-label="View a random student's profile">
-                    <div class="spotlight-eyebrow">
-                        <span class="spotlight-dot" aria-hidden="true"></span>Batch Spotlight
-                        <span class="spotlight-index" id="spotlightIndex"></span>
-                    </div>
-                    <div class="spotlight-body" id="spotlightBody">
-                        <div class="spotlight-avatar"><span class="spotlight-avatar-fallback">…</span></div>
-                        <div class="spotlight-info">
-                            <div class="spotlight-name">Loading roster…</div>
-                            <div class="spotlight-meta"><span>CSE 7th Batch · Netrokona University</span></div>
-                        </div>
-                    </div>
+                <div class="journey-cta-frame">
+                    <a href="journey.html" class="journey-cta" aria-label="Explore Our Journey — the story of CSE 7th Batch">
+                        <span class="journey-cta-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                        </span>
+                        <span class="journey-cta-text">
+                            <span class="journey-cta-title">Explore Our Journey</span>
+                            <span class="journey-cta-sub">প্রথম দিন থেকে আজ — CSE 7th Batch-এর পথচলার পুরো গল্প দেখুন।</span>
+                        </span>
+                        <span class="journey-cta-arrow" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </span>
+                    </a>
                 </div>
                 <div class="hero-cta">
                     <a href="#students" class="btn-primary">
@@ -2014,59 +2063,101 @@
             <div class="section-head reveal">
                 <div class="eyebrow">The Roster</div>
                 <h2>Meet the Students</h2>
-                <p lang="bn">প্রতিটি কার্ড একজন শিক্ষার্থীর পরিচয় বহন করে। একটি কার্ডে ক্লিক করলে পুরো ওয়েবসাইটের ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট বদলে যাবে — প্রতিটি কার্ডের নিজস্ব রঙের থিম আছে।</p>
+                <p lang="bn">প্রতি ৩ সেকেন্ডে একজন নতুন শিক্ষার্থী দেখা যাবে এই অ্যালবামে। পুরো ৪০ জনকে একসাথে দেখতে অ্যালবামে ক্লিক করুন অথবা নিচের বাটনে চাপুন।</p>
             </div>
 
-            <div class="controls-panel reveal">
-                <div class="search-row">
-                    <div class="search-box-wrapper">
-                        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, roll, hometown or interest..." aria-label="Search students" autocomplete="off">
-                        <!-- Quick Suggestions Dropdown -->
-                        <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
+            <div class="student-album-wrap reveal">
+                <div class="student-album-stage liquid-glass" id="studentAlbumStage" aria-label="Student album — click to view all students">
+                    <div class="album-stage-eyebrow">
+                        <span class="album-stage-dot" aria-hidden="true"></span>Student Album
+                        <span class="album-stage-index" id="albumStageIndex"></span>
                     </div>
-                    <select id="sortControl" class="sort-select" aria-label="Sort student list">
-                        <option value="rollAsc">↑ Sort by Roll</option>
-                        <option value="rollDesc">↓ Sort by Roll</option>
-                        <option value="nameEn">A–Z by Name</option>
-                    </select>
-                    <button type="button" class="random-btn" id="randomStudentBtn" title="Jump to a random student">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
-                        Random Student
-                    </button>
-                </div>
-
-                <div class="chip-container" id="filterChipContainer">
-                    <span class="chip-label">Filter:</span>
-                    <!-- Filter chips are built dynamically from students.json after fetch -->
-                </div>
-
-                <div class="filter-meta">
-                    <div role="status" aria-live="polite">
-                        Showing <span id="resultCount" style="color: var(--gold); font-weight: 600;">40</span> of <span id="totalCount">40</span> students
+                    <div class="album-stage-body" id="albumStageBody">
+                        <button type="button" class="album-stage-nav album-stage-prev" id="albumStagePrev" aria-label="Previous student">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <div class="album-stage-card-slot" id="albumStageCardSlot">
+                            <div class="skeleton-card" aria-hidden="true"></div>
+                        </div>
+                        <button type="button" class="album-stage-nav album-stage-next" id="albumStageNext" aria-label="Next student">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
                     </div>
-                    <button class="reset-theme-btn" id="resetThemeBtn">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Reset Accent
-                    </button>
+                    <div class="album-stage-hint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                        Tap the album to browse everyone
+                    </div>
                 </div>
-            </div>
-
-            <div class="grid" id="studentGrid">
-                <div class="skeleton-card" aria-hidden="true"></div>
-                <div class="skeleton-card" aria-hidden="true"></div>
-                <div class="skeleton-card" aria-hidden="true"></div>
-                <div class="skeleton-card" aria-hidden="true"></div>
-                <div class="skeleton-card" aria-hidden="true"></div>
-                <div class="skeleton-card" aria-hidden="true"></div>
-                <div class="skeleton-card" aria-hidden="true"></div>
-                <div class="skeleton-card" aria-hidden="true"></div>
-            </div>
-            <div class="no-results" id="noResults">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-                No student matches your search. Try a different query.
-                <button type="button" class="no-results-clear-btn" id="clearFiltersBtn">Clear search &amp; filters</button>
+                <button type="button" class="view-all-students-btn" id="viewAllStudentsBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    View All Students <span class="view-all-count" id="viewAllCount">40</span>
+                </button>
             </div>
         </section>
+
+        <!-- All Students popup — same search/filter/grid as before, just relocated -->
+        <div class="students-modal" id="studentsModal" role="dialog" aria-modal="true" aria-label="All students">
+            <div class="students-modal-frame liquid-glass" id="studentsModalFrame">
+                <div class="students-modal-topbar">
+                    <div class="students-modal-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        All Students
+                    </div>
+                    <button type="button" class="lightbox-icon-btn" id="studentsModalClose" aria-label="Close all students view">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="students-modal-scroll" id="studentsModalScroll">
+                    <div class="controls-panel">
+                        <div class="search-row">
+                            <div class="search-box-wrapper">
+                                <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="text" id="searchInput" class="search-input" placeholder="Search by name, roll, hometown or interest..." aria-label="Search students" autocomplete="off">
+                                <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
+                            </div>
+                            <select id="sortControl" class="sort-select" aria-label="Sort student list">
+                                <option value="rollAsc">↑ Sort by Roll</option>
+                                <option value="rollDesc">↓ Sort by Roll</option>
+                                <option value="nameEn">A–Z by Name</option>
+                            </select>
+                            <button type="button" class="random-btn" id="randomStudentBtn" title="Jump to a random student">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+                                Random Student
+                            </button>
+                        </div>
+
+                        <div class="chip-container" id="filterChipContainer">
+                            <span class="chip-label">Filter:</span>
+                        </div>
+
+                        <div class="filter-meta">
+                            <div role="status" aria-live="polite">
+                                Showing <span id="resultCount" style="color: var(--gold); font-weight: 600;">40</span> of <span id="totalCount">40</span> students
+                            </div>
+                            <button class="reset-theme-btn" id="resetThemeBtn">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Reset Accent
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid" id="studentGrid">
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                        <div class="skeleton-card" aria-hidden="true"></div>
+                    </div>
+                    <div class="no-results" id="noResults">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                        No student matches your search. Try a different query.
+                        <button type="button" class="no-results-clear-btn" id="clearFiltersBtn">Clear search &amp; filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- ═══ MOMENTS / GALLERY ══════════════════════════════════════════ -->
         <section id="moments">
@@ -2093,21 +2184,6 @@
                         </div>
                     </div>
                 </button>
-
-                <div class="journey-cta-frame">
-                    <a href="journey.html" class="journey-cta" aria-label="Explore Our Journey — the story of CSE 7th Batch">
-                        <span class="journey-cta-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-                        </span>
-                        <span class="journey-cta-text">
-                            <span class="journey-cta-title">Explore Our Journey</span>
-                            <span class="journey-cta-sub">প্রথম দিন থেকে আজ — CSE 7th Batch-এর পথচলার পুরো গল্প দেখুন।</span>
-                        </span>
-                        <span class="journey-cta-arrow" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                        </span>
-                    </a>
-                </div>
             </div>
         </section>
 
@@ -2213,7 +2289,7 @@
             <a href="journey.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg> Our Journey</a>
         </div>
         <div class="footer-divider"></div>
-        <div class="footer-copy">© 2026 CSE 7th Batch, Netrokona University · Designed &amp; developed by <a href="https://urfa-hasan-fattah.vercel.app" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(245,158,11,0.35);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(245,158,11,0.35)'">Urfa Hasan Fattah</a></div>
+        <div class="footer-copy">© 2026 CSE 7th Batch, Netrokona University · Designed &amp; developed by <a href="https://urfa-hasan-fattah.vercel.app" target="_blank" rel="noopener noreferrer" style="color:var(--text-primary);text-decoration:none;border-bottom:1px solid var(--border-hover);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-hover)'">Urfa Hasan Fattah</a></div>
     </footer>
 
     <!-- Back to Top -->
@@ -2223,12 +2299,10 @@
 
     <script>
         // ─── Lucide Icons Init ───────────────────────────────────────────
-        // Because Lucide loads async, init whenever it's ready.
         function initLucide() { if (window.lucide) lucide.createIcons(); }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initLucide);
         } else {
-            // DOM already parsed (script is at bottom); just wait for Lucide itself
             if (window.lucide) initLucide();
             else {
                 const lucideScript = document.querySelector('script[src*="lucide"]');
@@ -2236,12 +2310,7 @@
             }
         }
 
-        // ─── Icon Registry (icons.json) ───────────────────────────────────
-        // A single external JSON file drives every icon on this page (nav,
-        // socials, filter chips, interest badges, and per-skill icons inside
-        // the profile modal). Ship a solid built-in fallback set inline so
-        // the page never breaks if icons.json is missing/slow — whatever
-        // icons.json DOES provide simply overrides/extends these by key.
+        // ─── Icon Registry (icons.json, with built-in fallbacks) ──────────
         let ICONS = {};
         const ICON_FALLBACKS = {
             'home': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
@@ -2293,103 +2362,123 @@
             return `<span class="icon-wrap" style="display:inline-flex;width:${size}px;height:${size}px;flex-shrink:0;" aria-hidden="true">${raw}</span>`;
         }
 
-        // ─── Hero Spotlight — cycles a short glass card through the roster.
-        // Each change slides the old content out and the next one in from
-        // the opposite side (a deliberate, triggered transition — not an
-        // idle looping animation). Clicking/pressing the card opens that
-        // student's full profile. Hovering/focusing pauses the rotation so
-        // it never changes out from under someone reading it.
-        let spotlightTimer = null;
-        let spotlightIdx = 0;
-        const SPOTLIGHT_INTERVAL = 3000;
-        const SPOTLIGHT_SLIDE_MS = 320;
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        function spotlightContentHtml(student) {
-            const initials = student.nameEn.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-            const badges = getInterestBadges(student);
-            const primary = badges[0] || { text: 'CSE', slug: 'code', meta: DEFAULT_INTEREST_META };
-            const line = student.fact || student.bio || '';
-            return `
-                <div class="spotlight-avatar" style="--ring-color:${primary.meta.color}">
-                    <img src="${escapeHtml(student.img)}" alt="" onerror="this.remove(); this.parentElement.classList.add('show-fallback')">
-                    <span class="spotlight-avatar-fallback">${escapeHtml(initials)}</span>
-                </div>
-                <div class="spotlight-info">
-                    <div class="spotlight-name">${escapeHtml(student.nameEn)}</div>
-                    <div class="spotlight-meta">
-                        <span>${iconMarkup('map-pin', 12)}<span class="spotlight-meta-text">${escapeHtml(student.hometown)}</span></span>
-                        <span class="spotlight-chip" style="--chip-color:${primary.meta.color}">${resolveInterestIcon(primary.slug)}${escapeHtml(primary.text)}</span>
-                    </div>
-                    <div class="spotlight-quote">${escapeHtml(line)}</div>
-                </div>
-            `;
+        // ─── Student Album (auto-rotating card with manual prev/next) ─────
+        let albumTimer = null;
+        let albumIdx = 0;
+        const ALBUM_INTERVAL = 3000;
+
+        function paintAlbumCard(idx) {
+            const slot = document.getElementById('albumStageCardSlot');
+            const indexEl = document.getElementById('albumStageIndex');
+            if (!slot || !BATCH_STUDENTS.length) return;
+            const student = BATCH_STUDENTS[idx];
+            const card = createStudentCard(student, idx);
+            card.style.animationDelay = '0ms';
+            slot.innerHTML = '';
+            slot.appendChild(card);
+            if (indexEl) indexEl.textContent = `${String(idx + 1).padStart(2, '0')} / ${BATCH_STUDENTS.length}`;
         }
 
-        function paintSpotlight(student) {
-            const body = document.getElementById('spotlightBody');
-            const indexEl = document.getElementById('spotlightIndex');
-            if (!body || !student) return;
-            body.innerHTML = spotlightContentHtml(student);
-            if (indexEl && BATCH_STUDENTS.length) {
-                indexEl.textContent = `${String(spotlightIdx + 1).padStart(2, '0')} / ${BATCH_STUDENTS.length}`;
+        function goToAlbumCard(newIdx) {
+            if (!BATCH_STUDENTS.length) return;
+            const slot = document.getElementById('albumStageCardSlot');
+            const outgoing = slot ? slot.querySelector('.card') : null;
+            albumIdx = ((newIdx % BATCH_STUDENTS.length) + BATCH_STUDENTS.length) % BATCH_STUDENTS.length;
+            if (outgoing && !prefersReducedMotion) {
+                outgoing.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                outgoing.style.opacity = '0';
+                outgoing.style.transform = 'translateY(8px) scale(0.98)';
+                setTimeout(() => paintAlbumCard(albumIdx), 260);
+            } else {
+                paintAlbumCard(albumIdx);
             }
         }
 
-        // Slides the current content out to the left, swaps it, then slides
-        // the new content in from the right — a single deliberate transition
-        // per change, not a continuous animation.
-        function slideSpotlight(student) {
-            const body = document.getElementById('spotlightBody');
-            if (!body || !student) return;
-            if (prefersReducedMotion) { paintSpotlight(student); return; }
-            body.classList.add('spotlight-sliding-out');
-            window.setTimeout(() => {
-                paintSpotlight(student);
-                body.classList.remove('spotlight-sliding-out');
-                body.classList.add('spotlight-sliding-in');
-                void body.offsetWidth; // force reflow so the entry position registers
-                body.classList.remove('spotlight-sliding-in');
-            }, SPOTLIGHT_SLIDE_MS);
+        function cycleAlbum() { goToAlbumCard(albumIdx + 1); }
+
+        function startAlbumTimer() {
+            if (albumTimer) clearInterval(albumTimer);
+            albumTimer = setInterval(cycleAlbum, ALBUM_INTERVAL);
+        }
+        function stopAlbumTimer() {
+            if (albumTimer) clearInterval(albumTimer);
+            albumTimer = null;
         }
 
-        function cycleHeroSpotlight() {
+        function initStudentAlbum() {
             if (!BATCH_STUDENTS.length) return;
-            spotlightIdx = (spotlightIdx + 1) % BATCH_STUDENTS.length;
-            slideSpotlight(BATCH_STUDENTS[spotlightIdx]);
-        }
-
-        function startSpotlightTimer() {
-            if (spotlightTimer) clearInterval(spotlightTimer);
-            spotlightTimer = setInterval(cycleHeroSpotlight, SPOTLIGHT_INTERVAL);
-        }
-        function stopSpotlightTimer() {
-            if (spotlightTimer) clearInterval(spotlightTimer);
-            spotlightTimer = null;
-        }
-
-        function initHeroSpotlight() {
-            if (!BATCH_STUDENTS.length) return;
-            const spotlightEl = document.getElementById('heroSpotlight');
-            spotlightIdx = Math.floor(Math.random() * BATCH_STUDENTS.length);
-            paintSpotlight(BATCH_STUDENTS[spotlightIdx]);
-            startSpotlightTimer();
-            if (spotlightEl && !spotlightEl.dataset.wired) {
-                spotlightEl.dataset.wired = '1';
-                const openCurrent = () => {
-                    const s = BATCH_STUDENTS[spotlightIdx];
-                    if (s) openProfileModal(s, ACCENT_KEYS[spotlightIdx % ACCENT_KEYS.length]);
-                };
-                spotlightEl.addEventListener('click', openCurrent);
-                spotlightEl.addEventListener('keydown', e => {
-                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCurrent(); }
+            albumIdx = Math.floor(Math.random() * BATCH_STUDENTS.length);
+            paintAlbumCard(albumIdx);
+            startAlbumTimer();
+            const stage = document.getElementById('studentAlbumStage');
+            const prevBtn = document.getElementById('albumStagePrev');
+            const nextBtn = document.getElementById('albumStageNext');
+            if (stage && !stage.dataset.wired) {
+                stage.dataset.wired = '1';
+                stage.addEventListener('click', e => {
+                    if (e.target.closest('.card') || e.target.closest('.album-stage-nav')) return;
+                    openStudentsModal();
                 });
-                spotlightEl.addEventListener('mouseenter', stopSpotlightTimer);
-                spotlightEl.addEventListener('mouseleave', startSpotlightTimer);
-                spotlightEl.addEventListener('focusin', stopSpotlightTimer);
-                spotlightEl.addEventListener('focusout', startSpotlightTimer);
+                stage.addEventListener('mouseenter', stopAlbumTimer);
+                stage.addEventListener('mouseleave', startAlbumTimer);
+                stage.addEventListener('focusin', stopAlbumTimer);
+                stage.addEventListener('focusout', startAlbumTimer);
+                stage.addEventListener('mousemove', e => {
+                    const rect = stage.getBoundingClientRect();
+                    stage.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+                    stage.style.setProperty('--my', `${e.clientY - rect.top}px`);
+                });
+            }
+            if (prevBtn && !prevBtn.dataset.wired) {
+                prevBtn.dataset.wired = '1';
+                prevBtn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    goToAlbumCard(albumIdx - 1);
+                    startAlbumTimer();
+                });
+            }
+            if (nextBtn && !nextBtn.dataset.wired) {
+                nextBtn.dataset.wired = '1';
+                nextBtn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    goToAlbumCard(albumIdx + 1);
+                    startAlbumTimer();
+                });
             }
         }
+
+        // ─── All Students Popup ────────────────────────────────────────────
+        const studentsModal = document.getElementById('studentsModal');
+        const studentsModalFrame = document.getElementById('studentsModalFrame');
+        let studentsModalTrigger = null;
+
+        function openStudentsModal() {
+            studentsModalTrigger = document.activeElement;
+            studentsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            stopAlbumTimer();
+            requestAnimationFrame(() => {
+                const closeBtn = document.getElementById('studentsModalClose');
+                if (closeBtn) closeBtn.focus();
+            });
+        }
+        function closeStudentsModal() {
+            studentsModal.classList.remove('active');
+            document.body.style.overflow = '';
+            startAlbumTimer();
+            if (studentsModalTrigger && document.body.contains(studentsModalTrigger)) studentsModalTrigger.focus();
+            studentsModalTrigger = null;
+        }
+        document.getElementById('viewAllStudentsBtn').addEventListener('click', openStudentsModal);
+        document.getElementById('studentsModalClose').addEventListener('click', closeStudentsModal);
+        studentsModal.addEventListener('click', e => { if (e.target === studentsModal) closeStudentsModal(); });
+        document.addEventListener('keydown', e => {
+            if (!studentsModal.classList.contains('active')) return;
+            if (e.key === 'Escape') closeStudentsModal();
+            else trapTabKey(e, studentsModalFrame);
+        });
 
         function loadIcons() {
             return fetch('icons.json')
@@ -2411,16 +2500,17 @@
             .then(data => Promise.all([data, iconsReady]))
             .then(([data]) => {
                 BATCH_STUDENTS = data;
-                buildFilterChips();   // build chips from real interest values
+                buildFilterChips();
                 renderRoster();
                 const numStudentsEl = document.getElementById('numStudents');
                 if (numStudentsEl) numStudentsEl.textContent = data.length;
-                initHeroSpotlight();
+                const viewAllCountEl = document.getElementById('viewAllCount');
+                if (viewAllCountEl) viewAllCountEl.textContent = data.length;
+                initStudentAlbum();
                 openProfileFromUrlIfPresent();
             })
             .catch(err => {
                 console.error('students.json load error:', err);
-                // Show error state in grid
                 studentGrid.innerHTML = `<p style="color:var(--text-muted);font-family:var(--font-mono);grid-column:1/-1;text-align:center;padding:3rem 0;">⚠️ Could not load students.json — make sure the file is in the same directory.</p>`;
             });
 
@@ -2547,7 +2637,28 @@
             card.style.setProperty('--glow-color', palette.glow);
         }
 
+        // Converts a '#rrggbb' hex string to an 'r,g,b' triplet for use inside
+        // rgba(var(--x), alpha) — lets every glass layer keep its own authored
+        // alpha while swapping only the hue/tint underneath it.
+        function hexToRgbTriplet(hex) {
+            const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            if (!m) return '255,255,255';
+            return `${parseInt(m[1], 16)},${parseInt(m[2], 16)},${parseInt(m[3], 16)}`;
+        }
+
+        // Blends a colour toward white by a given amount (0–1) — used so the
+        // liquid-glass "sheen" layer reads as a tinted highlight rather than a
+        // flat, overly-saturated wash of the raw accent colour.
+        function lightenRgbTriplet(triplet, amount) {
+            return triplet.split(',').map(v => Math.round(Number(v) + (255 - Number(v)) * amount)).join(',');
+        }
+
         // Applies a theme-correct site-wide accent (used when a card is "active").
+        // Beyond the existing accent/violet/gold/teal tokens, this now also
+        // "stains" every liquid-glass surface on the page (nav, hero card,
+        // all-students modal, profile modal, gallery lightbox, footer, journey
+        // CTA) with the same colour — each layer keeps its own authored alpha,
+        // so only the hue shifts, never the glass's opacity/translucency.
         function applySiteAccent(accentKey) {
             const palette = ACCENT_THEMES[accentKey] && ACCENT_THEMES[accentKey][currentTheme];
             if (!palette) return;
@@ -2559,6 +2670,10 @@
             root.style.setProperty('--teal', palette.t);
             themeDot.style.background = palette.accent;
             themeDot.style.boxShadow = `0 0 14px ${palette.glow}`;
+
+            const accentRgb = hexToRgbTriplet(palette.accent);
+            root.style.setProperty('--glass-fade-rgb', accentRgb);
+            root.style.setProperty('--glass-tint-rgb', lightenRgbTriplet(accentRgb, currentTheme === 'light' ? 0.55 : 0.35));
         }
 
         // ─── Toast Helper ────────────────────────────────────────────────
@@ -2946,7 +3061,7 @@
                 activeCardElement = null;
             }
             const root = document.documentElement;
-            ['--active-accent', '--active-glow', '--violet', '--gold', '--teal'].forEach(v => root.style.removeProperty(v));
+            ['--active-accent', '--active-glow', '--violet', '--gold', '--teal', '--glass-fade-rgb', '--glass-tint-rgb'].forEach(v => root.style.removeProperty(v));
             themeDot.style.background = '';
             themeDot.style.boxShadow = '';
             if (!silent) showToast('Accent theme reset');
