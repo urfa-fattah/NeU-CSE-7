@@ -2653,6 +2653,17 @@
             return triplet.split(',').map(v => Math.round(Number(v) + (255 - Number(v)) * amount)).join(',');
         }
 
+        // Blends one 'r,g,b' triplet toward another by a given amount (0–1).
+        // Used to fold just a touch of the accent hue into the neutral glass
+        // base, so liquid-glass surfaces (nav, cards, the profile modal)
+        // pick up a subtle colour cue without turning into a solid,
+        // content-obscuring wash of the raw accent colour.
+        function blendRgbTriplets(baseTriplet, targetTriplet, amount) {
+            const base = baseTriplet.split(',').map(Number);
+            const target = targetTriplet.split(',').map(Number);
+            return base.map((v, i) => Math.round(v + (target[i] - v) * amount)).join(',');
+        }
+
         // Applies a theme-correct site-wide accent (used when a card is "active").
         // Beyond the existing accent/violet/gold/teal tokens, this now also
         // "stains" every liquid-glass surface on the page (nav, hero card,
@@ -2672,7 +2683,14 @@
             themeDot.style.boxShadow = `0 0 14px ${palette.glow}`;
 
             const accentRgb = hexToRgbTriplet(palette.accent);
-            root.style.setProperty('--glass-fade-rgb', accentRgb);
+            // The glass "fade" layer sits behind almost every piece of text in
+            // the profile modal (and every other liquid-glass surface on the
+            // site), so it stays close to its neutral dark/light base with
+            // only a subtle hint of the accent folded in — keeping content
+            // readable. The separate "tint" layer (already lightened toward
+            // white) carries the more visible liquid-glass colour on top.
+            const neutralFadeRgb = currentTheme === 'light' ? '255,255,255' : '8,11,24';
+            root.style.setProperty('--glass-fade-rgb', blendRgbTriplets(neutralFadeRgb, accentRgb, currentTheme === 'light' ? 0.1 : 0.16));
             root.style.setProperty('--glass-tint-rgb', lightenRgbTriplet(accentRgb, currentTheme === 'light' ? 0.55 : 0.35));
         }
 
