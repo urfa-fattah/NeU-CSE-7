@@ -740,12 +740,10 @@
         .video-card:hover{border-color:var(--border-hover);transform:translateY(-5px);box-shadow:var(--glass-shadow-raised);}
         .video-player-wrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border-subtle);}
         .video-player-wrap video{width:100%;height:100%;object-fit:contain;display:block;background:#000;}
-        .video-upload-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:linear-gradient(155deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));cursor:pointer;transition:background var(--speed-fast);}
-        .video-upload-placeholder:hover{background:linear-gradient(155deg,rgba(255,255,255,0.13),rgba(255,255,255,0.04));}
-        .video-upload-placeholder i[data-lucide]{width:44px;height:44px;color:var(--gold);opacity:0.85;}
-        .video-upload-placeholder p{font-family:var(--font-mono);font-size:0.75rem;letter-spacing:2px;color:var(--text-muted);text-align:center;line-height:1.6;}
-        .video-upload-placeholder span{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);opacity:0.6;}
-        .video-upload-input{display:none;}
+        .video-poster-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:var(--glass-fill-raised);border:1px solid var(--border-subtle);border-top-color:var(--glass-edge-top);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));box-shadow:var(--glass-shadow-raised);transition:all var(--speed-fast) var(--transition-liquid);}
+        .video-poster-play i[data-lucide]{width:24px;height:24px;margin-left:3px;}
+        .video-poster-play:hover{transform:translate(-50%,-50%) scale(1.1);border-color:rgba(246,178,62,0.5);}
+        .video-poster-play.hidden{opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(0.85);}
         .video-controls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(2,3,8,0.96),transparent);padding:1.5rem 1rem 0.75rem;display:flex;flex-direction:column;gap:0.5rem;opacity:0;transition:opacity var(--speed-fast);}
         .video-player-wrap:hover .video-controls,.video-player-wrap.playing .video-controls{opacity:1;}
         .video-progress-bar{width:100%;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;cursor:pointer;position:relative;}
@@ -1172,19 +1170,14 @@
         <div class="section-head reveal">
             <span class="section-tag"><i data-lucide="film"></i>Video Archive</span>
             <h2 id="videosTitle">In Motion</h2>
-            <p>The moments too alive for a photo. Upload your videos directly — no YouTube needed.</p>
+            <p>The moments too alive for a photo.</p>
         </div>
         <div class="video-grid" id="videoGrid">
-            <!-- VIDEO 1 — text content rendered dynamically from data/videos.json (index 0) -->
+            <!-- VIDEO 1 — src + text rendered dynamically from data/videos.json (index 0) -->
             <div class="video-card reveal reveal-delay-1">
                 <div class="video-player-wrap" id="vPlayer1">
-                    <video id="vVideo1" preload="none"></video>
-                    <div class="video-upload-placeholder" onclick="document.getElementById('vFile1').click()">
-                        <i data-lucide="film"></i>
-                        <p id="vUploadText1">Upload Orientation Vlog</p>
-                        <span>MP4 / WebM / MOV · No YouTube needed</span>
-                    </div>
-                    <input type="file" class="video-upload-input" id="vFile1" accept="video/*">
+                    <video id="vVideo1" preload="metadata"></video>
+                    <button class="video-poster-play" id="vPosterPlay1" aria-label="Play video"><i data-lucide="play"></i></button>
                     <div class="video-controls">
                         <div class="video-progress-bar" id="vProgress1"><div class="video-progress-fill" id="vFill1"></div></div>
                         <div class="video-ctrl-row">
@@ -1204,16 +1197,11 @@
                     <p class="video-desc" id="vDesc1">The first day, the nerves, the excitement. Upload your orientation vlog above.</p>
                 </div>
             </div>
-            <!-- VIDEO 2 — text content rendered dynamically from data/videos.json (index 1) -->
+            <!-- VIDEO 2 — src + text rendered dynamically from data/videos.json (index 1) -->
             <div class="video-card reveal reveal-delay-2">
                 <div class="video-player-wrap" id="vPlayer2">
-                    <video id="vVideo2" preload="none"></video>
-                    <div class="video-upload-placeholder" onclick="document.getElementById('vFile2').click()">
-                        <i data-lucide="film"></i>
-                        <p id="vUploadText2">Upload Tour Highlights Video</p>
-                        <span>MP4 / WebM / MOV · No YouTube needed</span>
-                    </div>
-                    <input type="file" class="video-upload-input" id="vFile2" accept="video/*">
+                    <video id="vVideo2" preload="metadata"></video>
+                    <button class="video-poster-play" id="vPosterPlay2" aria-label="Play video"><i data-lucide="play"></i></button>
                     <div class="video-controls">
                         <div class="video-progress-bar" id="vProgress2"><div class="video-progress-fill" id="vFill2"></div></div>
                         <div class="video-ctrl-row">
@@ -1233,16 +1221,11 @@
                     <p class="video-desc" id="vDesc2">Three days, forty people, one bus, and memories that outlast every hard drive.</p>
                 </div>
             </div>
-            <!-- VIDEO 3 — text content rendered dynamically from data/videos.json (index 2) -->
+            <!-- VIDEO 3 — src + text rendered dynamically from data/videos.json (index 2) -->
             <div class="video-card reveal reveal-delay-3">
                 <div class="video-player-wrap" id="vPlayer3">
-                    <video id="vVideo3" preload="none"></video>
-                    <div class="video-upload-placeholder" onclick="document.getElementById('vFile3').click()">
-                        <i data-lucide="film"></i>
-                        <p id="vUploadText3">Upload Farewell Film</p>
-                        <span>MP4 / WebM / MOV · No YouTube needed</span>
-                    </div>
-                    <input type="file" class="video-upload-input" id="vFile3" accept="video/*">
+                    <video id="vVideo3" preload="metadata"></video>
+                    <button class="video-poster-play" id="vPosterPlay3" aria-label="Play video"><i data-lucide="play"></i></button>
                     <div class="video-controls">
                         <div class="video-progress-bar" id="vProgress3"><div class="video-progress-fill" id="vFill3"></div></div>
                         <div class="video-ctrl-row">
@@ -1897,18 +1880,12 @@
     }
 
     // ─── Video Players ────────────────────────────────────
+    // Videos are linked directly from the project (e.g. "videos/1.mp4"
+    // via data/videos.json) — no browser-side upload or localStorage.
     function setupVideoPlayer(cfg) {
-        const { videoEl, fileInput, uploadPlaceholder, playBtn, timeLbl,
+        const { videoEl, posterBtn, playBtn, timeLbl,
                 progressBar, progressFill, volSlider, fsBtn, wrap } = cfg;
         if (!videoEl) return;
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            videoEl.src = URL.createObjectURL(file);
-            uploadPlaceholder.style.display = 'none';
-            videoEl.play();
-        });
 
         function fmtTime(s) {
             if (isNaN(s)) return '0:00';
@@ -1917,18 +1894,23 @@
             return `${m}:${sec.toString().padStart(2,'0')}`;
         }
 
-        playBtn.addEventListener('click', () => videoEl.paused ? videoEl.play() : videoEl.pause());
+        function play() { videoEl.play().catch(() => {}); }
+        playBtn.addEventListener('click', () => videoEl.paused ? play() : videoEl.pause());
+        if (posterBtn) posterBtn.addEventListener('click', play);
 
         videoEl.addEventListener('play', () => {
             wrap.classList.add('playing');
+            if (posterBtn) posterBtn.classList.add('hidden');
             const icon = playBtn.querySelector('i[data-lucide]');
             if (icon) { icon.setAttribute('data-lucide','pause'); if (typeof lucide !== 'undefined') lucide.createIcons(); }
         });
         videoEl.addEventListener('pause', () => {
             wrap.classList.remove('playing');
+            if (posterBtn) posterBtn.classList.remove('hidden');
             const icon = playBtn.querySelector('i[data-lucide]');
             if (icon) { icon.setAttribute('data-lucide','play'); if (typeof lucide !== 'undefined') lucide.createIcons(); }
         });
+        videoEl.addEventListener('ended', () => { if (posterBtn) posterBtn.classList.remove('hidden'); });
 
         videoEl.addEventListener('timeupdate', () => {
             if (!videoEl.duration) return;
@@ -1960,8 +1942,7 @@
         setupVideoPlayer({
             wrap: cfg.wrap,
             videoEl: cfg.wrap.querySelector('video'),
-            fileInput: document.getElementById(`vFile${n}`),
-            uploadPlaceholder: cfg.wrap.querySelector('.video-upload-placeholder'),
+            posterBtn: document.getElementById(`vPosterPlay${n}`),
             playBtn: document.getElementById(`vPlay${n}`),
             timeLbl: document.getElementById(`vTime${n}`),
             progressBar: document.getElementById(`vProgress${n}`),
@@ -1970,16 +1951,19 @@
             fsBtn: document.getElementById(`vFs${n}`),
         });
     });
-    // Applies title/desc/label/duration text from data/videos.json onto the 3 static player slots
+    // Applies src/poster/title/desc/label/duration from data/videos.json onto the 3 static player slots
     function applyVideosData(list) {
         (list || []).slice(0, 3).forEach((v, i) => {
             const n = i + 1;
-            const uploadText = document.getElementById(`vUploadText${n}`);
+            const videoEl = document.getElementById(`vVideo${n}`);
+            const posterBtn = document.getElementById(`vPosterPlay${n}`);
             const label = document.getElementById(`vLabel${n}`);
             const duration = document.getElementById(`vDuration${n}`);
             const title = document.getElementById(`vTitle${n}`);
             const desc = document.getElementById(`vDesc${n}`);
-            if (uploadText && v.uploadText) uploadText.textContent = v.uploadText;
+            if (videoEl && v.src) videoEl.setAttribute('src', v.src);
+            if (videoEl && v.poster) videoEl.setAttribute('poster', v.poster);
+            if (posterBtn) posterBtn.style.display = (v.src ? 'flex' : 'none');
             if (label && v.labelText) {
                 const iconName = v.labelIcon || 'clapperboard';
                 label.innerHTML = `<i data-lucide="${iconName}" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>${v.labelText}`;
@@ -1988,6 +1972,7 @@
             if (title && v.title) title.textContent = v.title;
             if (desc && v.desc) desc.textContent = v.desc;
         });
+        initLucide();
     }
 
     // ─── Init Lucide ──────────────────────────────────────
@@ -2143,9 +2128,9 @@
     ];
 
     const FALLBACK_VIDEOS = [
-        { uploadText: 'Upload Orientation Vlog', labelIcon: 'clapperboard', labelText: 'Orientation', duration: 'Replace duration', title: 'Orientation Vlog — Day One 2026', desc: 'The first day, the nerves, the excitement. Upload your orientation vlog above.' },
-        { uploadText: 'Upload Tour Highlights Video', labelIcon: 'map-pin', labelText: 'Trip Film', duration: 'Replace duration', title: 'Educational Tour Highlights 2028', desc: 'Three days, forty people, one bus, and memories that outlast every hard drive.' },
-        { uploadText: 'Upload Farewell Film', labelIcon: 'heart', labelText: 'Farewell Film', duration: 'Replace duration', title: 'Farewell Night 2029 — Full Film', desc: "The night we documented everything, because we knew we'd need to remember it." }
+        { src: 'videos/1.mp4', labelIcon: 'clapperboard', labelText: 'Orientation', duration: 'Replace duration', title: 'Orientation Vlog — Day One 2026', desc: 'The first day, the nerves, the excitement.' },
+        { src: 'videos/2.mp4', labelIcon: 'map-pin', labelText: 'Trip Film', duration: 'Replace duration', title: 'Educational Tour Highlights 2028', desc: 'Three days, forty people, one bus, and memories that outlast every hard drive.' },
+        { src: 'videos/3.mp4', labelIcon: 'heart', labelText: 'Farewell Film', duration: 'Replace duration', title: 'Farewell Night 2029 — Full Film', desc: "The night we documented everything, because we knew we'd need to remember it." }
     ];
 
     const FALLBACK_ACHIEVEMENTS = [
