@@ -1,14 +1,14 @@
 [
   {
-    "uploadText": "Upload Orientation Vlog",
+    "src": "videos/1.mp4",
     "labelIcon": "clapperboard",
     "labelText": "Orientation",
     "duration": "Replace duration",
     "title": "Orientation Vlog — Day One 2026",
-    "desc": "The first day, the nerves, the excitement. Upload your orientation vlog above."
+    "desc": "The first day, the nerves, the excitement."
   },
   {
-    "uploadText": "Upload Tour Highlights Video",
+    "src": "videos/2.mp4",
     "labelIcon": "map-pin",
     "labelText": "Trip Film",
     "duration": "Replace duration",
@@ -16,7 +16,7 @@
     "desc": "Three days, forty people, one bus, and memories that outlast every hard drive."
   },
   {
-    "uploadText": "Upload Farewell Film",
+    "src": "videos/3.mp4",
     "labelIcon": "heart",
     "labelText": "Farewell Film",
     "duration": "Replace duration",
