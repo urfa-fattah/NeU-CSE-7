@@ -1,0 +1,94 @@
+[
+  {
+    "year": "2026",
+    "date": "September 2026",
+    "tag": "milestone",
+    "tagLabel": "Milestone",
+    "icon": "shield",
+    "title": "Orientation Day — Day One",
+    "body": "40 students walk into Netrokona University's CSE department — nervous, excited, and ready to start a four-year adventure. The first handshakes, the first faces, the first step of our journey together. Replace this with your actual orientation day memory.",
+    "image": "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=600&auto=format&fit=crop",
+    "caption": "📍 CSE Dept. · Netrokona University · Replace with real photo"
+  },
+  {
+    "year": "2026",
+    "date": "October 2026",
+    "tag": "academic",
+    "tagLabel": "Academic",
+    "icon": "book-open",
+    "title": "First Mid-Term Exams",
+    "body": "Our first real test as university students. Late-night study sessions, canteen coffee, and the shared panic of not knowing what to expect. Replace with real exam memories."
+  },
+  {
+    "year": "2026",
+    "date": "December 2026",
+    "tag": "social",
+    "tagLabel": "Social",
+    "icon": "users",
+    "title": "First Batch Picnic",
+    "body": "The first time we got together outside class — a picnic that turned into a tradition. Replace this with real details: venue, date, who organised it, what happened.",
+    "image": "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&auto=format&fit=crop",
+    "caption": "📍 Replace with real photo"
+  },
+  {
+    "year": "2027",
+    "date": "March 2027",
+    "tag": "project",
+    "tagLabel": "Project",
+    "icon": "code-2",
+    "title": "First Hackathon",
+    "body": "48 hours, a team of four, too much caffeine, and our first product. Replace this with which hackathon, who was on the team, what you built, and how it went."
+  },
+  {
+    "year": "2027",
+    "date": "November 2027",
+    "tag": "fest",
+    "tagLabel": "Fest",
+    "icon": "music",
+    "title": "Cultural Fest 2027",
+    "body": "Music, drama, dance, and competitions. The department's annual cultural festival — where we finally saw sides of each other that lectures never revealed. Replace with real fest name and memories.",
+    "image": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop",
+    "caption": "📍 Replace with real cultural fest photo"
+  },
+  {
+    "year": "2028",
+    "date": "February 2028",
+    "tag": "social",
+    "tagLabel": "Trip",
+    "icon": "map-pin",
+    "title": "Educational Tour 2028",
+    "body": "Three days, 40 people, one bus, and memories that outlast every hard drive. Replace with actual destination, highlights, and who organised it.",
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop",
+    "caption": "📍 Replace with actual trip photo"
+  },
+  {
+    "year": "2028",
+    "date": "October 2028",
+    "tag": "academic",
+    "tagLabel": "Academic",
+    "icon": "file-text",
+    "title": "Thesis Proposals Submitted",
+    "body": "The moment it got real. Final-year thesis topics chosen, supervisors assigned, and the countdown to graduation began. Replace with actual thesis titles and supervisors."
+  },
+  {
+    "year": "2029",
+    "date": "April 2029",
+    "tag": "fest",
+    "tagLabel": "Farewell",
+    "icon": "heart",
+    "title": "Farewell Night 2029",
+    "body": "The last time we were all in one room — dressed up, nostalgic, and trying not to cry. Replace with actual date, venue, and memories from the night.",
+    "image": "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop",
+    "caption": "📍 Replace with real farewell photo"
+  },
+  {
+    "year": "2029",
+    "date": "June 2029",
+    "tag": "milestone",
+    "tagLabel": "Milestone",
+    "icon": "graduation-cap",
+    "title": "Convocation Day — Graduation 2029",
+    "body": "Four years distilled into one handshake and a scroll. This page is for that day. Update with the actual convocation date when confirmed by the university.",
+    "countdownDate": "2029-06-21"
+  }
+]

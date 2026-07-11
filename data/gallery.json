@@ -1,0 +1,110 @@
+[
+  {
+    "size": 1,
+    "category": "academic",
+    "badge": "academic",
+    "badgeLabel": "Academic",
+    "caption": "Orientation Day",
+    "sub": "September 2026 · Replace with real photo",
+    "src": "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&auto=format&fit=crop"
+  },
+  {
+    "size": 2,
+    "category": "academic",
+    "badge": "academic",
+    "badgeLabel": "Academic",
+    "caption": "CSE Lab Sessions",
+    "sub": "2026 · Replace",
+    "src": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 3,
+    "category": "social",
+    "badge": "social",
+    "badgeLabel": "Social",
+    "caption": "Canteen Talks",
+    "sub": "2026 · Replace",
+    "src": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 4,
+    "category": "fest",
+    "badge": "fest",
+    "badgeLabel": "Fest",
+    "caption": "Cultural Fest 2027",
+    "sub": "November 2027 · Replace",
+    "src": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 5,
+    "category": "trip",
+    "badge": "trip",
+    "badgeLabel": "Trip",
+    "caption": "Educational Tour 2028",
+    "sub": "February 2028 · Replace",
+    "src": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 6,
+    "category": "academic",
+    "badge": "academic",
+    "badgeLabel": "Academic",
+    "caption": "Project Demo Day",
+    "sub": "2027 · Replace",
+    "src": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 7,
+    "category": "social",
+    "badge": "social",
+    "badgeLabel": "Social",
+    "caption": "Batch Group Photo",
+    "sub": "2027 · Replace with real group photo",
+    "src": "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&auto=format&fit=crop"
+  },
+  {
+    "size": 8,
+    "category": "social",
+    "badge": "social",
+    "badgeLabel": "Sports",
+    "caption": "Sports Week 2027",
+    "sub": "November 2027 · Replace",
+    "src": "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 9,
+    "category": "fest",
+    "badge": "fest",
+    "badgeLabel": "Farewell",
+    "caption": "Farewell Night 2029",
+    "sub": "April 2029 · Replace",
+    "src": "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 10,
+    "category": "academic",
+    "badge": "academic",
+    "badgeLabel": "Thesis",
+    "caption": "Thesis Defence Day",
+    "sub": "2029 · Replace",
+    "src": "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&auto=format&fit=crop"
+  },
+  {
+    "size": 11,
+    "category": "academic",
+    "badge": "academic",
+    "badgeLabel": "Academic",
+    "caption": "The Night Before Exams",
+    "sub": "Every semester · Replace",
+    "src": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop"
+  },
+  {
+    "size": 12,
+    "category": "fest",
+    "badge": "fest",
+    "badgeLabel": "Convocation",
+    "caption": "Graduation Day 2029",
+    "sub": "2029 · Update when available",
+    "src": "https://images.unsplash.com/photo-1520608760-eff2c44d8ac4?w=600&auto=format&fit=crop"
+  }
+]

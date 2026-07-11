@@ -1,0 +1,43 @@
+[
+  {
+    "priority": "high",
+    "icon": "alert-triangle",
+    "title": "Semester Exam Schedule — Revised",
+    "date": "20 June 2026",
+    "dateSort": "2026-06-20",
+    "badge": "urgent",
+    "badgeLabel": "Urgent",
+    "body": "The 1st semester final examination schedule has been revised. All students must collect their admit cards from the department office by 25 June 2026. Replace this with the actual exam notice from the university registrar.",
+    "attachments": [
+      { "name": "Exam Schedule.pdf", "type": "pdf", "href": "#" },
+      { "name": "Seating Plan.pdf", "type": "pdf", "href": "#" }
+    ]
+  },
+  {
+    "priority": "medium",
+    "icon": "calendar-days",
+    "title": "Orientation Day — Schedule & Venue",
+    "date": "15 June 2026",
+    "dateSort": "2026-06-15",
+    "badge": "important",
+    "badgeLabel": "Important",
+    "body": "The official orientation programme for CSE 7th Batch is scheduled for 15 September 2026 at the University Auditorium. All new students are required to attend. Dress code: formal. Replace this with the real orientation details.",
+    "attachments": [
+      { "name": "Programme.pdf", "type": "pdf", "href": "#" },
+      { "name": "Campus Map", "type": "image", "href": "#" }
+    ]
+  },
+  {
+    "priority": "low",
+    "icon": "info",
+    "title": "Department Library — New Books Available",
+    "date": "10 June 2026",
+    "dateSort": "2026-06-10",
+    "badge": "info",
+    "badgeLabel": "Info",
+    "body": "The CSE Department Library has received a new batch of reference books for Data Structures, Algorithms, and Database Systems. Students can borrow books Monday–Thursday, 9 AM – 4 PM. Replace with the actual library notice.",
+    "attachments": [
+      { "name": "Book List.pdf", "type": "pdf", "href": "#" }
+    ]
+  }
+]

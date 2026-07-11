@@ -1,0 +1,44 @@
+[
+  {
+    "variant": "gold",
+    "year": "2027 · Replace Year",
+    "title": "Best Project Award",
+    "desc": "Replace with actual award name, issuing body, and a brief description of the winning project.",
+    "icon": "<polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/>"
+  },
+  {
+    "variant": "violet",
+    "year": "2027 · Replace Year",
+    "title": "Hackathon Runners-Up",
+    "desc": "Replace with actual hackathon name, organiser, and what the team built.",
+    "icon": "<polyline points=\"16 18 22 12 16 6\"/><polyline points=\"8 6 2 12 8 18\"/>"
+  },
+  {
+    "variant": "teal",
+    "year": "2028 · Replace Year",
+    "title": "Research Paper Published",
+    "desc": "Replace with actual paper title, journal/conference name, DOI link, and authoring students.",
+    "icon": "<path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/>"
+  },
+  {
+    "variant": "rose",
+    "year": "2027 · Replace Year",
+    "title": "Cultural Fest Champion",
+    "desc": "Replace with actual cultural event name, category won, and participants involved.",
+    "icon": "<path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/>"
+  },
+  {
+    "variant": "gold",
+    "year": "2028 · Replace Year",
+    "title": "Dean's List — Multiple Students",
+    "desc": "Replace with names of students who made the Dean's List and the semester/year.",
+    "icon": "<circle cx=\"12\" cy=\"8\" r=\"6\"/><path d=\"M15.477 12.89 17 22l-5-3-5 3 1.523-9.11\"/>"
+  },
+  {
+    "variant": "teal",
+    "year": "2027–29 · Replace",
+    "title": "Internship Placements",
+    "desc": "Replace with companies where batch members secured internships.",
+    "icon": "<rect x=\"2\" y=\"7\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2\"/>"
+  }
+]

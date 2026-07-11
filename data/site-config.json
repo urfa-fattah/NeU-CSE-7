@@ -1,0 +1,92 @@
+{
+  "heroStats": [
+    { "num": "40", "label": "Students" },
+    { "num": "4", "label": "Years" },
+    { "num": "8", "label": "Semesters" },
+    { "num": "∞", "label": "Memories" }
+  ],
+
+  "chapters": [
+    {
+      "href": "#year-2026",
+      "variant": "gold",
+      "icon": "shield",
+      "year": "1st Year · 2026",
+      "title": "The Beginning",
+      "desc": "Orientation, first lectures, making friends, and discovering university life together as CSE 7th Batch.",
+      "count": "↳ Chapter 1 · 2026"
+    },
+    {
+      "href": "#year-2027",
+      "variant": "violet",
+      "icon": "trending-up",
+      "year": "2nd Year · 2027",
+      "title": "Rising Up",
+      "desc": "Deeper into DSA, OOP, and databases. First hackathons, first real friendships tested under pressure.",
+      "count": "↳ Chapter 2 · 2027"
+    },
+    {
+      "href": "#year-2028",
+      "variant": "teal",
+      "icon": "zap",
+      "year": "3rd Year · 2028",
+      "title": "The Golden Hustle",
+      "desc": "Thesis proposals, internships, department trips, cultural fest, and the most memorable nights.",
+      "count": "↳ Chapter 3 · 2028"
+    },
+    {
+      "href": "#year-2029",
+      "variant": "rose",
+      "icon": "graduation-cap",
+      "year": "4th Year · 2029",
+      "title": "The Final Chapter",
+      "desc": "Thesis defences, farewell, convocation, and stepping out into the world we built ourselves for.",
+      "count": "↳ Chapter 4 · 2029"
+    }
+  ],
+
+  "stats": [
+    {
+      "color": "gold",
+      "icon": "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75",
+      "number": "40",
+      "label": "Batch Members"
+    },
+    {
+      "color": "violet",
+      "icon": "M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z",
+      "number": "48",
+      "label": "Courses"
+    },
+    {
+      "color": "teal",
+      "icon": "M16 18 22 12 16 6 M8 6 2 12 8 18",
+      "number": "12",
+      "label": "Thesis Projects"
+    },
+    {
+      "color": "rose",
+      "icon": "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z",
+      "number": "3",
+      "label": "Tours"
+    },
+    {
+      "color": "gold",
+      "icon": "M12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2",
+      "number": "8",
+      "label": "Awards Won"
+    },
+    {
+      "color": "violet",
+      "icon": "M3 3h18v18H3z",
+      "number": "400+",
+      "label": "Shared Photos"
+    },
+    {
+      "color": "teal",
+      "icon": "M12 6 12 12 16 14",
+      "number": "4",
+      "label": "Years Together"
+    }
+  ]
+}

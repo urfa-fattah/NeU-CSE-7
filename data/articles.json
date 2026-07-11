@@ -1,0 +1,35 @@
+[
+  {
+    "date": "Replace Date",
+    "category": "academic",
+    "categoryLabel": "Reflection",
+    "title": "What Four Years of CSE Taught Me Beyond Code",
+    "excerpt": "Replace this with a real excerpt from the article. Talk about what the author learned, what surprised them, what they'd tell a first-year student.",
+    "thumb": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop",
+    "authorName": "Author Name — Replace",
+    "authorColor": "violet",
+    "link": "#"
+  },
+  {
+    "date": "Replace Date",
+    "category": "social",
+    "categoryLabel": "Memory",
+    "title": "The Trip That Changed How We Saw Each Other",
+    "excerpt": "Replace with real article excerpt about the educational tour. Who surprised you? What did you learn about your classmates outside the classroom?",
+    "thumb": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop",
+    "authorName": "Author Name — Replace",
+    "authorColor": "teal",
+    "link": "#"
+  },
+  {
+    "date": "Replace Date",
+    "category": "fest",
+    "categoryLabel": "Farewell",
+    "title": "A Letter to the Batch I Grew Up With",
+    "excerpt": "Replace with a real personal letter or essay about the farewell, the friendships, and what comes next. Make it personal, make it real.",
+    "thumb": "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop",
+    "authorName": "Author Name — Replace",
+    "authorColor": "rose",
+    "link": "#"
+  }
+]
