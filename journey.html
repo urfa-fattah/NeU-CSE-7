@@ -80,21 +80,23 @@
         }
         :root[data-theme="light"] {
             --bg-base:#eef1f8; --bg-deep:#e3e7f2;
-            --bg-surface:rgba(255,255,255,0.55); --bg-surface-raised:rgba(255,255,255,0.78);
-            --border-subtle:rgba(15,23,42,0.10); --border-hover:rgba(15,23,42,0.24);
-            --text-primary:#0f1424; --text-muted:#525b76; --text-accent:#1e2338;
-            --gold:#c2790a; --gold-glow:rgba(194,121,10,0.14);
-            --violet:#6d3fd8; --violet-glow:rgba(109,63,216,0.14);
-            --teal:#0d8f7f; --teal-glow:rgba(13,143,127,0.14);
-            --rose:#d1355f; --rose-glow:rgba(209,53,95,0.14);
-            --azure:#0f7fc4; --azure-glow:rgba(15,127,196,0.14);
-            --glass-fill: linear-gradient(155deg, rgba(255,255,255,0.85), rgba(255,255,255,0.35) 45%, rgba(255,255,255,0.55) 100%);
-            --glass-fill-raised: linear-gradient(155deg, rgba(255,255,255,0.95), rgba(255,255,255,0.55) 45%, rgba(255,255,255,0.72) 100%);
-            --glass-edge-top: rgba(255,255,255,0.95);
-            --glass-edge-bottom: rgba(15,23,42,0.06);
-            --glass-shadow: 0 1px 1px rgba(255,255,255,0.8) inset, 0 -1px 10px rgba(15,23,42,0.03) inset, 0 20px 50px -18px rgba(30,40,70,0.22), 0 2px 6px -2px rgba(30,40,70,0.12);
-            --glass-shadow-raised: 0 1px 1px rgba(255,255,255,0.9) inset, 0 -1px 14px rgba(15,23,42,0.04) inset, 0 28px 60px -16px rgba(30,40,70,0.26), 0 4px 10px -4px rgba(30,40,70,0.16);
+            --bg-surface:rgba(255,255,255,0.72); --bg-surface-raised:rgba(255,255,255,0.92);
+            --border-subtle:rgba(15,23,42,0.14); --border-hover:rgba(15,23,42,0.32);
+            --text-primary:#0f1424; --text-muted:#4b5372; --text-accent:#1e2338;
+            --gold:#b56e08; --gold-glow:rgba(181,110,8,0.16);
+            --violet:#6531d4; --violet-glow:rgba(101,49,212,0.16);
+            --teal:#0b8272; --teal-glow:rgba(11,130,114,0.16);
+            --rose:#c62d57; --rose-glow:rgba(198,45,87,0.16);
+            --azure:#0d74b3; --azure-glow:rgba(13,116,179,0.16);
+            --glass-fill: linear-gradient(155deg, rgba(255,255,255,0.92), rgba(255,255,255,0.5) 45%, rgba(255,255,255,0.68) 100%);
+            --glass-fill-raised: linear-gradient(155deg, rgba(255,255,255,0.98), rgba(255,255,255,0.68) 45%, rgba(255,255,255,0.84) 100%);
+            --glass-edge-top: rgba(255,255,255,1);
+            --glass-edge-bottom: rgba(15,23,42,0.09);
+            --glass-shadow: 0 1px 1px rgba(255,255,255,0.9) inset, 0 -1px 10px rgba(15,23,42,0.04) inset, 0 20px 50px -18px rgba(30,40,70,0.28), 0 2px 8px -2px rgba(30,40,70,0.16);
+            --glass-shadow-raised: 0 1px 1px rgba(255,255,255,1) inset, 0 -1px 14px rgba(15,23,42,0.05) inset, 0 28px 60px -16px rgba(30,40,70,0.32), 0 4px 12px -4px rgba(30,40,70,0.2);
         }
+        /* Text on photo/video overlays stays white in both themes on purpose —
+           those overlays sit on top of images, not the page background. */
 
         /* ─── Reset ─────────────────────────────────────── */
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -328,13 +330,17 @@
 
         /* ═══════════════════════════════════════════════════
            NAVBAR — floating glass capsule
+           Rebuilt as a true flex row (brand | nav | actions) so
+           no element is absolutely positioned over another —
+           at every width, content shrinks/collapses in order
+           instead of overlapping.
         ═══════════════════════════════════════════════════ */
         header {
             position: fixed; top: calc(var(--notice-h) + 14px); left: 50%; right: auto; z-index: 100;
             transform: translateX(-50%);
             display: flex; align-items: center; justify-content: space-between;
-            gap: 1rem;
-            padding: 0 1.75rem; height: var(--nav-h); width: calc(100% - 2.5rem); max-width: 1200px;
+            gap: 0.75rem;
+            padding: 0 1.75rem; height: var(--nav-h); width: calc(100% - 2.5rem); max-width: 1240px;
             background: var(--glass-fill);
             backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--glass-sat));
             -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--glass-sat));
@@ -354,29 +360,39 @@
             background: var(--glass-fill-raised);
         }
 
-        /* Brand */
-        .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text-primary);flex-shrink:0;}
-        .logo-img{width:34px;height:34px;border-radius:11px;object-fit:cover;border:1px solid var(--border-subtle);transition:border-color var(--speed-fast),box-shadow var(--speed-fast);}
+        /* Brand — never shrinks below its content, but the label can truncate */
+        .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text-primary);flex-shrink:0;min-width:0;}
+        .logo-img{width:34px;height:34px;border-radius:11px;object-fit:cover;border:1px solid var(--border-subtle);transition:border-color var(--speed-fast),box-shadow var(--speed-fast);flex-shrink:0;}
         .brand:hover .logo-img{border-color:var(--gold);box-shadow:0 0 14px -2px rgba(246,178,62,0.5);}
-        .brand-text{font-family:var(--font-display);font-weight:700;font-size:0.92rem;letter-spacing:0.3px;}
+        .brand-text{font-family:var(--font-display);font-weight:700;font-size:0.92rem;letter-spacing:0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .brand-text .brand-accent{color:var(--gold);}
         .theme-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--violet);margin-left:6px;vertical-align:middle;box-shadow:0 0 8px var(--violet);animation:pulseDot 3s ease-in-out infinite;}
         @keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.8)}}
 
-        /* Desktop nav — individual glass pills */
-        nav{display:flex;align-items:center;gap:3px;position:absolute;left:50%;transform:translateX(-50%);
-            background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle); border-radius:50px; padding:4px;}
-        .nav-link{display:flex;align-items:center;gap:5px;color:var(--text-muted);text-decoration:none;font-size:0.8rem;font-weight:500;font-family:var(--font-body);padding:7px 13px;border-radius:40px;transition:color var(--speed-fast),background var(--speed-fast),box-shadow var(--speed-fast);white-space:nowrap;position:relative;}
+        /* Desktop nav — a real flex child (not absolutely positioned),
+           so it shares space with brand/actions instead of floating
+           over them. It shrinks first; labels drop before icons do. */
+        nav{
+            display:flex; align-items:center; gap:3px;
+            flex:1 1 auto; min-width:0; overflow:hidden;
+            justify-content:center;
+            background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle);
+            border-radius:50px; padding:4px;
+        }
+        :root[data-theme="light"] nav{background:rgba(15,23,42,0.035);}
+        .nav-link{display:flex;align-items:center;gap:5px;color:var(--text-muted);text-decoration:none;font-size:0.8rem;font-weight:500;font-family:var(--font-body);padding:7px 13px;border-radius:40px;transition:color var(--speed-fast),background var(--speed-fast),box-shadow var(--speed-fast),padding var(--speed-fast);white-space:nowrap;position:relative;flex-shrink:0;}
         .nav-link i[data-lucide]{width:14px;height:14px;flex-shrink:0;transition:transform var(--speed-fast);}
         .nav-link:hover i[data-lucide]{transform:scale(1.15);}
         .nav-link:hover{color:var(--text-primary);background:rgba(255,255,255,0.08);}
+        :root[data-theme="light"] .nav-link:hover{background:rgba(15,23,42,0.06);}
         .nav-link.active{color:var(--text-primary);background:var(--glass-fill-raised);box-shadow:0 1px 0 rgba(255,255,255,0.3) inset, 0 4px 14px -4px rgba(0,0,0,0.4);}
         .nav-link.active i[data-lucide]{color:var(--gold);}
+        .nav-link-label{transition:opacity var(--speed-fast);}
 
         /* Nav actions */
         .nav-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-        .nav-divider{width:1px;height:18px;background:var(--border-subtle);margin:0 2px;}
-        .icon-btn{background:var(--bg-surface);border:1px solid var(--border-subtle);color:var(--text-muted);cursor:pointer;width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;transition:all var(--speed-fast);position:relative;box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;}
+        .nav-divider{width:1px;height:18px;background:var(--border-subtle);margin:0 2px;flex-shrink:0;}
+        .icon-btn{background:var(--bg-surface);border:1px solid var(--border-subtle);color:var(--text-muted);cursor:pointer;width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;transition:all var(--speed-fast);position:relative;box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;flex-shrink:0;}
         .icon-btn i[data-lucide],.icon-btn svg{width:15px;height:15px;stroke-width:2;}
         .icon-btn:hover{color:var(--text-primary);border-color:var(--border-hover);background:var(--bg-surface-raised);transform:translateY(-1px);}
 
@@ -399,6 +415,7 @@
 
         /* Mobile drawer — full glass sheet */
         .mobile-nav-drawer{position:fixed;inset:0;background:rgba(2,3,8,0.5);backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);z-index:105;display:flex;flex-direction:column;padding:2rem;transform:translateX(100%);transition:transform 0.5s var(--transition-liquid);overflow-y:auto;}
+        :root[data-theme="light"] .mobile-nav-drawer{background:rgba(238,241,248,0.82);}
         .mobile-nav-drawer.open{transform:translateX(0);}
         .drawer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-subtle);}
         .drawer-brand{font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:var(--text-primary);}
@@ -443,6 +460,7 @@
         @keyframes heroZoom{0%{transform:scale(1.05)}100%{transform:scale(1.0)}}
         :root[data-theme="light"] .hero-cover-img{opacity:0.09;}
         .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(5,7,14,0.12) 0%,rgba(5,7,14,0.5) 50%,var(--bg-base) 94%);}
+        :root[data-theme="light"] .hero-overlay{background:linear-gradient(180deg,rgba(238,241,248,0.25) 0%,rgba(238,241,248,0.68) 50%,var(--bg-base) 94%);}
         .hero-content{position:relative;z-index:2;max-width:880px;width:100%;}
         .year-strip{display:flex;justify-content:center;gap:0.5rem;margin-bottom:2.5rem;flex-wrap:wrap;}
         .year-pill{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;border:1px solid var(--border-subtle);border-radius:40px;padding:5px 15px;background:var(--glass-fill);backdrop-filter:blur(10px);transition:all var(--speed-medium);cursor:default;box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;}
@@ -540,20 +558,20 @@
         .tl-spine{position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom, transparent, var(--border-subtle) 5%, var(--border-subtle) 95%, transparent);transform:translateX(-50%);z-index:0;border-radius:2px;}
         @media(max-width:640px){.tl-spine{left:28px;}}
         .tl-item{display:grid;grid-template-columns:1fr 56px 1fr;gap:0;margin-bottom:3.5rem;position:relative;z-index:1;}
-        .tl-item:nth-child(odd) .tl-content{grid-column:1;text-align:right;padding-right:2rem;}
-        .tl-item:nth-child(odd) .tl-dot{grid-column:2;}
-        .tl-item:nth-child(odd) .tl-empty{grid-column:3;}
-        .tl-item:nth-child(even) .tl-empty{grid-column:1;}
-        .tl-item:nth-child(even) .tl-dot{grid-column:2;}
-        .tl-item:nth-child(even) .tl-content{grid-column:3;text-align:left;padding-left:2rem;}
+        .tl-item.tl-left .tl-content{grid-column:1;text-align:right;padding-right:2rem;}
+        .tl-item.tl-left .tl-dot{grid-column:2;}
+        .tl-item.tl-left .tl-empty{grid-column:3;}
+        .tl-item.tl-right .tl-empty{grid-column:1;}
+        .tl-item.tl-right .tl-dot{grid-column:2;}
+        .tl-item.tl-right .tl-content{grid-column:3;text-align:left;padding-left:2rem;}
         .tl-dot{display:flex;align-items:flex-start;justify-content:center;padding-top:0.2rem;}
         .tl-dot-inner{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border-subtle);border-top-color:var(--glass-edge-top);background:var(--glass-fill);backdrop-filter:blur(14px) saturate(var(--glass-sat));flex-shrink:0;transition:border-color var(--speed-fast),box-shadow var(--speed-fast),transform var(--speed-fast);box-shadow:var(--glass-shadow);}
         .tl-dot-inner i[data-lucide]{width:18px;height:18px;}
         .tl-item:hover .tl-dot-inner{border-color:rgba(246,178,62,0.55);box-shadow:0 0 24px -3px rgba(246,178,62,0.55), var(--glass-shadow);color:var(--gold);transform:scale(1.14);}
         .tl-content{padding-bottom:0.5rem;}
         .tl-meta{display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;flex-wrap:wrap;}
-        .tl-item:nth-child(odd) .tl-meta{justify-content:flex-end;}
-        .tl-item:nth-child(even) .tl-meta{justify-content:flex-start;}
+        .tl-item.tl-left .tl-meta{justify-content:flex-end;}
+        .tl-item.tl-right .tl-meta{justify-content:flex-start;}
         .tl-date{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
         .tl-tag{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:2px 9px;border-radius:20px;border:1px solid transparent;}
         .tag-academic{background:var(--violet-glow);color:var(--violet);border-color:rgba(159,123,255,0.25);}
@@ -572,10 +590,10 @@
         .tl-link svg{width:12px;height:12px;stroke-width:2;}
         @media(max-width:640px){
             .tl-item{grid-template-columns:56px 1fr;}
-            .tl-item:nth-child(odd) .tl-content,.tl-item:nth-child(even) .tl-content{grid-column:2;text-align:left;padding-right:0;padding-left:1.25rem;}
-            .tl-item:nth-child(odd) .tl-dot,.tl-item:nth-child(even) .tl-dot{grid-column:1;}
-            .tl-item:nth-child(odd) .tl-empty,.tl-item:nth-child(even) .tl-empty{display:none;}
-            .tl-item:nth-child(odd) .tl-meta,.tl-item:nth-child(even) .tl-meta{justify-content:flex-start;}
+            .tl-item.tl-left .tl-content,.tl-item.tl-right .tl-content{grid-column:2;text-align:left;padding-right:0;padding-left:1.25rem;}
+            .tl-item.tl-left .tl-dot,.tl-item.tl-right .tl-dot{grid-column:1;}
+            .tl-item.tl-left .tl-empty,.tl-item.tl-right .tl-empty{display:none;}
+            .tl-item.tl-left .tl-meta,.tl-item.tl-right .tl-meta{justify-content:flex-start;}
         }
 
         /* ═══════════════════════════════════════════════════
@@ -874,9 +892,32 @@
         .footer-designer a:hover{color:var(--text-primary);text-decoration:underline;}
 
         /* ═══════════════════════════════════════════════════
-           RESPONSIVE
+           RESPONSIVE — NAVBAR
+           Tiered so nothing ever overlaps:
+           > 1180px : full nav with icon + label
+           861–1180 : nav stays, labels hide (icon-only pills)
+           ≤ 860px  : nav hides entirely, hamburger takes over
         ═══════════════════════════════════════════════════ */
-        @media(max-width:900px){nav{display:none;}.mobile-hamburger{display:flex;}}
+        @media(max-width:1180px){
+            .nav-link-label{display:none;}
+            .nav-link{padding:9px;}
+            nav{gap:1px;padding:4px;}
+        }
+        @media(max-width:860px){
+            nav{display:none;}
+            .mobile-hamburger{display:flex;}
+        }
+        @media(max-width:560px){
+            .brand-text{max-width:38vw;}
+        }
+        @media(max-width:420px){
+            .nav-divider{display:none;}
+            .nav-actions{gap:4px;}
+        }
+
+        /* ═══════════════════════════════════════════════════
+           RESPONSIVE — GENERAL
+        ═══════════════════════════════════════════════════ */
         @media(max-width:820px){.footer-top{grid-template-columns:1fr;gap:2rem;}.footer-desc{max-width:100%;}.footer-nav-cols{grid-template-columns:repeat(3,1fr);gap:1.25rem;}}
         @media(max-width:600px){header{padding:0 1.1rem;width:calc(100% - 1.5rem);}section{padding:3.5rem 1.25rem;}.tl-year{font-size:3rem;letter-spacing:-2px;}.gallery-toolbar{flex-direction:column;align-items:flex-start;}}
         @media(max-width:540px){.footer-inner{padding:2.5rem 1.25rem 1.5rem;}.footer-nav-cols{grid-template-columns:repeat(2,1fr);gap:1.5rem;}.footer-bottom{flex-direction:column;align-items:flex-start;gap:0.5rem;}}
@@ -927,85 +968,7 @@
             </div>
 
             <div class="notice-list" id="noticeList">
-                <!-- ═══════════════════════════════════════════════════════════
-                     HOW TO ADD/EDIT NOTICES:
-                     Copy one .notice-item block and adjust:
-                     - priority class: priority-high / priority-medium / priority-low
-                     - icon class: icon-high / icon-medium / icon-low / icon-info
-                     - badge class: badge-urgent / badge-important / badge-info / badge-update
-                     - data-notice-date: ISO date string for sorting (YYYY-MM-DD)
-                     - Attachments: add .notice-attachment links with href to your file
-                       For PDF: icon "file-text", for image: "image", for doc: "file"
-                ═══════════════════════════════════════════════════════════ -->
-
-                <!-- NOTICE 1 — Urgent -->
-                <div class="notice-item priority-high" data-notice-date="2026-06-20">
-                    <div class="notice-item-top">
-                        <div class="notice-item-icon icon-high"><i data-lucide="alert-triangle"></i></div>
-                        <div class="notice-item-meta">
-                            <p class="notice-item-title">Semester Exam Schedule — Revised</p>
-                            <p class="notice-item-date">20 June 2026</p>
-                        </div>
-                        <span class="notice-item-badge badge-urgent">Urgent</span>
-                    </div>
-                    <p class="notice-item-body">
-                        The 1st semester final examination schedule has been revised. All students must collect their admit cards from the department office by 25 June 2026. Replace this with actual exam notice from the university registrar.
-                    </p>
-                    <div class="notice-attachments">
-                        <a href="#" class="notice-attachment" data-file-name="exam-schedule.pdf" data-file-type="pdf">
-                            <i data-lucide="file-text"></i>Exam Schedule.pdf
-                        </a>
-                        <a href="#" class="notice-attachment" data-file-name="seating-plan.pdf" data-file-type="pdf">
-                            <i data-lucide="file-text"></i>Seating Plan.pdf
-                        </a>
-                    </div>
-                </div>
-
-                <!-- NOTICE 2 — Important -->
-                <div class="notice-item priority-medium" data-notice-date="2026-06-15">
-                    <div class="notice-item-top">
-                        <div class="notice-item-icon icon-medium"><i data-lucide="calendar-days"></i></div>
-                        <div class="notice-item-meta">
-                            <p class="notice-item-title">Orientation Day — Schedule &amp; Venue</p>
-                            <p class="notice-item-date">15 June 2026</p>
-                        </div>
-                        <span class="notice-item-badge badge-important">Important</span>
-                    </div>
-                    <p class="notice-item-body">
-                        The official orientation programme for CSE 7th Batch is scheduled for 15 September 2026 at the University Auditorium. All new students are required to attend. Dress code: formal. Replace this with real orientation details.
-                    </p>
-                    <div class="notice-attachments">
-                        <a href="#" class="notice-attachment" data-file-name="orientation-programme.pdf" data-file-type="pdf">
-                            <i data-lucide="file-text"></i>Programme.pdf
-                        </a>
-                        <a href="#" class="notice-attachment" data-file-name="campus-map.jpg" data-file-type="image">
-                            <i data-lucide="image"></i>Campus Map
-                        </a>
-                    </div>
-                </div>
-
-                <!-- NOTICE 3 — Info -->
-                <div class="notice-item priority-low" data-notice-date="2026-06-10">
-                    <div class="notice-item-top">
-                        <div class="notice-item-icon icon-info"><i data-lucide="info"></i></div>
-                        <div class="notice-item-meta">
-                            <p class="notice-item-title">Department Library — New Books Available</p>
-                            <p class="notice-item-date">10 June 2026</p>
-                        </div>
-                        <span class="notice-item-badge badge-info">Info</span>
-                    </div>
-                    <p class="notice-item-body">
-                        The CSE Department Library has received a new batch of reference books for Data Structures, Algorithms, and Database Systems. Students can borrow books from Monday–Thursday, 9 AM – 4 PM. Replace with actual library notice.
-                    </p>
-                    <div class="notice-attachments">
-                        <a href="#" class="notice-attachment" data-file-name="book-list.pdf" data-file-type="pdf">
-                            <i data-lucide="file-text"></i>Book List.pdf
-                        </a>
-                    </div>
-                </div>
-
-                <!-- ADD MORE NOTICES HERE — copy a notice-item block above -->
-
+                <!-- Rendered dynamically from data/notices.json — see renderNotices() in the script -->
             </div>
 
             <div class="notice-modal-footer">
@@ -1025,14 +988,14 @@
         </a>
 
         <nav aria-label="Page sections">
-            <a href="index.html" class="nav-link" data-section="home"><i data-lucide="home"></i>Home</a>
-            <a href="#overview" class="nav-link" data-section="overview"><i data-lucide="layout-grid"></i>Overview</a>
-            <a href="#timeline" class="nav-link" data-section="timeline"><i data-lucide="clock"></i>Timeline</a>
-            <a href="#gallery" class="nav-link" data-section="gallery"><i data-lucide="image"></i>Gallery</a>
-            <a href="#videos" class="nav-link" data-section="videos"><i data-lucide="film"></i>Videos</a>
-            <a href="#achievements" class="nav-link" data-section="achievements"><i data-lucide="trophy"></i>Achievements</a>
-            <a href="#memories" class="nav-link" data-section="memories"><i data-lucide="heart"></i>Memories</a>
-            <a href="#upcoming" class="nav-link" data-section="upcoming"><i data-lucide="calendar"></i>Upcoming</a>
+            <a href="index.html" class="nav-link" data-section="home" title="Home"><i data-lucide="home"></i><span class="nav-link-label">Home</span></a>
+            <a href="#overview" class="nav-link" data-section="overview" title="Overview"><i data-lucide="layout-grid"></i><span class="nav-link-label">Overview</span></a>
+            <a href="#timeline" class="nav-link" data-section="timeline" title="Timeline"><i data-lucide="clock"></i><span class="nav-link-label">Timeline</span></a>
+            <a href="#gallery" class="nav-link" data-section="gallery" title="Gallery"><i data-lucide="image"></i><span class="nav-link-label">Gallery</span></a>
+            <a href="#videos" class="nav-link" data-section="videos" title="Videos"><i data-lucide="film"></i><span class="nav-link-label">Videos</span></a>
+            <a href="#achievements" class="nav-link" data-section="achievements" title="Achievements"><i data-lucide="trophy"></i><span class="nav-link-label">Achievements</span></a>
+            <a href="#memories" class="nav-link" data-section="memories" title="Memories"><i data-lucide="heart"></i><span class="nav-link-label">Memories</span></a>
+            <a href="#upcoming" class="nav-link" data-section="upcoming" title="Upcoming"><i data-lucide="calendar"></i><span class="nav-link-label">Upcoming</span></a>
         </nav>
 
         <div class="nav-actions">
@@ -1098,15 +1061,12 @@
             <p class="hero-sub">আমাদের বিশ্ববিদ্যালয় জীবনের গল্প</p>
             <p class="hero-desc">From the first day of orientation in 2026 to the golden moment of graduation — every lecture, late night, laugh, project, trip, and triumph, documented here for us and everyone who comes after.</p>
             <div class="hero-cta">
+                <a href="index.html" class="btn-ghost"><i data-lucide="arrow-left"></i>Back to Home</a>
                 <a href="#timeline" class="btn-primary"><i data-lucide="clock"></i>Start the Timeline</a>
                 <a href="#gallery" class="btn-ghost"><i data-lucide="image"></i>View Gallery</a>
             </div>
-            <div class="hero-stats" aria-label="Batch quick facts">
-                <!-- HOW TO EDIT: Change the numbers and labels below -->
-                <div class="hero-stat"><span class="hero-stat-num">40</span><span class="hero-stat-label">Students</span></div>
-                <div class="hero-stat"><span class="hero-stat-num">4</span><span class="hero-stat-label">Years</span></div>
-                <div class="hero-stat"><span class="hero-stat-num">8</span><span class="hero-stat-label">Semesters</span></div>
-                <div class="hero-stat"><span class="hero-stat-num">∞</span><span class="hero-stat-label">Memories</span></div>
+            <div class="hero-stats" id="heroStats" aria-label="Batch quick facts">
+                <!-- Rendered dynamically from data/site-config.json (hero.stats) -->
             </div>
         </div>
         <div class="scroll-hint" aria-hidden="true"><span>scroll</span><i data-lucide="chevron-down"></i></div>
@@ -1123,35 +1083,8 @@
             <h2 id="overviewTitle">Four Years, One Story</h2>
             <p>Each year brought its own flavour — new faces, harder subjects, bolder adventures. Jump to any chapter.</p>
         </div>
-        <div class="chapter-grid">
-            <a href="#year-2026" class="chapter-card chapter-gold reveal reveal-delay-1">
-                <div class="chapter-icon"><i data-lucide="shield"></i></div>
-                <span class="chapter-year">1st Year · 2026</span>
-                <h3 class="chapter-title">The Beginning</h3>
-                <p class="chapter-desc">Orientation, first lectures, making friends, and discovering university life together as CSE 7th Batch.</p>
-                <span class="chapter-count">↳ Chapter 1 · 2026</span>
-            </a>
-            <a href="#year-2027" class="chapter-card chapter-violet reveal reveal-delay-2">
-                <div class="chapter-icon"><i data-lucide="trending-up"></i></div>
-                <span class="chapter-year">2nd Year · 2027</span>
-                <h3 class="chapter-title">Rising Up</h3>
-                <p class="chapter-desc">Deeper into DSA, OOP, and databases. First hackathons, first real friendships tested under pressure.</p>
-                <span class="chapter-count">↳ Chapter 2 · 2027</span>
-            </a>
-            <a href="#year-2028" class="chapter-card chapter-teal reveal reveal-delay-3">
-                <div class="chapter-icon"><i data-lucide="zap"></i></div>
-                <span class="chapter-year">3rd Year · 2028</span>
-                <h3 class="chapter-title">The Golden Hustle</h3>
-                <p class="chapter-desc">Thesis proposals, internships, department trips, cultural fest, and the most memorable nights.</p>
-                <span class="chapter-count">↳ Chapter 3 · 2028</span>
-            </a>
-            <a href="#year-2029" class="chapter-card chapter-rose reveal reveal-delay-4">
-                <div class="chapter-icon"><i data-lucide="graduation-cap"></i></div>
-                <span class="chapter-year">4th Year · 2029</span>
-                <h3 class="chapter-title">The Final Chapter</h3>
-                <p class="chapter-desc">Thesis defences, farewell, convocation, and stepping out into the world we built ourselves for.</p>
-                <span class="chapter-count">↳ Chapter 4 · 2029</span>
-            </a>
+        <div class="chapter-grid" id="chapterGrid">
+            <!-- Rendered dynamically from data/site-config.json (chapters) -->
         </div>
     </section>
 
@@ -1173,164 +1106,9 @@
             <h2 id="timelineTitle">The Timeline</h2>
             <p>Every milestone, in the order it happened. Scroll through four years of becoming.</p>
         </div>
-        <div class="timeline-container">
+        <div class="timeline-container" id="timelineContainer">
             <div class="tl-spine" aria-hidden="true"></div>
-
-            <!-- ══ YEAR 2026 ═════════════════════════════ -->
-            <div class="tl-year" id="year-2026">20<span>26</span></div>
-
-            <!-- EVENT 1 -->
-            <div class="tl-item reveal">
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">September 2026</span>
-                        <span class="tl-tag tag-milestone">Milestone</span>
-                    </div>
-                    <h3 class="tl-title">Orientation Day — Day One</h3>
-                    <p class="tl-body">40 students walk into Netrokona University's CSE department — nervous, excited, and ready to start a four-year adventure. The first handshakes, the first faces, the first step of our journey together. Replace this with your actual orientation day memory.</p>
-                    <div class="tl-media">
-                        <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=600&auto=format&fit=crop" alt="Orientation Day" loading="lazy">
-                        <p class="tl-media-caption">📍 CSE Dept. · Netrokona University · Replace with real photo</p>
-                    </div>
-                </div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="shield"></i></div></div>
-                <div class="tl-empty"></div>
-            </div>
-
-            <!-- EVENT 2 -->
-            <div class="tl-item reveal">
-                <div class="tl-empty"></div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="book-open"></i></div></div>
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">October 2026</span>
-                        <span class="tl-tag tag-academic">Academic</span>
-                    </div>
-                    <h3 class="tl-title">First Mid-Term Exams</h3>
-                    <p class="tl-body">Our first real test as university students. Late-night study sessions, canteen coffee, and the shared panic of not knowing what to expect. Replace with real exam memories.</p>
-                </div>
-            </div>
-
-            <!-- EVENT 3 -->
-            <div class="tl-item reveal">
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">December 2026</span>
-                        <span class="tl-tag tag-social">Social</span>
-                    </div>
-                    <h3 class="tl-title">First Batch Picnic</h3>
-                    <p class="tl-body">The first time we got together outside class — a picnic that turned into a tradition. Replace this with real details: venue, date, who organised it, what happened.</p>
-                    <div class="tl-media">
-                        <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&auto=format&fit=crop" alt="Picnic" loading="lazy">
-                        <p class="tl-media-caption">📍 Replace with real photo</p>
-                    </div>
-                </div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="users"></i></div></div>
-                <div class="tl-empty"></div>
-            </div>
-
-            <!-- ══ YEAR 2027 ═════════════════════════════ -->
-            <div class="tl-year" id="year-2027">20<span>27</span></div>
-
-            <div class="tl-item reveal">
-                <div class="tl-empty"></div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="code-2"></i></div></div>
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">March 2027</span>
-                        <span class="tl-tag tag-project">Project</span>
-                    </div>
-                    <h3 class="tl-title">First Hackathon</h3>
-                    <p class="tl-body">48 hours, a team of four, too much caffeine, and our first product. Replace this with which hackathon, who was on the team, what you built, and how it went.</p>
-                </div>
-            </div>
-
-            <div class="tl-item reveal">
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">November 2027</span>
-                        <span class="tl-tag tag-fest">Fest</span>
-                    </div>
-                    <h3 class="tl-title">Cultural Fest 2027</h3>
-                    <p class="tl-body">Music, drama, dance, and competitions. The department's annual cultural festival — where we finally saw sides of each other that lectures never revealed. Replace with real fest name and memories.</p>
-                    <div class="tl-media">
-                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop" alt="Cultural Fest" loading="lazy">
-                        <p class="tl-media-caption">📍 Replace with real cultural fest photo</p>
-                    </div>
-                </div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="music"></i></div></div>
-                <div class="tl-empty"></div>
-            </div>
-
-            <!-- ══ YEAR 2028 ═════════════════════════════ -->
-            <div class="tl-year" id="year-2028">20<span>28</span></div>
-
-            <div class="tl-item reveal">
-                <div class="tl-empty"></div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="map-pin"></i></div></div>
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">February 2028</span>
-                        <span class="tl-tag tag-social">Trip</span>
-                    </div>
-                    <h3 class="tl-title">Educational Tour 2028</h3>
-                    <p class="tl-body">Three days, 40 people, one bus, and memories that outlast every hard drive. Replace with actual destination, highlights, and who organised it.</p>
-                    <div class="tl-media">
-                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Educational Tour" loading="lazy">
-                        <p class="tl-media-caption">📍 Replace with actual trip photo</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tl-item reveal">
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">October 2028</span>
-                        <span class="tl-tag tag-academic">Academic</span>
-                    </div>
-                    <h3 class="tl-title">Thesis Proposals Submitted</h3>
-                    <p class="tl-body">The moment it got real. Final-year thesis topics chosen, supervisors assigned, and the countdown to graduation began. Replace with actual thesis titles and supervisors.</p>
-                </div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="file-text"></i></div></div>
-                <div class="tl-empty"></div>
-            </div>
-
-            <!-- ══ YEAR 2029 ═════════════════════════════ -->
-            <div class="tl-year" id="year-2029">20<span>29</span></div>
-
-            <div class="tl-item reveal">
-                <div class="tl-empty"></div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="heart"></i></div></div>
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">April 2029</span>
-                        <span class="tl-tag tag-fest">Farewell</span>
-                    </div>
-                    <h3 class="tl-title">Farewell Night 2029</h3>
-                    <p class="tl-body">The last time we were all in one room — dressed up, nostalgic, and trying not to cry. Replace with actual date, venue, and memories from the night.</p>
-                    <div class="tl-media">
-                        <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop" alt="Farewell" loading="lazy">
-                        <p class="tl-media-caption">📍 Replace with real farewell photo</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tl-item reveal">
-                <div class="tl-content">
-                    <div class="tl-meta">
-                        <span class="tl-date">June 2029</span>
-                        <span class="tl-tag tag-milestone">Milestone</span>
-                    </div>
-                    <h3 class="tl-title">Convocation Day — Graduation 2029</h3>
-                    <p class="tl-body">Four years distilled into one handshake and a scroll. This page is for that day. Update with actual convocation date when confirmed by the university.</p>
-                    <div class="event-countdown" id="convocationCountdown" style="margin-top:0.75rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--teal);letter-spacing:1.5px;">⏳ Calculating time to graduation…</div>
-                </div>
-                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="graduation-cap"></i></div></div>
-                <div class="tl-empty"></div>
-            </div>
-
-            <!-- ADD MORE TIMELINE EVENTS: Copy a .tl-item block and paste here -->
-
+            <!-- Year headers + .tl-item events rendered dynamically from data/timeline.json -->
         </div>
     </section>
 
@@ -1367,166 +1145,7 @@
         </div>
 
         <div class="gallery-mosaic" id="galleryMosaic" role="list">
-            <!-- PHOTO 1 -->
-            <div class="gallery-item g-item-1 reveal" role="listitem" data-category="academic" data-caption="Orientation Day" data-sub="September 2026 · Replace with real photo">
-                <span class="gallery-badge badge-academic">Academic</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&auto=format&fit=crop" alt="Orientation Day" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Orientation Day</p>
-                    <p class="gallery-caption-sub">September 2026 · Replace with real photo</p>
-                </div>
-            </div>
-            <!-- PHOTO 2 -->
-            <div class="gallery-item g-item-2 reveal" role="listitem" data-category="academic" data-caption="CSE Lab Sessions" data-sub="2026 · Replace">
-                <span class="gallery-badge badge-academic">Academic</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop" alt="Lab" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">CSE Lab Sessions</p>
-                    <p class="gallery-caption-sub">2026 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 3 -->
-            <div class="gallery-item g-item-3 reveal" role="listitem" data-category="social" data-caption="Canteen Talks" data-sub="2026 · Replace">
-                <span class="gallery-badge badge-social">Social</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop" alt="Canteen" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Canteen Talks</p>
-                    <p class="gallery-caption-sub">2026 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 4 -->
-            <div class="gallery-item g-item-4 reveal" role="listitem" data-category="fest" data-caption="Cultural Fest 2027" data-sub="November 2027 · Replace">
-                <span class="gallery-badge badge-fest">Fest</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop" alt="Cultural Fest" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Cultural Fest 2027</p>
-                    <p class="gallery-caption-sub">November 2027 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 5 -->
-            <div class="gallery-item g-item-5 reveal" role="listitem" data-category="trip" data-caption="Educational Tour 2028" data-sub="February 2028 · Replace">
-                <span class="gallery-badge badge-trip">Trip</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Trip" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Educational Tour 2028</p>
-                    <p class="gallery-caption-sub">February 2028 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 6 -->
-            <div class="gallery-item g-item-6 reveal" role="listitem" data-category="academic" data-caption="Project Demo Day" data-sub="2027 · Replace">
-                <span class="gallery-badge badge-academic">Academic</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop" alt="Project Demo" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Project Demo Day</p>
-                    <p class="gallery-caption-sub">2027 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 7 -->
-            <div class="gallery-item g-item-7 reveal" role="listitem" data-category="social" data-caption="Batch Group Photo" data-sub="2027 · Replace">
-                <span class="gallery-badge badge-social">Social</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&auto=format&fit=crop" alt="Group Photo" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Batch Group Photo</p>
-                    <p class="gallery-caption-sub">2027 · Replace with real group photo</p>
-                </div>
-            </div>
-            <!-- PHOTO 8 -->
-            <div class="gallery-item g-item-8 reveal" role="listitem" data-category="social" data-caption="Sports Week 2027" data-sub="November 2027 · Replace">
-                <span class="gallery-badge badge-social">Sports</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop" alt="Sports" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Sports Week 2027</p>
-                    <p class="gallery-caption-sub">November 2027 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 9 -->
-            <div class="gallery-item g-item-9 reveal" role="listitem" data-category="fest" data-caption="Farewell Night 2029" data-sub="April 2029 · Replace">
-                <span class="gallery-badge badge-fest">Farewell</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop" alt="Farewell" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Farewell Night 2029</p>
-                    <p class="gallery-caption-sub">April 2029 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 10 -->
-            <div class="gallery-item g-item-10 reveal" role="listitem" data-category="academic" data-caption="Thesis Defence Day" data-sub="2029 · Replace">
-                <span class="gallery-badge badge-academic">Thesis</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&auto=format&fit=crop" alt="Thesis" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Thesis Defence Day</p>
-                    <p class="gallery-caption-sub">2029 · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 11 -->
-            <div class="gallery-item g-item-11 reveal" role="listitem" data-category="academic" data-caption="The Night Before Exams" data-sub="Every semester · Replace">
-                <span class="gallery-badge badge-academic">Academic</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop" alt="Study Night" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">The Night Before Exams</p>
-                    <p class="gallery-caption-sub">Every semester · Replace</p>
-                </div>
-            </div>
-            <!-- PHOTO 12 -->
-            <div class="gallery-item g-item-12 reveal" role="listitem" data-category="fest" data-caption="Graduation Day 2029" data-sub="2029 · Update when available">
-                <span class="gallery-badge badge-fest">Convocation</span>
-                <div class="gallery-actions">
-                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
-                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
-                </div>
-                <img src="https://images.unsplash.com/photo-1520608760-eff2c44d8ac4?w=600&auto=format&fit=crop" alt="Convocation" class="gallery-img" loading="lazy">
-                <div class="gallery-overlay">
-                    <p class="gallery-caption-title">Graduation Day 2029</p>
-                    <p class="gallery-caption-sub">2029 · Update when available</p>
-                </div>
-            </div>
-
-            <!-- ADD MORE PHOTOS: Copy a .gallery-item block and paste here.
-                 Change the g-item-N class to control mosaic size. -->
-
+            <!-- Rendered dynamically from data/gallery.json — see renderGallery() in the script -->
         </div>
     </section>
 
@@ -1555,14 +1174,14 @@
             <h2 id="videosTitle">In Motion</h2>
             <p>The moments too alive for a photo. Upload your videos directly — no YouTube needed.</p>
         </div>
-        <div class="video-grid">
-            <!-- VIDEO 1 — HOW TO EDIT: Change video-title, video-desc, and video-label text below -->
+        <div class="video-grid" id="videoGrid">
+            <!-- VIDEO 1 — text content rendered dynamically from data/videos.json (index 0) -->
             <div class="video-card reveal reveal-delay-1">
                 <div class="video-player-wrap" id="vPlayer1">
                     <video id="vVideo1" preload="none"></video>
                     <div class="video-upload-placeholder" onclick="document.getElementById('vFile1').click()">
                         <i data-lucide="film"></i>
-                        <p>Upload Orientation Vlog</p>
+                        <p id="vUploadText1">Upload Orientation Vlog</p>
                         <span>MP4 / WebM / MOV · No YouTube needed</span>
                     </div>
                     <input type="file" class="video-upload-input" id="vFile1" accept="video/*">
@@ -1578,20 +1197,20 @@
                 </div>
                 <div class="video-info">
                     <div class="video-meta">
-                        <span class="video-label"><i data-lucide="clapperboard" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Orientation</span>
-                        <span class="video-duration">· Replace duration</span>
+                        <span class="video-label" id="vLabel1"><i data-lucide="clapperboard" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Orientation</span>
+                        <span class="video-duration" id="vDuration1">· Replace duration</span>
                     </div>
-                    <h3 class="video-title">Orientation Vlog — Day One 2026</h3>
-                    <p class="video-desc">The first day, the nerves, the excitement. Upload your orientation vlog above.</p>
+                    <h3 class="video-title" id="vTitle1">Orientation Vlog — Day One 2026</h3>
+                    <p class="video-desc" id="vDesc1">The first day, the nerves, the excitement. Upload your orientation vlog above.</p>
                 </div>
             </div>
-            <!-- VIDEO 2 -->
+            <!-- VIDEO 2 — text content rendered dynamically from data/videos.json (index 1) -->
             <div class="video-card reveal reveal-delay-2">
                 <div class="video-player-wrap" id="vPlayer2">
                     <video id="vVideo2" preload="none"></video>
                     <div class="video-upload-placeholder" onclick="document.getElementById('vFile2').click()">
                         <i data-lucide="film"></i>
-                        <p>Upload Tour Highlights Video</p>
+                        <p id="vUploadText2">Upload Tour Highlights Video</p>
                         <span>MP4 / WebM / MOV · No YouTube needed</span>
                     </div>
                     <input type="file" class="video-upload-input" id="vFile2" accept="video/*">
@@ -1607,20 +1226,20 @@
                 </div>
                 <div class="video-info">
                     <div class="video-meta">
-                        <span class="video-label"><i data-lucide="map-pin" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Trip Film</span>
-                        <span class="video-duration">· Replace duration</span>
+                        <span class="video-label" id="vLabel2"><i data-lucide="map-pin" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Trip Film</span>
+                        <span class="video-duration" id="vDuration2">· Replace duration</span>
                     </div>
-                    <h3 class="video-title">Educational Tour Highlights 2028</h3>
-                    <p class="video-desc">Three days, forty people, one bus, and memories that outlast every hard drive.</p>
+                    <h3 class="video-title" id="vTitle2">Educational Tour Highlights 2028</h3>
+                    <p class="video-desc" id="vDesc2">Three days, forty people, one bus, and memories that outlast every hard drive.</p>
                 </div>
             </div>
-            <!-- VIDEO 3 -->
+            <!-- VIDEO 3 — text content rendered dynamically from data/videos.json (index 2) -->
             <div class="video-card reveal reveal-delay-3">
                 <div class="video-player-wrap" id="vPlayer3">
                     <video id="vVideo3" preload="none"></video>
                     <div class="video-upload-placeholder" onclick="document.getElementById('vFile3').click()">
                         <i data-lucide="film"></i>
-                        <p>Upload Farewell Film</p>
+                        <p id="vUploadText3">Upload Farewell Film</p>
                         <span>MP4 / WebM / MOV · No YouTube needed</span>
                     </div>
                     <input type="file" class="video-upload-input" id="vFile3" accept="video/*">
@@ -1636,11 +1255,11 @@
                 </div>
                 <div class="video-info">
                     <div class="video-meta">
-                        <span class="video-label"><i data-lucide="heart" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Farewell Film</span>
-                        <span class="video-duration">· Replace duration</span>
+                        <span class="video-label" id="vLabel3"><i data-lucide="heart" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>Farewell Film</span>
+                        <span class="video-duration" id="vDuration3">· Replace duration</span>
                     </div>
-                    <h3 class="video-title">Farewell Night 2029 — Full Film</h3>
-                    <p class="video-desc">The night we documented everything, because we knew we'd need to remember it.</p>
+                    <h3 class="video-title" id="vTitle3">Farewell Night 2029 — Full Film</h3>
+                    <p class="video-desc" id="vDesc3">The night we documented everything, because we knew we'd need to remember it.</p>
                 </div>
             </div>
         </div>
@@ -1657,42 +1276,8 @@
             <span class="section-tag"><i data-lucide="bar-chart-2"></i>By the Numbers</span>
             <h2 id="statsTitle">Four Years in Figures</h2>
         </div>
-        <div class="stats-bar reveal">
-            <div class="stat-cell">
-                <div class="stat-cell-icon" style="background:var(--gold-glow);color:var(--gold)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-                <div class="stat-number">40</div><!-- REPLACE with actual count -->
-                <div class="stat-label">Batch Members</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-cell-icon" style="background:var(--violet-glow);color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-                <div class="stat-number">48</div><!-- REPLACE -->
-                <div class="stat-label">Courses</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-cell-icon" style="background:var(--teal-glow);color:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-                <div class="stat-number">12</div><!-- REPLACE -->
-                <div class="stat-label">Thesis Projects</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-cell-icon" style="background:var(--rose-glow);color:var(--rose)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-                <div class="stat-number">3</div><!-- REPLACE -->
-                <div class="stat-label">Tours</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-cell-icon" style="background:var(--gold-glow);color:var(--gold)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-                <div class="stat-number">8</div><!-- REPLACE -->
-                <div class="stat-label">Awards Won</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-cell-icon" style="background:var(--violet-glow);color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-                <div class="stat-number">400+</div><!-- REPLACE -->
-                <div class="stat-label">Shared Photos</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-cell-icon" style="background:var(--teal-glow);color:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                <div class="stat-number">4</div>
-                <div class="stat-label">Years Together</div>
-            </div>
+        <div class="stats-bar reveal" id="statsBar">
+            <!-- Rendered dynamically from data/site-config.json (stats) -->
         </div>
     </section>
 
@@ -1710,43 +1295,8 @@
             <h2 id="achTitle">What We Built &amp; Won</h2>
             <p>The awards, publications, and moments our batch made us proud. Replace with actual achievements.</p>
         </div>
-        <div class="ach-grid">
-            <div class="ach-card ach-gold reveal reveal-delay-1">
-                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-                <p class="ach-year">2027 · Replace Year</p>
-                <h3 class="ach-title">Best Project Award</h3>
-                <p class="ach-desc">Replace with actual award name, issuing body, and a brief description of the winning project.</p>
-            </div>
-            <div class="ach-card ach-violet reveal reveal-delay-2">
-                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-                <p class="ach-year">2027 · Replace Year</p>
-                <h3 class="ach-title">Hackathon Runners-Up</h3>
-                <p class="ach-desc">Replace with actual hackathon name, organiser, and what the team built.</p>
-            </div>
-            <div class="ach-card ach-teal reveal reveal-delay-3">
-                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-                <p class="ach-year">2028 · Replace Year</p>
-                <h3 class="ach-title">Research Paper Published</h3>
-                <p class="ach-desc">Replace with actual paper title, journal/conference name, DOI link, and authoring students.</p>
-            </div>
-            <div class="ach-card ach-rose reveal reveal-delay-4">
-                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                <p class="ach-year">2027 · Replace Year</p>
-                <h3 class="ach-title">Cultural Fest Champion</h3>
-                <p class="ach-desc">Replace with actual cultural event name, category won, and participants involved.</p>
-            </div>
-            <div class="ach-card ach-gold reveal reveal-delay-1">
-                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></div>
-                <p class="ach-year">2028 · Replace Year</p>
-                <h3 class="ach-title">Dean's List — Multiple Students</h3>
-                <p class="ach-desc">Replace with names of students who made the Dean's List and the semester/year.</p>
-            </div>
-            <div class="ach-card ach-teal reveal reveal-delay-2">
-                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
-                <p class="ach-year">2027–29 · Replace</p>
-                <h3 class="ach-title">Internship Placements</h3>
-                <p class="ach-desc">Replace with companies where batch members secured internships.</p>
-            </div>
+        <div class="ach-grid" id="achGrid">
+            <!-- Rendered dynamically from data/achievements.json -->
         </div>
     </section>
 
@@ -1766,37 +1316,7 @@
         <div class="quote-carousel" aria-roledescription="carousel" aria-label="Memory quotes">
             <div class="quote-track">
                 <div class="quote-slides" id="quoteSlides">
-                    <!-- QUOTE 1 — Replace everything below -->
-                    <div class="quote-slide" role="group" aria-roledescription="slide">
-                        <span class="quote-mark">"</span>
-                        <p class="quote-text">"Replace this with a real quote from a batch member — something they said about university life, a memory, or what this journey meant to them."</p>
-                        <p class="quote-bn">এখানে বাংলায় উক্তি বা স্মৃতি লিখুন। আপনার ব্যাচমেটের কথা।</p>
-                        <div class="quote-author">
-                            <div class="quote-avatar-placeholder" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                            <div><p class="quote-name">Student Name — Replace</p><p class="quote-role">Roll No. XXX · CSE 7th Batch</p></div>
-                        </div>
-                    </div>
-                    <!-- QUOTE 2 -->
-                    <div class="quote-slide" role="group" aria-roledescription="slide">
-                        <span class="quote-mark">"</span>
-                        <p class="quote-text">"The hardest part was not the exams — it was saying goodbye to people who had become family. Replace this with a real memory."</p>
-                        <p class="quote-bn">পরীক্ষা কঠিন ছিল, কিন্তু বিদায় আরও কঠিন। Replace this Bengali quote.</p>
-                        <div class="quote-author">
-                            <div class="quote-avatar-placeholder" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                            <div><p class="quote-name">Another Student — Replace</p><p class="quote-role">Roll No. XXX · CSE 7th Batch</p></div>
-                        </div>
-                    </div>
-                    <!-- QUOTE 3 -->
-                    <div class="quote-slide" role="group" aria-roledescription="slide">
-                        <span class="quote-mark">"</span>
-                        <p class="quote-text">"I came here to learn programming. I left knowing how to learn anything. Add your own version of this quote."</p>
-                        <p class="quote-bn">আমি এসেছিলাম প্রোগ্রামিং শিখতে, শিখলাম কীভাবে যেকোনো কিছু শিখতে হয়।</p>
-                        <div class="quote-author">
-                            <div class="quote-avatar-placeholder" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                            <div><p class="quote-name">Yet Another — Replace</p><p class="quote-role">Roll No. XXX · CSE 7th Batch</p></div>
-                        </div>
-                    </div>
-                    <!-- ADD MORE QUOTES: Copy a .quote-slide block and paste here -->
+                    <!-- Rendered dynamically from data/quotes.json -->
                 </div>
             </div>
             <div class="carousel-controls" aria-label="Carousel controls">
@@ -1820,44 +1340,8 @@
             <h2 id="articlesTitle">Reflections &amp; Stories</h2>
             <p>Long-form memories, technical reflections, and personal essays by batch members.</p>
         </div>
-        <div class="blog-grid">
-            <article class="blog-card reveal reveal-delay-1">
-                <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop" alt="Article 1" class="blog-thumb" loading="lazy">
-                <div class="blog-body">
-                    <div class="blog-meta"><span class="blog-date">Replace Date</span><span class="blog-cat tag-academic">Reflection</span></div>
-                    <h3 class="blog-title">What Four Years of CSE Taught Me Beyond Code</h3>
-                    <p class="blog-excerpt">Replace this with a real excerpt from the article. Talk about what the author learned, what surprised them, what they'd tell a first-year student.</p>
-                    <div class="blog-footer">
-                        <div class="blog-author"><div class="blog-avatar" style="background:var(--violet-glow);display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--violet)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="blog-author-name">Author Name — Replace</span></div>
-                        <a href="#" class="blog-read-more">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></a>
-                    </div>
-                </div>
-            </article>
-            <article class="blog-card reveal reveal-delay-2">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Article 2" class="blog-thumb" loading="lazy">
-                <div class="blog-body">
-                    <div class="blog-meta"><span class="blog-date">Replace Date</span><span class="blog-cat tag-social">Memory</span></div>
-                    <h3 class="blog-title">The Trip That Changed How We Saw Each Other</h3>
-                    <p class="blog-excerpt">Replace with real article excerpt about the educational tour. Who surprised you? What did you learn about your classmates outside the classroom?</p>
-                    <div class="blog-footer">
-                        <div class="blog-author"><div class="blog-avatar" style="background:var(--teal-glow);display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="blog-author-name">Author Name — Replace</span></div>
-                        <a href="#" class="blog-read-more">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></a>
-                    </div>
-                </div>
-            </article>
-            <article class="blog-card reveal reveal-delay-3">
-                <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop" alt="Article 3" class="blog-thumb" loading="lazy">
-                <div class="blog-body">
-                    <div class="blog-meta"><span class="blog-date">Replace Date</span><span class="blog-cat tag-fest">Farewell</span></div>
-                    <h3 class="blog-title">A Letter to the Batch I Grew Up With</h3>
-                    <p class="blog-excerpt">Replace with a real personal letter or essay about the farewell, the friendships, and what comes next. Make it personal, make it real.</p>
-                    <div class="blog-footer">
-                        <div class="blog-author"><div class="blog-avatar" style="background:var(--rose-glow);display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="blog-author-name">Author Name — Replace</span></div>
-                        <a href="#" class="blog-read-more">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></a>
-                    </div>
-                </div>
-            </article>
-            <!-- ADD MORE ARTICLES: Copy an <article class="blog-card"> block and paste here -->
+        <div class="blog-grid" id="blogGrid">
+            <!-- Rendered dynamically from data/articles.json -->
         </div>
     </section>
 
@@ -1874,29 +1358,8 @@
             <h2 id="upcomingTitle">Upcoming Events</h2>
             <p>The chapter isn't over yet. Update these events with real dates as they're confirmed.</p>
         </div>
-        <div class="upcoming-grid">
-            <!-- EVENT 1 — HOW TO EDIT: change data-date, event-day, event-month, event-title, event-desc -->
-            <div class="event-card reveal reveal-delay-1" data-date="2026-09-15">
-                <div class="event-date-badge"><span class="event-day">15</span><span class="event-month">Sep 2026</span></div>
-                <h3 class="event-title">Orientation Day 2026</h3>
-                <p class="event-desc">The official start of CSE 7th Batch. Replace with confirmed date, venue, and schedule.</p>
-                <p class="event-countdown" id="countdown-1"></p>
-            </div>
-            <!-- EVENT 2 -->
-            <div class="event-card reveal reveal-delay-2" data-date="2028-02-10">
-                <div class="event-date-badge"><span class="event-day">10</span><span class="event-month">Feb 2028</span></div>
-                <h3 class="event-title">Educational Tour 2028</h3>
-                <p class="event-desc">The batch trip — 40 people, one destination. Replace with confirmed venue and RSVP details.</p>
-                <p class="event-countdown" id="countdown-2"></p>
-            </div>
-            <!-- EVENT 3 -->
-            <div class="event-card reveal reveal-delay-3" data-date="2029-06-21">
-                <div class="event-date-badge"><span class="event-day">21</span><span class="event-month">Jun 2029</span></div>
-                <h3 class="event-title">Graduation / Convocation 2029</h3>
-                <p class="event-desc">The final milestone — caps, gowns, and the handshake that closes four years.</p>
-                <p class="event-countdown" id="countdown-3"></p>
-            </div>
-            <!-- ADD MORE EVENTS: Copy an .event-card block and paste here -->
+        <div class="upcoming-grid" id="upcomingGrid">
+            <!-- Rendered dynamically from data/events.json -->
         </div>
     </section>
 
@@ -2154,6 +1617,8 @@
     document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', closeDrawer));
 
     // ─── Scroll Reveal ────────────────────────────────────
+    // Wrapped in a function so it can be re-run after JSON-driven
+    // sections (gallery, timeline, achievements...) are injected.
     const revealObs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
             if (e.isIntersecting) {
@@ -2162,12 +1627,20 @@
             }
         });
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => revealObs.observe(el));
+    function observeReveals(root) {
+        (root || document).querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => {
+            if (!el.classList.contains('revealed')) revealObs.observe(el);
+        });
+    }
+    observeReveals();
 
     // ─── Year pills ───────────────────────────────────────
+    // Year IDs now come from the rendered .tl-year elements
+    // (data/timeline.json), so this is computed, not hardcoded.
     const yearPills = document.querySelectorAll('.year-pill');
-    const yearSections = ['year-2026','year-2027','year-2028','year-2029'];
     function updateYearPills() {
+        const yearSections = Array.from(document.querySelectorAll('.tl-year')).map(el => el.id);
+        if (!yearSections.length) return;
         const scrollMid = window.scrollY + window.innerHeight / 2;
         let closestYear = null, closestDist = Infinity;
         yearSections.forEach((id, idx) => {
@@ -2283,11 +1756,11 @@
         };
     }
 
-    document.querySelectorAll('.gallery-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            if (e.target.closest('.gallery-action-btn')) return;
-            openLightboxForItem(item);
-        });
+    // Delegated so it keeps working after gallery.json re-renders the grid
+    galleryMosaic.addEventListener('click', (e) => {
+        if (e.target.closest('.gallery-action-btn')) return;
+        const item = e.target.closest('.gallery-item');
+        if (item) openLightboxForItem(item);
     });
 
     function closeLightbox() {
@@ -2341,55 +1814,64 @@
     });
 
     // ─── Quote Carousel ───────────────────────────────────
+    // Slides are injected from data/quotes.json by renderQuotes();
+    // this just wires up navigation and can be (re)initialised
+    // once the slide count is known.
     const slides    = document.getElementById('quoteSlides');
     const dotsWrap  = document.getElementById('carouselDots');
     const prevBtn   = document.getElementById('quotePrev');
     const nextBtn   = document.getElementById('quoteNext');
     let currentSlide = 0;
-    const slideCount = document.querySelectorAll('.quote-slide').length;
-
-    for (let i = 0; i < slideCount; i++) {
-        const dot = document.createElement('button');
-        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', `Go to quote ${i+1}`);
-        dot.setAttribute('role', 'tab');
-        dot.addEventListener('click', () => goToSlide(i));
-        dotsWrap.appendChild(dot);
-    }
+    let slideCount = 0;
+    let carouselTimer = null;
+    let carouselWired = false;
 
     function goToSlide(n) {
+        if (!slideCount) return;
         currentSlide = (n + slideCount) % slideCount;
         slides.style.transform = `translateX(-${currentSlide * 100}%)`;
         document.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i === currentSlide));
     }
 
-    prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
-    nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
-
-    let carouselTimer = setInterval(() => goToSlide(currentSlide + 1), 6000);
-    [prevBtn, nextBtn].forEach(b => b.addEventListener('click', () => {
+    function restartCarouselTimer() {
         clearInterval(carouselTimer);
         carouselTimer = setInterval(() => goToSlide(currentSlide + 1), 6000);
-    }));
-
-    document.querySelector('.quote-carousel').addEventListener('keydown', e => {
-        if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
-        if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
-    });
-
-    // Carousel touch swipe
-    let cTouchStartX = 0;
-    const cTrack = document.querySelector('.quote-track');
-    if (cTrack) {
-        cTrack.addEventListener('touchstart', e => { cTouchStartX = e.touches[0].clientX; }, { passive: true });
-        cTrack.addEventListener('touchend', e => {
-            const dx = e.changedTouches[0].clientX - cTouchStartX;
-            if (Math.abs(dx) > 40) { goToSlide(dx < 0 ? currentSlide + 1 : currentSlide - 1); }
-        }, { passive: true });
     }
 
-    // ─── Year pill highlight on scroll ───────────────────
-    // Already defined above in updateYearPills()
+    function initQuoteCarousel() {
+        slideCount = document.querySelectorAll('.quote-slide').length;
+        currentSlide = 0;
+        dotsWrap.innerHTML = '';
+        for (let i = 0; i < slideCount; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Go to quote ${i+1}`);
+            dot.setAttribute('role', 'tab');
+            dot.addEventListener('click', () => { goToSlide(i); restartCarouselTimer(); });
+            dotsWrap.appendChild(dot);
+        }
+        slides.style.transform = 'translateX(0%)';
+        if (slideCount) restartCarouselTimer();
+
+        if (!carouselWired) {
+            carouselWired = true;
+            prevBtn.addEventListener('click', () => { goToSlide(currentSlide - 1); restartCarouselTimer(); });
+            nextBtn.addEventListener('click', () => { goToSlide(currentSlide + 1); restartCarouselTimer(); });
+            document.querySelector('.quote-carousel').addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft') { goToSlide(currentSlide - 1); restartCarouselTimer(); }
+                if (e.key === 'ArrowRight') { goToSlide(currentSlide + 1); restartCarouselTimer(); }
+            });
+            let cTouchStartX = 0;
+            const cTrack = document.querySelector('.quote-track');
+            if (cTrack) {
+                cTrack.addEventListener('touchstart', e => { cTouchStartX = e.touches[0].clientX; }, { passive: true });
+                cTrack.addEventListener('touchend', e => {
+                    const dx = e.changedTouches[0].clientX - cTouchStartX;
+                    if (Math.abs(dx) > 40) { goToSlide(dx < 0 ? currentSlide + 1 : currentSlide - 1); restartCarouselTimer(); }
+                }, { passive: true });
+            }
+        }
+    }
 
     // ─── Countdown helper ─────────────────────────────────
     function countdownToDate(targetDateStr) {
@@ -2401,14 +1883,18 @@
         const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
         return `⏳ ${days}d ${hours}h remaining`;
     }
-
-    document.querySelectorAll('.event-card[data-date]').forEach((card, i) => {
-        const el = card.querySelector('.event-countdown') || document.getElementById(`countdown-${i+1}`);
-        if (el) el.textContent = countdownToDate(card.dataset.date);
-    });
-
-    const convEl = document.getElementById('convocationCountdown');
-    if (convEl) convEl.textContent = countdownToDate('2029-06-21');
+    // Fills in every .event-countdown / [data-countdown-date] element
+    // currently in the DOM — called after events.json and timeline.json render.
+    function applyCountdowns() {
+        document.querySelectorAll('.event-card[data-date]').forEach(card => {
+            const el = card.querySelector('.event-countdown');
+            if (el) el.textContent = countdownToDate(card.dataset.date);
+        });
+        document.querySelectorAll('[data-countdown-date]').forEach(el => {
+            el.textContent = '⏳ ' + countdownToDate(el.dataset.countdownDate).replace('⏳ ', '').replace('✓ ', '');
+            if (new Date(el.dataset.countdownDate) - new Date() <= 0) el.textContent = '✓ This event has passed';
+        });
+    }
 
     // ─── Video Players ────────────────────────────────────
     function setupVideoPlayer(cfg) {
@@ -2484,6 +1970,25 @@
             fsBtn: document.getElementById(`vFs${n}`),
         });
     });
+    // Applies title/desc/label/duration text from data/videos.json onto the 3 static player slots
+    function applyVideosData(list) {
+        (list || []).slice(0, 3).forEach((v, i) => {
+            const n = i + 1;
+            const uploadText = document.getElementById(`vUploadText${n}`);
+            const label = document.getElementById(`vLabel${n}`);
+            const duration = document.getElementById(`vDuration${n}`);
+            const title = document.getElementById(`vTitle${n}`);
+            const desc = document.getElementById(`vDesc${n}`);
+            if (uploadText && v.uploadText) uploadText.textContent = v.uploadText;
+            if (label && v.labelText) {
+                const iconName = v.labelIcon || 'clapperboard';
+                label.innerHTML = `<i data-lucide="${iconName}" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>${v.labelText}`;
+            }
+            if (duration && v.duration) duration.textContent = '· ' + v.duration;
+            if (title && v.title) title.textContent = v.title;
+            if (desc && v.desc) desc.textContent = v.desc;
+        });
+    }
 
     // ─── Init Lucide ──────────────────────────────────────
     function initLucide() {
@@ -2496,9 +2001,6 @@
         let attempts = 0;
         const poll = setInterval(() => { if (initLucide() || ++attempts > 50) clearInterval(poll); }, 100);
     }
-
-    // Sort notices on load
-    sortNoticesByDate();
 
     // ─── Notice bar reset: show if dismissed long ago ─────
     // (Remove this block if you always want dismissal to persist)
@@ -2535,6 +2037,8 @@
     // ─── LIQUID GLASS: droplet ripple on glass-surface clicks ──
     // A small expanding, fading ring — like a droplet hitting the
     // glass — gives tactile feedback without any extra markup.
+    // Delegated on document so it also covers cards rendered later
+    // from JSON (gallery, timeline, achievements, articles, events...).
     function spawnLiquidRipple(target, clientX, clientY) {
         const rect = target.getBoundingClientRect();
         const ripple = document.createElement('span');
@@ -2552,9 +2056,326 @@
         requestAnimationFrame(() => { ripple.style.transform = 'scale(1)'; ripple.style.opacity = '0'; });
         setTimeout(() => ripple.remove(), 700);
     }
-    document.querySelectorAll('.chapter-card, .btn-primary, .btn-ghost, .ach-card, .video-card, .blog-card, .event-card, .icon-btn, .carousel-btn, .gallery-filter-btn').forEach(el => {
-        el.addEventListener('click', (e) => spawnLiquidRipple(el, e.clientX, e.clientY));
+    const RIPPLE_SELECTOR = '.chapter-card, .btn-primary, .btn-ghost, .ach-card, .video-card, .blog-card, .event-card, .icon-btn, .carousel-btn, .gallery-filter-btn';
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest(RIPPLE_SELECTOR);
+        if (el) spawnLiquidRipple(el, e.clientX, e.clientY);
     });
+
+    /* ═══════════════════════════════════════════════════════
+       JSON-DRIVEN CONTENT SYSTEM
+       Every list-like section on this page is rendered from a
+       small JSON file under /data. If a file is missing (e.g. it
+       hasn't been generated yet) or the page is opened directly
+       from disk (file:// blocks fetch), the built-in FALLBACK_*
+       data below is used instead, so the page always renders.
+    ═══════════════════════════════════════════════════════════ */
+
+    async function loadJSON(path, fallback) {
+        try {
+            const res = await fetch(path, { cache: 'no-store' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            return data;
+        } catch (err) {
+            console.info(`[data] Using built-in fallback for ${path} (${err.message})`);
+            return fallback;
+        }
+    }
+
+    const esc = (str) => (str ?? '').toString()
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    // ── Fallback data (mirrors the original hand-written content) ──
+    const FALLBACK_NOTICES = [
+        { priority: 'high', icon: 'alert-triangle', title: 'Semester Exam Schedule — Revised', date: '20 June 2026', dateSort: '2026-06-20', badge: 'urgent', badgeLabel: 'Urgent', body: 'The 1st semester final examination schedule has been revised. All students must collect their admit cards from the department office by 25 June 2026. Replace this with actual exam notice from the university registrar.', attachments: [ { name: 'Exam Schedule.pdf', type: 'pdf', href: '#' }, { name: 'Seating Plan.pdf', type: 'pdf', href: '#' } ] },
+        { priority: 'medium', icon: 'calendar-days', title: 'Orientation Day — Schedule &amp; Venue', date: '15 June 2026', dateSort: '2026-06-15', badge: 'important', badgeLabel: 'Important', body: 'The official orientation programme for CSE 7th Batch is scheduled for 15 September 2026 at the University Auditorium. All new students are required to attend. Dress code: formal. Replace this with real orientation details.', attachments: [ { name: 'Programme.pdf', type: 'pdf', href: '#' }, { name: 'Campus Map', type: 'image', href: '#' } ] },
+        { priority: 'low', icon: 'info', title: 'Department Library — New Books Available', date: '10 June 2026', dateSort: '2026-06-10', badge: 'info', badgeLabel: 'Info', body: 'The CSE Department Library has received a new batch of reference books for Data Structures, Algorithms, and Database Systems. Students can borrow books from Monday–Thursday, 9 AM – 4 PM. Replace with actual library notice.', attachments: [ { name: 'Book List.pdf', type: 'pdf', href: '#' } ] }
+    ];
+
+    const FALLBACK_CONFIG = {
+        heroStats: [
+            { num: '40', label: 'Students' }, { num: '4', label: 'Years' },
+            { num: '8', label: 'Semesters' }, { num: '∞', label: 'Memories' }
+        ],
+        chapters: [
+            { href: '#year-2026', variant: 'gold', icon: 'shield', year: '1st Year · 2026', title: 'The Beginning', desc: 'Orientation, first lectures, making friends, and discovering university life together as CSE 7th Batch.', count: '↳ Chapter 1 · 2026' },
+            { href: '#year-2027', variant: 'violet', icon: 'trending-up', year: '2nd Year · 2027', title: 'Rising Up', desc: 'Deeper into DSA, OOP, and databases. First hackathons, first real friendships tested under pressure.', count: '↳ Chapter 2 · 2027' },
+            { href: '#year-2028', variant: 'teal', icon: 'zap', year: '3rd Year · 2028', title: 'The Golden Hustle', desc: 'Thesis proposals, internships, department trips, cultural fest, and the most memorable nights.', count: '↳ Chapter 3 · 2028' },
+            { href: '#year-2029', variant: 'rose', icon: 'graduation-cap', year: '4th Year · 2029', title: 'The Final Chapter', desc: 'Thesis defences, farewell, convocation, and stepping out into the world we built ourselves for.', count: '↳ Chapter 4 · 2029' }
+        ],
+        stats: [
+            { color: 'gold', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75', number: '40', label: 'Batch Members' },
+            { color: 'violet', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', number: '48', label: 'Courses' },
+            { color: 'teal', icon: 'M16 18 22 12 16 6 M8 6 2 12 8 18', number: '12', label: 'Thesis Projects' },
+            { color: 'rose', icon: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z', number: '3', label: 'Tours' },
+            { color: 'gold', icon: 'M12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2', number: '8', label: 'Awards Won' },
+            { color: 'violet', icon: 'M3 3h18v18H3z', number: '400+', label: 'Shared Photos' },
+            { color: 'teal', icon: 'M12 6 12 12 16 14', number: '4', label: 'Years Together' }
+        ]
+    };
+
+    const FALLBACK_TIMELINE = [
+        { year: '2026', date: 'September 2026', tag: 'milestone', tagLabel: 'Milestone', icon: 'shield', title: 'Orientation Day — Day One', body: "40 students walk into Netrokona University's CSE department — nervous, excited, and ready to start a four-year adventure. Replace this with your actual orientation day memory.", image: 'https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=600&auto=format&fit=crop', caption: '📍 CSE Dept. · Netrokona University · Replace with real photo' },
+        { year: '2026', date: 'October 2026', tag: 'academic', tagLabel: 'Academic', icon: 'book-open', title: 'First Mid-Term Exams', body: 'Our first real test as university students. Late-night study sessions, canteen coffee, and the shared panic of not knowing what to expect.' },
+        { year: '2026', date: 'December 2026', tag: 'social', tagLabel: 'Social', icon: 'users', title: 'First Batch Picnic', body: 'The first time we got together outside class — a picnic that turned into a tradition.', image: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&auto=format&fit=crop', caption: '📍 Replace with real photo' },
+        { year: '2027', date: 'March 2027', tag: 'project', tagLabel: 'Project', icon: 'code-2', title: 'First Hackathon', body: '48 hours, a team of four, too much caffeine, and our first product.' },
+        { year: '2027', date: 'November 2027', tag: 'fest', tagLabel: 'Fest', icon: 'music', title: 'Cultural Fest 2027', body: "Music, drama, dance, and competitions — the department's annual cultural festival.", image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop', caption: '📍 Replace with real cultural fest photo' },
+        { year: '2028', date: 'February 2028', tag: 'social', tagLabel: 'Trip', icon: 'map-pin', title: 'Educational Tour 2028', body: 'Three days, 40 people, one bus, and memories that outlast every hard drive.', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop', caption: '📍 Replace with actual trip photo' },
+        { year: '2028', date: 'October 2028', tag: 'academic', tagLabel: 'Academic', icon: 'file-text', title: 'Thesis Proposals Submitted', body: 'The moment it got real. Final-year thesis topics chosen, supervisors assigned.' },
+        { year: '2029', date: 'April 2029', tag: 'fest', tagLabel: 'Farewell', icon: 'heart', title: 'Farewell Night 2029', body: 'The last time we were all in one room — dressed up, nostalgic, and trying not to cry.', image: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop', caption: '📍 Replace with real farewell photo' },
+        { year: '2029', date: 'June 2029', tag: 'milestone', tagLabel: 'Milestone', icon: 'graduation-cap', title: 'Convocation Day — Graduation 2029', body: 'Four years distilled into one handshake and a scroll.', countdownDate: '2029-06-21' }
+    ];
+
+    const FALLBACK_GALLERY = [
+        { size: 1, category: 'academic', badge: 'academic', badgeLabel: 'Academic', caption: 'Orientation Day', sub: 'September 2026 · Replace with real photo', src: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&auto=format&fit=crop' },
+        { size: 2, category: 'academic', badge: 'academic', badgeLabel: 'Academic', caption: 'CSE Lab Sessions', sub: '2026 · Replace', src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop' },
+        { size: 3, category: 'social', badge: 'social', badgeLabel: 'Social', caption: 'Canteen Talks', sub: '2026 · Replace', src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop' },
+        { size: 4, category: 'fest', badge: 'fest', badgeLabel: 'Fest', caption: 'Cultural Fest 2027', sub: 'November 2027 · Replace', src: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop' },
+        { size: 5, category: 'trip', badge: 'trip', badgeLabel: 'Trip', caption: 'Educational Tour 2028', sub: 'February 2028 · Replace', src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop' },
+        { size: 6, category: 'academic', badge: 'academic', badgeLabel: 'Academic', caption: 'Project Demo Day', sub: '2027 · Replace', src: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop' },
+        { size: 7, category: 'social', badge: 'social', badgeLabel: 'Social', caption: 'Batch Group Photo', sub: '2027 · Replace with real group photo', src: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&auto=format&fit=crop' },
+        { size: 8, category: 'social', badge: 'social', badgeLabel: 'Sports', caption: 'Sports Week 2027', sub: 'November 2027 · Replace', src: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop' },
+        { size: 9, category: 'fest', badge: 'fest', badgeLabel: 'Farewell', caption: 'Farewell Night 2029', sub: 'April 2029 · Replace', src: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop' },
+        { size: 10, category: 'academic', badge: 'academic', badgeLabel: 'Thesis', caption: 'Thesis Defence Day', sub: '2029 · Replace', src: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&auto=format&fit=crop' },
+        { size: 11, category: 'academic', badge: 'academic', badgeLabel: 'Academic', caption: 'The Night Before Exams', sub: 'Every semester · Replace', src: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop' },
+        { size: 12, category: 'fest', badge: 'fest', badgeLabel: 'Convocation', caption: 'Graduation Day 2029', sub: '2029 · Update when available', src: 'https://images.unsplash.com/photo-1520608760-eff2c44d8ac4?w=600&auto=format&fit=crop' }
+    ];
+
+    const FALLBACK_VIDEOS = [
+        { uploadText: 'Upload Orientation Vlog', labelIcon: 'clapperboard', labelText: 'Orientation', duration: 'Replace duration', title: 'Orientation Vlog — Day One 2026', desc: 'The first day, the nerves, the excitement. Upload your orientation vlog above.' },
+        { uploadText: 'Upload Tour Highlights Video', labelIcon: 'map-pin', labelText: 'Trip Film', duration: 'Replace duration', title: 'Educational Tour Highlights 2028', desc: 'Three days, forty people, one bus, and memories that outlast every hard drive.' },
+        { uploadText: 'Upload Farewell Film', labelIcon: 'heart', labelText: 'Farewell Film', duration: 'Replace duration', title: 'Farewell Night 2029 — Full Film', desc: "The night we documented everything, because we knew we'd need to remember it." }
+    ];
+
+    const FALLBACK_ACHIEVEMENTS = [
+        { variant: 'gold', year: '2027 · Replace Year', title: 'Best Project Award', desc: 'Replace with actual award name, issuing body, and a brief description of the winning project.', icon: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>' },
+        { variant: 'violet', year: '2027 · Replace Year', title: 'Hackathon Runners-Up', desc: 'Replace with actual hackathon name, organiser, and what the team built.', icon: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
+        { variant: 'teal', year: '2028 · Replace Year', title: 'Research Paper Published', desc: 'Replace with actual paper title, journal/conference name, DOI link, and authoring students.', icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
+        { variant: 'rose', year: '2027 · Replace Year', title: 'Cultural Fest Champion', desc: 'Replace with actual cultural event name, category won, and participants involved.', icon: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>' },
+        { variant: 'gold', year: '2028 · Replace Year', title: "Dean's List — Multiple Students", desc: "Replace with names of students who made the Dean's List and the semester/year.", icon: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>' },
+        { variant: 'teal', year: '2027–29 · Replace', title: 'Internship Placements', desc: 'Replace with companies where batch members secured internships.', icon: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>' }
+    ];
+
+    const FALLBACK_QUOTES = [
+        { text: 'Replace this with a real quote from a batch member — something they said about university life, a memory, or what this journey meant to them.', bn: 'এখানে বাংলায় উক্তি বা স্মৃতি লিখুন। আপনার ব্যাচমেটের কথা।', name: 'Student Name — Replace', role: 'Roll No. XXX · CSE 7th Batch' },
+        { text: 'The hardest part was not the exams — it was saying goodbye to people who had become family. Replace this with a real memory.', bn: 'পরীক্ষা কঠিন ছিল, কিন্তু বিদায় আরও কঠিন। Replace this Bengali quote.', name: 'Another Student — Replace', role: 'Roll No. XXX · CSE 7th Batch' },
+        { text: 'I came here to learn programming. I left knowing how to learn anything. Add your own version of this quote.', bn: 'আমি এসেছিলাম প্রোগ্রামিং শিখতে, শিখলাম কীভাবে যেকোনো কিছু শিখতে হয়।', name: 'Yet Another — Replace', role: 'Roll No. XXX · CSE 7th Batch' }
+    ];
+
+    const FALLBACK_ARTICLES = [
+        { date: 'Replace Date', category: 'academic', categoryLabel: 'Reflection', title: 'What Four Years of CSE Taught Me Beyond Code', excerpt: "Replace this with a real excerpt from the article. Talk about what the author learned, what surprised them, what they'd tell a first-year student.", thumb: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop', authorName: 'Author Name — Replace', authorColor: 'violet', link: '#' },
+        { date: 'Replace Date', category: 'social', categoryLabel: 'Memory', title: 'The Trip That Changed How We Saw Each Other', excerpt: 'Replace with real article excerpt about the educational tour. Who surprised you? What did you learn about your classmates outside the classroom?', thumb: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop', authorName: 'Author Name — Replace', authorColor: 'teal', link: '#' },
+        { date: 'Replace Date', category: 'fest', categoryLabel: 'Farewell', title: 'A Letter to the Batch I Grew Up With', excerpt: 'Replace with a real personal letter or essay about the farewell, the friendships, and what comes next.', thumb: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&auto=format&fit=crop', authorName: 'Author Name — Replace', authorColor: 'rose', link: '#' }
+    ];
+
+    const FALLBACK_EVENTS = [
+        { date: '2026-09-15', day: '15', month: 'Sep 2026', title: 'Orientation Day 2026', desc: 'The official start of CSE 7th Batch. Replace with confirmed date, venue, and schedule.' },
+        { date: '2028-02-10', day: '10', month: 'Feb 2028', title: 'Educational Tour 2028', desc: 'The batch trip — 40 people, one destination. Replace with confirmed venue and RSVP details.' },
+        { date: '2029-06-21', day: '21', month: 'Jun 2029', title: 'Graduation / Convocation 2029', desc: 'The final milestone — caps, gowns, and the handshake that closes four years.' }
+    ];
+
+    // ── Render functions ──────────────────────────────────
+    function renderNotices(list) {
+        const el = document.getElementById('noticeList');
+        if (!list.length) { el.innerHTML = '<p class="notice-empty">No notices right now — check back soon.</p>'; return; }
+        el.innerHTML = list.map(n => `
+            <div class="notice-item priority-${n.priority}" data-notice-date="${esc(n.dateSort)}">
+                <div class="notice-item-top">
+                    <div class="notice-item-icon icon-${n.priority}"><i data-lucide="${esc(n.icon)}"></i></div>
+                    <div class="notice-item-meta">
+                        <p class="notice-item-title">${esc(n.title)}</p>
+                        <p class="notice-item-date">${esc(n.date)}</p>
+                    </div>
+                    <span class="notice-item-badge badge-${n.badge}">${esc(n.badgeLabel)}</span>
+                </div>
+                <p class="notice-item-body">${esc(n.body)}</p>
+                ${(n.attachments && n.attachments.length) ? `<div class="notice-attachments">${n.attachments.map(a => `
+                    <a href="${esc(a.href) || '#'}" class="notice-attachment" data-file-name="${esc(a.name)}" data-file-type="${esc(a.type)}">
+                        <i data-lucide="${a.type === 'image' ? 'image' : 'file-text'}"></i>${esc(a.name)}
+                    </a>`).join('')}</div>` : ''}
+            </div>`).join('');
+        const barCount = document.getElementById('noticeBarCount');
+        const bellCount = document.getElementById('noticeBellCount');
+        if (barCount) barCount.textContent = list.length;
+        if (bellCount) bellCount.textContent = list.length;
+    }
+
+    function renderHeroStats(stats) {
+        const el = document.getElementById('heroStats');
+        el.innerHTML = stats.map(s => `<div class="hero-stat"><span class="hero-stat-num">${esc(s.num)}</span><span class="hero-stat-label">${esc(s.label)}</span></div>`).join('');
+    }
+
+    function renderChapters(chapters) {
+        const el = document.getElementById('chapterGrid');
+        el.innerHTML = chapters.map((c, i) => `
+            <a href="${esc(c.href)}" class="chapter-card chapter-${c.variant} reveal reveal-delay-${(i % 4) + 1}">
+                <div class="chapter-icon"><i data-lucide="${esc(c.icon)}"></i></div>
+                <span class="chapter-year">${esc(c.year)}</span>
+                <h3 class="chapter-title">${esc(c.title)}</h3>
+                <p class="chapter-desc">${esc(c.desc)}</p>
+                <span class="chapter-count">${esc(c.count)}</span>
+            </a>`).join('');
+    }
+
+    function renderStatsBar(stats) {
+        const el = document.getElementById('statsBar');
+        el.innerHTML = stats.map(s => `
+            <div class="stat-cell">
+                <div class="stat-cell-icon" style="background:var(--${s.color}-glow);color:var(--${s.color})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${s.icon.split(' M').map((d,i)=> i===0? `<path d="${d}"/>` : `<path d="M${d}"/>`).join('')}</svg></div>
+                <div class="stat-number">${esc(s.number)}</div>
+                <div class="stat-label">${esc(s.label)}</div>
+            </div>`).join('');
+    }
+
+    function renderTimeline(events) {
+        const container = document.getElementById('timelineContainer');
+        const spine = container.querySelector('.tl-spine');
+        let itemIndex = 0;
+        let lastYear = null;
+        let html = '';
+        events.forEach(ev => {
+            if (ev.year !== lastYear) {
+                html += `<div class="tl-year" id="year-${esc(ev.year)}">${esc(ev.year).slice(0,2)}<span>${esc(ev.year).slice(2)}</span></div>`;
+                lastYear = ev.year;
+            }
+            const side = itemIndex % 2 === 0 ? 'tl-left' : 'tl-right';
+            itemIndex++;
+            const media = ev.image ? `
+                    <div class="tl-media">
+                        <img src="${esc(ev.image)}" alt="${esc(ev.title)}" loading="lazy">
+                        <p class="tl-media-caption">${esc(ev.caption || '')}</p>
+                    </div>` : '';
+            const countdown = ev.countdownDate ? `<div class="event-countdown" data-countdown-date="${esc(ev.countdownDate)}" style="margin-top:0.75rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--teal);letter-spacing:1.5px;">⏳ Calculating…</div>` : '';
+            html += `
+            <div class="tl-item reveal ${side}">
+                <div class="tl-content">
+                    <div class="tl-meta">
+                        <span class="tl-date">${esc(ev.date)}</span>
+                        <span class="tl-tag tag-${ev.tag}">${esc(ev.tagLabel)}</span>
+                    </div>
+                    <h3 class="tl-title">${esc(ev.title)}</h3>
+                    <p class="tl-body">${esc(ev.body)}</p>
+                    ${media}
+                    ${countdown}
+                </div>
+                <div class="tl-dot" aria-hidden="true"><div class="tl-dot-inner"><i data-lucide="${esc(ev.icon)}"></i></div></div>
+                <div class="tl-empty"></div>
+            </div>`;
+        });
+        container.innerHTML = '';
+        container.appendChild(spine);
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function renderGallery(photos) {
+        const el = document.getElementById('galleryMosaic');
+        el.innerHTML = photos.map(p => `
+            <div class="gallery-item g-item-${p.size} reveal" role="listitem" data-category="${esc(p.category)}" data-caption="${esc(p.caption)}" data-sub="${esc(p.sub)}">
+                <span class="gallery-badge badge-${p.badge}">${esc(p.badgeLabel)}</span>
+                <div class="gallery-actions">
+                    <button class="gallery-action-btn" data-action="zoom" aria-label="View fullscreen"><i data-lucide="maximize-2"></i></button>
+                    <button class="gallery-action-btn" data-action="download" aria-label="Download"><i data-lucide="download"></i></button>
+                </div>
+                <img src="${esc(p.src)}" alt="${esc(p.caption)}" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="gallery-caption-title">${esc(p.caption)}</p>
+                    <p class="gallery-caption-sub">${esc(p.sub)}</p>
+                </div>
+            </div>`).join('');
+    }
+
+    function renderAchievements(list) {
+        const el = document.getElementById('achGrid');
+        el.innerHTML = list.map((a, i) => `
+            <div class="ach-card ach-${a.variant} reveal reveal-delay-${(i % 4) + 1}">
+                <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${a.icon}</svg></div>
+                <p class="ach-year">${esc(a.year)}</p>
+                <h3 class="ach-title">${esc(a.title)}</h3>
+                <p class="ach-desc">${esc(a.desc)}</p>
+            </div>`).join('');
+    }
+
+    function renderQuotes(list) {
+        const el = document.getElementById('quoteSlides');
+        el.innerHTML = list.map(q => `
+            <div class="quote-slide" role="group" aria-roledescription="slide">
+                <span class="quote-mark">"</span>
+                <p class="quote-text">"${esc(q.text)}"</p>
+                <p class="quote-bn">${esc(q.bn)}</p>
+                <div class="quote-author">
+                    <div class="quote-avatar-placeholder" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                    <div><p class="quote-name">${esc(q.name)}</p><p class="quote-role">${esc(q.role)}</p></div>
+                </div>
+            </div>`).join('');
+    }
+
+    function renderArticles(list) {
+        const el = document.getElementById('blogGrid');
+        el.innerHTML = list.map((a, i) => `
+            <article class="blog-card reveal reveal-delay-${(i % 4) + 1}">
+                <img src="${esc(a.thumb)}" alt="${esc(a.title)}" class="blog-thumb" loading="lazy">
+                <div class="blog-body">
+                    <div class="blog-meta"><span class="blog-date">${esc(a.date)}</span><span class="blog-cat tag-${a.category}">${esc(a.categoryLabel)}</span></div>
+                    <h3 class="blog-title">${esc(a.title)}</h3>
+                    <p class="blog-excerpt">${esc(a.excerpt)}</p>
+                    <div class="blog-footer">
+                        <div class="blog-author"><div class="blog-avatar" style="background:var(--${a.authorColor}-glow);display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--${a.authorColor})" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="blog-author-name">${esc(a.authorName)}</span></div>
+                        <a href="${esc(a.link) || '#'}" class="blog-read-more">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></a>
+                    </div>
+                </div>
+            </article>`).join('');
+    }
+
+    function renderEvents(list) {
+        const el = document.getElementById('upcomingGrid');
+        el.innerHTML = list.map((e, i) => `
+            <div class="event-card reveal reveal-delay-${(i % 4) + 1}" data-date="${esc(e.date)}">
+                <div class="event-date-badge"><span class="event-day">${esc(e.day)}</span><span class="event-month">${esc(e.month)}</span></div>
+                <h3 class="event-title">${esc(e.title)}</h3>
+                <p class="event-desc">${esc(e.desc)}</p>
+                <p class="event-countdown"></p>
+            </div>`).join('');
+    }
+
+    // ── Master init: fetch everything, render, then wire up
+    //    the interactive bits that depend on the fresh DOM. ──
+    async function initDynamicContent() {
+        const [notices, config, timeline, gallery, videos, achievements, quotes, articles, events] = await Promise.all([
+            loadJSON('data/notices.json', FALLBACK_NOTICES),
+            loadJSON('data/site-config.json', FALLBACK_CONFIG),
+            loadJSON('data/timeline.json', FALLBACK_TIMELINE),
+            loadJSON('data/gallery.json', FALLBACK_GALLERY),
+            loadJSON('data/videos.json', FALLBACK_VIDEOS),
+            loadJSON('data/achievements.json', FALLBACK_ACHIEVEMENTS),
+            loadJSON('data/quotes.json', FALLBACK_QUOTES),
+            loadJSON('data/articles.json', FALLBACK_ARTICLES),
+            loadJSON('data/events.json', FALLBACK_EVENTS),
+        ]);
+
+        renderNotices(notices);
+        renderHeroStats((config && config.heroStats) || FALLBACK_CONFIG.heroStats);
+        renderChapters((config && config.chapters) || FALLBACK_CONFIG.chapters);
+        renderStatsBar((config && config.stats) || FALLBACK_CONFIG.stats);
+        renderTimeline(timeline);
+        renderGallery(gallery);
+        applyVideosData(videos);
+        renderAchievements(achievements);
+        renderQuotes(quotes);
+        renderArticles(articles);
+        renderEvents(events);
+
+        // Post-render wiring
+        initLucide();
+        observeReveals();
+        buildGalleryIndex();
+        initQuoteCarousel();
+        applyCountdowns();
+        sortNoticesByDate();
+        updateYearPills();
+    }
+
+    initDynamicContent();
     </script>
 </body>
 </html>
