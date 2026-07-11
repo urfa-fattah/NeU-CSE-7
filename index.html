@@ -12,8 +12,9 @@
     <meta name="keywords" content="Netrokona University, CSE, Computer Science, Bangladesh, 7th Batch, Software Engineers">
     <meta name="robots" content="index, follow">
     <meta name="color-scheme" content="dark light">
-    <link rel="icon" href="logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="canonical" href="https://neu-cse-7.vercel.app/">
+    <link rel="icon" href="https://neu-cse-7.vercel.app/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://neu-cse-7.vercel.app/logo.png">
     <link rel="manifest" href="manifest.json">
 
     <!-- Set theme before first paint to avoid a flash of the wrong theme -->
@@ -31,9 +32,10 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://neu-cse-7.vercel.app/">
     <meta property="og:title" content="CSE 7th Batch — Netrokona University">
     <meta property="og:description" content="Discover the roster, interests, and aspirations of 40 passionate computer science students from Netrokona University's 7th Batch.">
-    <meta property="og:image" content="logo.png">
+    <meta property="og:image" content="https://neu-cse-7.vercel.app/logo.png">
     <meta property="og:image:width" content="512">
     <meta property="og:image:height" content="512">
     <meta property="og:image:alt" content="CSE 7th Batch — Netrokona University">
@@ -42,7 +44,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="CSE 7th Batch — Netrokona University">
     <meta property="twitter:description" content="Discover the roster, interests, and aspirations of 40 passionate computer science students.">
-    <meta property="twitter:image" content="logo.png">
+    <meta property="twitter:image" content="https://neu-cse-7.vercel.app/logo.png">
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -52,7 +54,7 @@
       "name": "Department of Computer Science & Engineering, Netrokona University",
       "alternateName": "NU CSE 7th Batch",
       "url": "https://neub.edu.bd",
-      "logo": "logo.png",
+      "logo": "https://neu-cse-7.vercel.app/logo.png",
       "description": "B.Sc. in Computer Science and Engineering 7th Batch, Netrokona University."
     }
     </script>
@@ -64,8 +66,10 @@
     <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link rel="preconnect" href="https://unpkg.com">
 
-    <!-- Lucide Icons — async so it never blocks first render -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" async></script>
+    <!-- Lucide Icons — async so it never blocks first render.
+         Version pinned on purpose: @latest can silently ship a breaking
+         change and take the whole site's icons down with zero code change. -->
+    <script src="https://unpkg.com/lucide@0.552.0/dist/umd/lucide.min.js" async></script>
 
     <!-- Fonts: exact weights only -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Bengali:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -1497,9 +1501,18 @@
         .profile-name-en {
             font-family: var(--font-display); font-size: clamp(1.6rem, 5vw, 2.1rem); font-weight: 700;
             letter-spacing: -0.5px;
+            /* Solid fallback color FIRST: if a browser/WebView doesn't support
+               background-clip:text, this keeps the name visible instead of
+               rendering fully transparent (color:transparent) with no fallback. */
+            color: var(--text-primary);
             background: linear-gradient(100deg, var(--text-primary) 40%, var(--accent-color, var(--gold)) 60%, var(--text-primary) 80%);
-            background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent; color: transparent;
+            background-size: 200% auto;
+        }
+        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+            .profile-name-en {
+                -webkit-background-clip: text; background-clip: text;
+                -webkit-text-fill-color: transparent; color: transparent;
+            }
         }
         .profile-name-bn { font-family: var(--font-bn); font-size: 1.05rem; color: var(--accent-color, var(--gold)); margin-top: 2px; margin-bottom: var(--space-5); }
         .profile-stats-grid {
@@ -3088,6 +3101,11 @@
         // ─── Render Roster ───────────────────────────────────────────────
         function renderRoster() {
             if (!BATCH_STUDENTS.length) return;
+            // Fix: the grid is about to be rebuilt from scratch, which would
+            // leave `activeCardElement` pointing at a detached DOM node while
+            // the root-level --active-accent etc. variables stay applied —
+            // a "stale theme" that never visually resets after search/filter/sort.
+            resetTheme(true);
             studentGrid.innerHTML = '';
 
             let filtered = BATCH_STUDENTS.filter(s => {
