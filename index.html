@@ -2027,10 +2027,10 @@
                 <div class="eyebrow">B.Sc. in CSE · 7th Batch · Est. 2026</div>
                 <h1>CSE 7TH BATCH</h1>
                 <div class="hero-bn" lang="bn">নেত্রকোনা বিশ্ববিদ্যালয়</div>
-                <p class="hero-tag" lang="bn">৪০ জন স্বপ্নবাজ, একটি যাত্রা। চল্লিশটি ভিন্ন গল্প, একটাই লক্ষ্য — কোডিং, সৃজনশীলতা আর উদ্ভাবনের পথে একসাথে এগিয়ে চলা।</p>
+                <p class="hero-tag" lang="bn"><span id="heroTagCountBn1">৪০</span> জন স্বপ্নবাজ, একটি যাত্রা। <span id="heroTagCountBn2">৪০</span>টি ভিন্ন গল্প, একটাই লক্ষ্য — কোডিং, সৃজনশীলতা আর উদ্ভাবনের পথে একসাথে এগিয়ে চলা।</p>
                 <div class="hero-stats">
                     <div class="stat">
-                        <div class="stat-value">40</div>
+                        <div class="stat-value" id="heroStudentCount">40</div>
                         <div class="stat-label">Students</div>
                     </div>
                     <div class="stat">
@@ -2076,7 +2076,7 @@
             <div class="section-head reveal">
                 <div class="eyebrow">The Roster</div>
                 <h2>Meet the Students</h2>
-                <p lang="bn">প্রতি ৩ সেকেন্ডে একজন নতুন শিক্ষার্থী দেখা যাবে এই অ্যালবামে। পুরো ৪০ জনকে একসাথে দেখতে অ্যালবামে ক্লিক করুন অথবা নিচের বাটনে চাপুন।</p>
+                <p lang="bn">প্রতি ৩ সেকেন্ডে একজন নতুন শিক্ষার্থী দেখা যাবে এই অ্যালবামে। পুরো <span id="studentsSectionCount">৪০</span> জনকে একসাথে দেখতে অ্যালবামে ক্লিক করুন অথবা নিচের বাটনে চাপুন।</p>
             </div>
 
             <div class="student-album-wrap reveal">
@@ -2245,7 +2245,7 @@
                 <div class="eyebrow">Who We Are</div>
                 <h2>About the Batch</h2>
                 <div class="about-quote" lang="bn">আমরা নেত্রকোনা বিশ্ববিদ্যালয়ের কম্পিউটার সায়েন্স অ্যান্ড ইঞ্জিনিয়ারিং বিভাগের ৭ম ব্যাচ।</div>
-                <p class="about-desc">From competitive programmers to web builders, from AI enthusiasts to cybersecurity hopefuls — this batch is a mix of forty distinct minds united by one department and one mission: to learn, build, and grow together through every semester ahead.</p>
+                <p class="about-desc">From competitive programmers to web builders, from AI enthusiasts to cybersecurity hopefuls — this batch is a mix of <span id="aboutDescCount">forty</span> distinct minds united by one department and one mission: to learn, build, and grow together through every semester ahead.</p>
                 <div class="counters-grid">
                     <div class="counter-card">
                         <div class="counter-number" id="numStudents">40</div>
@@ -2376,6 +2376,37 @@
         }
 
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // ─── Dynamic student-count text (hero stat, Bangla copy, about
+        // paragraph, meta descriptions) — updated once students.json has
+        // loaded so every "40" on the page reflects the real dataset size,
+        // wherever the batch size changes in the future. ───────────────────
+        const BN_DIGITS = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+        function toBanglaDigits(num) {
+            return String(num).split('').map(ch => (BN_DIGITS[+ch] !== undefined ? BN_DIGITS[+ch] : ch)).join('');
+        }
+        function updateStudentCountEverywhere(count) {
+            const bn = toBanglaDigits(count);
+
+            const heroCountEl = document.getElementById('heroStudentCount');
+            if (heroCountEl) heroCountEl.textContent = count;
+
+            const heroTagBn1 = document.getElementById('heroTagCountBn1');
+            if (heroTagBn1) heroTagBn1.textContent = bn;
+            const heroTagBn2 = document.getElementById('heroTagCountBn2');
+            if (heroTagBn2) heroTagBn2.textContent = bn;
+
+            const studentsSectionCountEl = document.getElementById('studentsSectionCount');
+            if (studentsSectionCountEl) studentsSectionCountEl.textContent = bn;
+
+            const aboutDescCountEl = document.getElementById('aboutDescCount');
+            if (aboutDescCountEl) aboutDescCountEl.textContent = count;
+
+            const ogDescMeta = document.querySelector('meta[property="og:description"]');
+            if (ogDescMeta) ogDescMeta.setAttribute('content', ogDescMeta.getAttribute('content').replace(/\d+/, count));
+            const twitterDescMeta = document.querySelector('meta[property="twitter:description"]');
+            if (twitterDescMeta) twitterDescMeta.setAttribute('content', twitterDescMeta.getAttribute('content').replace(/\d+/, count));
+        }
 
         // ─── Student Album (auto-rotating card with manual prev/next) ─────
         let albumTimer = null;
@@ -2519,6 +2550,7 @@
                 if (numStudentsEl) numStudentsEl.textContent = data.length;
                 const viewAllCountEl = document.getElementById('viewAllCount');
                 if (viewAllCountEl) viewAllCountEl.textContent = data.length;
+                updateStudentCountEverywhere(data.length);
                 initStudentAlbum();
                 openProfileFromUrlIfPresent();
             })
