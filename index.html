@@ -65,6 +65,11 @@
     <link rel="preconnect" href="https://images.unsplash.com">
     <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link rel="preconnect" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <!-- Lucide Icons — async so it never blocks first render.
          Version pinned on purpose: @latest can silently ship a breaking
@@ -727,27 +732,30 @@
             border-bottom: 1px solid var(--border-subtle); background: var(--bg-surface);
         }
 
-        .chip-container { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
-        .chip-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-right: var(--space-2); }
-        .filter-chip {
-            display: inline-flex; align-items: center; gap: 5px;
+        /* ─── Smart Search Extras ───────────────────────────────────────── */
+        .search-clear-btn {
+            position: absolute; right: 10px; width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: none; border: none; color: var(--text-muted); cursor: pointer;
+            opacity: 0; pointer-events: none; transform: scale(0.8);
+            transition: opacity var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), background var(--speed-fast), color var(--speed-fast);
+        }
+        .search-clear-btn.visible { opacity: 1; pointer-events: auto; transform: scale(1); }
+        .search-clear-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+        .search-clear-btn svg { width: 13px; height: 13px; }
+        .search-input { padding-right: 40px; }
+        .search-hint {
+            font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+        }
+        .search-hint svg { width: 13px; height: 13px; color: var(--violet); flex-shrink: 0; }
+        .search-hint code {
             background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
-            color: var(--text-muted); padding: 5px 12px; border-radius: 20px;
-            font-size: 0.78rem; cursor: pointer;
-            transition: background var(--speed-fast), border-color var(--speed-fast),
-                        color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast);
-            font-family: var(--font-body);
+            padding: 1px 7px; border-radius: 6px; color: var(--gold); font-family: var(--font-mono);
         }
-        .filter-chip svg { width: 13px; height: 13px; }
-        .chip-count { font-family: var(--font-mono); opacity: 0.85; }
-        .filter-chip:hover, .filter-chip:focus-visible { border-color: var(--border-hover); color: var(--text-primary); transform: translateY(-2px); }
-        .filter-chip.active {
-            background-color: var(--active-accent); color: #fff;
-            border-color: var(--active-accent);
-            box-shadow: 0 4px 14px var(--active-glow);
-        }
-        .filter-chip.active:hover { transform: translateY(-2px) scale(1.03); }
-        .filter-chip:active { transform: translateY(0) scale(0.96); }
+        .suggestion-item.key-active { background: rgba(255,255,255,0.08); }
+        :root[data-theme="light"] .suggestion-item.key-active { background: rgba(0,0,0,0.06); }
+        .suggestion-fav-flag { color: var(--gold); flex-shrink: 0; width: 13px; height: 13px; }
 
         .filter-meta {
             display: flex; justify-content: space-between; align-items: center;
@@ -823,8 +831,8 @@
         .card:hover .card-bg, .card:focus-visible .card-bg { transform: scale(1.05); }
         .student-image { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform var(--speed-slow), opacity 0.5s ease; opacity: 0; }
         .student-image.img-loaded { opacity: 1; }
-        .card-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(4,7,20,0.1) 0%, rgba(4,7,20,0.6) 45%, rgba(4,7,20,0.98) 100%); }
-        :root[data-theme="light"] .card-overlay { background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(4,7,20,0.6) 40%, rgba(4,7,20,0.98) 100%); }
+        .card-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(4,7,20,0.05) 0%, rgba(4,7,20,0.38) 50%, rgba(4,7,20,0.82) 100%); }
+        :root[data-theme="light"] .card-overlay { background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(4,7,20,0.45) 45%, rgba(4,7,20,0.88) 100%); }
 
         /* Resting shadow so cards read as elevated in light mode too, not just on hover */
         :root[data-theme="light"] .card,
@@ -936,6 +944,22 @@
         :root[data-theme="light"] .avatar-fallback { color: rgba(15,23,42,0.14); }
         .card-content { position: relative; z-index: 3; padding: var(--space-6); }
         .stu-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff; line-height: 1.2; }
+        .stu-role-tag {
+            display: inline-flex; align-items: center; gap: 3px;
+            margin-left: 8px; padding: 3px 10px; border-radius: 20px;
+            font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800;
+            letter-spacing: 0.6px; text-transform: uppercase; vertical-align: middle;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            /* Reset text-fill/clip explicitly: this badge can be nested inside
+               .profile-name-en, whose gradient-text effect (background-clip:text,
+               -webkit-text-fill-color:transparent) would otherwise be inherited
+               by this child and render it invisible. */
+            -webkit-background-clip: border-box; background-clip: border-box;
+            color: #1c1002; -webkit-text-fill-color: #1c1002;
+            border: 1px solid rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px -1px rgba(245,158,11,0.6);
+            line-height: 1.3;
+        }
         .stu-name-bn { font-family: var(--font-bn); font-size: 1rem; color: var(--accent-color, var(--gold)); margin-top: 2px; }
         /* Hometown — always visible right under the name, NOT gated behind hover */
         .stu-hometown {
@@ -1225,8 +1249,7 @@
             border-top: 1px solid rgba(255,255,255,0.08);
         }
         .lightbox-filmstrip::-webkit-scrollbar { height: 6px; }
-        .film-thumb {
-            flex-shrink: 0; width: 58px; height: 58px; border-radius: 10px; overflow: hidden;
+        .film-thumb { flex-shrink: 0; width: 58px; height: 58px; border-radius: 10px; overflow: hidden;
             border: 2px solid rgba(255,255,255,0.14); cursor: pointer; padding: 0; background: none;
             opacity: 0.55; transition: opacity var(--speed-fast), border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce);
         }
@@ -1235,12 +1258,10 @@
         .film-thumb.active { opacity: 1; border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-glow); }
         :root[data-theme="light"] .film-thumb { border-color: rgba(15,23,42,0.14); }
 
-        /* Tablet: tighten spacing a touch, nav stays inline */
         @media (max-width: 768px) {
             .lightbox-nav { width: 40px; height: 40px; }
             .film-thumb { width: 52px; height: 52px; }
         }
-        /* Phone: float nav arrows over the image edges */
         @media (max-width: 640px) {
             .lightbox-title-mobile { display: none; }
             .lightbox-content { padding: var(--space-2) 0; }
@@ -1302,7 +1323,6 @@
         }
         .journey-cta-frame:active .journey-cta { transform: translateY(-1px) scale(0.99); }
 
-        /* Shimmer sweep across the glass on hover */
         .journey-cta::after {
             content: ''; position: absolute; inset: 0; z-index: 0;
             background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,0.4) 50%, transparent 75%);
@@ -1358,8 +1378,6 @@
             .journey-cta-arrow { width: 34px; height: 34px; }
         }
 
-
-        /* ─── Card Pulse (Random Student highlight) ─────────────────────── */
         @keyframes cardPulseGlow {
             0%, 100% { box-shadow: 0 20px 40px -15px var(--glow-color, var(--violet-glow)); }
             50% { box-shadow: 0 0 0 5px var(--accent-color, var(--violet)), 0 25px 60px -12px var(--glow-color, var(--violet-glow)); }
@@ -1429,7 +1447,6 @@
         .profile-action-btn.is-favorite { color: var(--gold); border-color: var(--gold); }
         .profile-action-btn.is-favorite svg { fill: var(--gold); }
 
-        /* Cover buttons stay light on the blurred photo backdrop in both themes on purpose */
         .profile-cover {
             position: relative; height: 300px; overflow: hidden;
             border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -1461,7 +1478,6 @@
             padding: 5px 11px; border-radius: 20px; backdrop-filter: blur(6px);
             letter-spacing: 0.5px; white-space: nowrap;
         }
-        /* Prev/next tap zones over the cover photo */
         .profile-nav-zone {
             position: absolute; top: 54px; bottom: 0; z-index: 2;
             width: 40%; border: none; cursor: pointer; background: none;
@@ -1501,9 +1517,6 @@
         .profile-name-en {
             font-family: var(--font-display); font-size: clamp(1.6rem, 5vw, 2.1rem); font-weight: 700;
             letter-spacing: -0.5px;
-            /* Solid fallback color FIRST: if a browser/WebView doesn't support
-               background-clip:text, this keeps the name visible instead of
-               rendering fully transparent (color:transparent) with no fallback. */
             color: var(--text-primary);
             background: linear-gradient(100deg, var(--text-primary) 40%, var(--accent-color, var(--gold)) 60%, var(--text-primary) 80%);
             background-size: 200% auto;
@@ -1565,7 +1578,7 @@
             padding: 16px 18px 16px 30px; margin-top: var(--space-4); line-height: 1.65;
         }
         .profile-fact::before {
-            content: '“'; position: absolute; left: 8px; top: 2px;
+            content: '"'; position: absolute; left: 8px; top: 2px;
             font-family: Georgia, serif; font-size: 2.4rem; color: var(--accent-color, var(--gold));
             opacity: 0.5; line-height: 1;
         }
@@ -1598,6 +1611,16 @@
         .profile-skill-chip:hover { transform: translateY(-2px) scale(1.04); border-color: var(--accent-color, var(--gold)); box-shadow: 0 4px 12px -3px var(--glow-color, var(--gold-glow)); }
         .profile-skill-chip .skill-icon-wrap { display: flex; width: 14px; height: 14px; flex-shrink: 0; }
         .profile-skill-chip .skill-icon-wrap svg { width: 14px !important; height: 14px !important; }
+        .profile-similar-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .profile-similar-chip {
+            display: flex; align-items: center; gap: 7px;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
+            border-radius: 20px; padding: 5px 12px 5px 6px; cursor: pointer;
+            font-family: var(--font-body); font-size: 0.78rem; color: var(--text-primary);
+            transition: border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce);
+        }
+        .profile-similar-chip:hover { border-color: var(--violet); transform: translateY(-2px); }
+        .profile-similar-chip .rv-avatar { width: 22px; height: 22px; font-size: 0.62rem; }
         .profile-socials {
             display: flex; gap: 10px; margin-top: var(--space-6);
             border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);
@@ -1623,7 +1646,6 @@
         }
         .profile-no-socials { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.78rem; margin-top: var(--space-6); }
 
-        /* ─── Random Student Button ──────────────────────────────────────── */
         .random-btn {
             display: inline-flex; align-items: center; gap: 8px;
             background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
@@ -1638,7 +1660,6 @@
         .random-btn:hover svg { transform: rotate(180deg); }
         .random-btn:active { transform: translateY(0) scale(0.97); }
 
-        /* ─── Student Album (auto-rotating card, manual prev/next) ─────────── */
         .student-album-wrap { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
         .student-album-stage {
             position: relative; width: 100%; border-radius: var(--radius-lg);
@@ -1717,7 +1738,244 @@
             padding: 1px 9px; border-radius: 12px;
         }
 
-        /* ─── All Students Popup ──────────────────────────────────────────── */
+        .export-wrap { max-width: 720px; margin: var(--space-8) auto 0; }
+        .export-cta {
+            width: 100%; display: flex; align-items: center; gap: var(--space-5);
+            border-radius: var(--radius-lg); padding: var(--space-5) var(--space-6);
+            cursor: pointer; text-align: left; font: inherit; color: inherit;
+            position: relative; overflow: hidden; isolation: isolate;
+            transition: transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast), border-color var(--speed-fast);
+        }
+        .export-cta::before {
+            content: ''; position: absolute; inset: 0; z-index: -1;
+            background: linear-gradient(115deg, transparent 20%, rgba(245,158,11,0.22) 50%, transparent 80%);
+            transform: translateX(-120%); transition: transform 0.7s var(--transition-smooth);
+        }
+        .export-cta:hover { transform: translateY(-3px); border-color: rgba(245,158,11,0.4); box-shadow: 0 18px 44px -16px rgba(245,158,11,0.35); }
+        .export-cta:hover::before { transform: translateX(120%); }
+        .export-cta:active { transform: translateY(-1px) scale(0.99); }
+        .export-cta-icon {
+            width: 52px; height: 52px; border-radius: 15px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(150deg, rgba(245,158,11,0.26), rgba(245,158,11,0.05));
+            border: 1px solid rgba(245,158,11,0.34); color: var(--gold);
+        }
+        .export-cta-icon svg { width: 24px; height: 24px; }
+        .export-cta-text { flex: 1; min-width: 0; }
+        .export-cta-title {
+            font-family: var(--font-display); font-weight: 700; font-size: 1.08rem; color: var(--text-primary);
+            display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+        }
+        .export-cta-badge {
+            font-family: var(--font-mono); font-size: 0.65rem; font-weight: 400;
+            color: var(--gold); background: var(--gold-glow); border: 1px solid rgba(245,158,11,0.3);
+            padding: 2px 9px; border-radius: 20px;
+        }
+        .export-cta-sub { font-family: var(--font-body); font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+        .export-cta-arrow {
+            width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-subtle); color: var(--gold);
+            transition: transform var(--speed-fast) var(--transition-bounce), background var(--speed-fast);
+        }
+        .export-cta-arrow svg { width: 16px; height: 16px; }
+        .export-cta:hover .export-cta-arrow { transform: translateX(4px); background: var(--gold-glow); }
+        @media (max-width: 560px) {
+            .export-cta { flex-wrap: wrap; padding: var(--space-5); }
+            .export-cta-arrow { display: none; }
+        }
+
+        /* ─── Export Data Modal — solid glass backing so text stays readable
+           regardless of what's drifting behind it (gradient mesh, grain,
+           other cards). Same opaque recipe as the lightbox/profile modal
+           instead of the too-transparent bare .liquid-glass background. */
+        .export-modal {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(4,7,20,0.82); backdrop-filter: blur(10px) saturate(140%);
+            display: none; align-items: center; justify-content: center;
+            padding: var(--space-4); animation: fadeIn 0.25s ease;
+        }
+        .export-modal.active { display: flex; }
+        .export-modal-frame {
+            position: relative; width: 100%; max-width: 760px;
+            max-height: 92dvh; max-height: 92vh;
+            display: flex; flex-direction: column; min-height: 0;
+            border-radius: var(--radius-lg); overflow: hidden;
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.10), rgba(var(--glass-tint-rgb),0.02) 60%), var(--glass-fade);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.16);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), var(--shadow-lg);
+            animation: modalPop 0.35s var(--transition-bounce);
+            transition: background var(--speed-slow) var(--transition-smooth);
+        }
+        :root[data-theme="light"] .export-modal-frame {
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.75), rgba(var(--glass-tint-rgb),0.35) 60%), var(--glass-fade);
+            border: 1px solid rgba(255,255,255,0.65);
+        }
+        .export-modal-topbar {
+            display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+            padding: 14px var(--space-6); flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .export-modal-title {
+            display: flex; align-items: center; gap: 8px;
+            font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--text-primary);
+        }
+        .export-modal-title svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
+        .export-modal-scroll {
+            flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
+            padding: var(--space-6) clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        @media (max-width: 640px) {
+            .export-modal-scroll { padding: var(--space-4); }
+            .export-modal-topbar { padding: 12px var(--space-4); }
+        }
+
+        .export-panel { display: flex; flex-direction: column; }
+        .export-header { display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-2); }
+        .export-header-icon {
+            width: 46px; height: 46px; border-radius: 13px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(150deg, rgba(245,158,11,0.24), rgba(245,158,11,0.04));
+            border: 1px solid rgba(245,158,11,0.32); color: var(--gold);
+        }
+        .export-header-icon svg { width: 22px; height: 22px; }
+        .export-title { font-family: var(--font-display); font-weight: 700; font-size: 1.12rem; color: var(--text-primary); }
+        .export-sub { font-family: var(--font-body); font-size: 0.82rem; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+
+        .export-section-label {
+            font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 2px; margin: var(--space-6) 0 var(--space-3);
+            display: flex; align-items: center; gap: 9px;
+        }
+        .export-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+        .export-step-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+            background: var(--gold-glow); color: var(--gold); border: 1px solid rgba(245,158,11,0.35);
+            font-size: 0.62rem; font-weight: 700;
+        }
+
+        .export-scope-row { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+        .export-scope-chip {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
+            color: var(--text-muted); padding: 8px 14px; border-radius: 20px;
+            font-family: var(--font-body); font-size: 0.82rem; cursor: pointer;
+            transition: background var(--speed-fast), border-color var(--speed-fast),
+                        color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast);
+        }
+        .export-scope-chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+        .export-scope-chip:hover { border-color: var(--border-hover); color: var(--text-primary); transform: translateY(-2px); }
+        .export-scope-chip.active {
+            background-color: var(--violet); color: #fff; border-color: var(--violet);
+            box-shadow: 0 4px 14px var(--violet-glow);
+        }
+        .export-scope-count {
+            font-family: var(--font-mono); font-size: 0.68rem;
+            background: rgba(255,255,255,0.12); padding: 1px 8px; border-radius: 10px;
+        }
+        .export-scope-chip.active .export-scope-count { background: rgba(255,255,255,0.25); }
+        .export-scope-desc {
+            font-family: var(--font-body); font-size: 0.78rem; color: var(--text-muted);
+            margin-top: 8px; line-height: 1.5;
+        }
+
+        .export-fields-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+            gap: 8px;
+        }
+        .export-field-pill {
+            display: flex; align-items: center; gap: 9px;
+            background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
+            border-radius: 10px; padding: 9px 12px; cursor: pointer;
+            font-family: var(--font-body); font-size: 0.82rem; color: var(--text-accent);
+            transition: border-color var(--speed-fast), background var(--speed-fast), color var(--speed-fast), transform var(--speed-fast);
+            user-select: none;
+        }
+        .export-field-pill:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+        .export-field-pill.checked { border-color: var(--gold); background: var(--gold-glow); color: var(--text-primary); }
+        .export-field-pill input {
+            accent-color: var(--gold); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; margin: 0;
+        }
+        .export-field-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .export-fields-actions { display: flex; gap: var(--space-4); margin-top: var(--space-3); flex-wrap: wrap; align-items: center; }
+        .export-text-btn {
+            background: none; border: none; color: var(--violet); font-family: var(--font-mono);
+            font-size: 0.74rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+            padding: 0; transition: opacity var(--speed-fast);
+        }
+        .export-text-btn:hover { opacity: 0.75; }
+        .export-fields-picked {
+            font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);
+            margin-left: auto;
+        }
+        .export-fields-picked strong { color: var(--gold); font-weight: 700; }
+
+        .export-preview-wrap {
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+            overflow: hidden; background: var(--bg-surface-raised);
+        }
+        .export-preview-scroll { overflow-x: auto; }
+        .export-preview-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; white-space: nowrap; }
+        .export-preview-table th, .export-preview-table td {
+            padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-subtle);
+            max-width: 180px; overflow: hidden; text-overflow: ellipsis;
+        }
+        .export-preview-table th {
+            font-family: var(--font-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--gold); background: var(--gold-glow); position: sticky; top: 0;
+        }
+        .export-preview-table td { font-family: var(--font-body); color: var(--text-accent); }
+        .export-preview-table tbody tr:last-child td { border-bottom: none; }
+        .export-preview-more {
+            padding: 8px 12px; font-family: var(--font-mono); font-size: 0.7rem;
+            color: var(--text-muted); border-top: 1px solid var(--border-subtle);
+        }
+        .export-preview-empty {
+            padding: 20px 14px; text-align: center; font-family: var(--font-mono);
+            font-size: 0.78rem; color: var(--text-muted);
+        }
+
+        .export-format-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+        .export-format-btn {
+            position: relative; overflow: hidden; isolation: isolate;
+            flex: 1; min-width: 160px; justify-content: center;
+            display: inline-flex; align-items: center; gap: 9px;
+            padding: 13px 18px; border-radius: 12px;
+            border: 1px solid var(--border-subtle); background: var(--bg-surface-raised);
+            color: var(--text-primary); font-family: var(--font-display); font-weight: 700;
+            font-size: 0.86rem; cursor: pointer;
+            transition: transform var(--speed-fast) var(--transition-bounce), border-color var(--speed-fast),
+                        box-shadow var(--speed-fast), color var(--speed-fast);
+        }
+        .export-format-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .export-format-btn:hover { transform: translateY(-2px); }
+        .export-format-btn:active { transform: translateY(0) scale(0.98); }
+        .export-format-btn.fmt-json:hover { border-color: #38bdf8; color: #38bdf8; box-shadow: 0 10px 22px -8px rgba(56,189,248,0.4); }
+        .export-format-btn.fmt-excel:hover { border-color: #22c55e; color: #22c55e; box-shadow: 0 10px 22px -8px rgba(34,197,94,0.4); }
+        .export-format-btn.fmt-pdf:hover { border-color: #ef4444; color: #ef4444; box-shadow: 0 10px 22px -8px rgba(239,68,68,0.4); }
+        .export-format-btn:disabled { opacity: 0.55; cursor: wait; transform: none; box-shadow: none; }
+        .export-format-btn .fmt-spinner {
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.25); border-top-color: currentColor;
+            animation: fmtSpin 0.7s linear infinite; flex-shrink: 0;
+        }
+        @keyframes fmtSpin { to { transform: rotate(360deg); } }
+
+        .export-status {
+            margin-top: var(--space-3); font-family: var(--font-mono); font-size: 0.74rem;
+            color: var(--text-muted); min-height: 1.2em;
+        }
+        @media (max-width: 480px) {
+            .export-header { gap: var(--space-3); }
+            .export-format-btn { min-width: 100%; }
+            .export-fields-picked { margin-left: 0; }
+        }
+
+        /* ─── All Students Popup — same opaque glass backing as above ────── */
         .students-modal {
             position: fixed; inset: 0; z-index: 1000;
             background: rgba(4,7,20,0.82); backdrop-filter: blur(10px) saturate(140%);
@@ -1730,7 +1988,17 @@
             max-height: 92dvh; max-height: 92vh;
             display: flex; flex-direction: column; min-height: 0;
             border-radius: var(--radius-lg); overflow: hidden;
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.10), rgba(var(--glass-tint-rgb),0.02) 60%), var(--glass-fade);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.16);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), var(--shadow-lg);
             animation: modalPop 0.35s var(--transition-bounce);
+            transition: background var(--speed-slow) var(--transition-smooth);
+        }
+        :root[data-theme="light"] .students-modal-frame {
+            background: linear-gradient(165deg, rgba(var(--glass-tint-rgb),0.75), rgba(var(--glass-tint-rgb),0.35) 60%), var(--glass-fade);
+            border: 1px solid rgba(255,255,255,0.65);
         }
         .students-modal-topbar {
             display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
@@ -1766,11 +2034,32 @@
         }
         .counter-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: var(--space-2); }
 
-        /* ─── Footer — Liquid Glass ─────────────────────────────────────────
-           Footer now floats as a frosted glass panel (same recipe as
-           .liquid-glass) instead of an opaque block, so the animated
-           gradient-mesh orbs drifting behind the page (they're position:
-           fixed, so still present at scroll-bottom) show through faintly. */
+        .insights-panel { max-width: 560px; margin: var(--space-12) auto 0; text-align: left; }
+        .insights-title {
+            text-align: center; font-family: var(--font-mono); font-size: 0.72rem;
+            letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: var(--space-5);
+        }
+        .insights-bars { display: flex; flex-direction: column; gap: var(--space-3); }
+        .insight-bar-row { display: flex; align-items: center; gap: var(--space-3); }
+        .insight-bar-label {
+            width: 120px; flex-shrink: 0; font-family: var(--font-body); font-size: 0.82rem;
+            color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .insight-bar-track {
+            flex: 1; height: 10px; border-radius: 6px; background: var(--bg-surface-raised);
+            border: 1px solid var(--border-subtle); overflow: hidden;
+        }
+        .insight-bar-fill {
+            height: 100%; border-radius: 6px;
+            background: linear-gradient(90deg, var(--gold), var(--violet));
+            transition: width 0.6s var(--transition-smooth);
+        }
+        .insight-bar-count {
+            width: 34px; flex-shrink: 0; text-align: right;
+            font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted);
+        }
+
         footer {
             position: relative; overflow: hidden;
             background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.015) 55%), rgba(8,11,24,0.94);
@@ -1821,7 +2110,6 @@
         .footer-divider { width: 60px; height: 1px; background: var(--border-subtle); margin: 0 auto var(--space-6); }
         .footer-copy { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); }
 
-        /* ─── Back to Top ─────────────────────────────────────────────────── */
         .back-to-top {
             position: fixed; bottom: 28px; right: 28px; z-index: 99;
             width: 46px; height: 46px; border-radius: 13px;
@@ -1838,7 +2126,6 @@
         .back-to-top:hover { border-color: var(--violet); color: var(--violet); transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 26px -4px rgba(139,92,246,0.35); }
         .back-to-top:active { transform: translateY(0) scale(0.94); }
 
-        /* ─── Toast Notifications ────────────────────────────────────────── */
         .toast-container { position: fixed; bottom: 80px; right: 28px; z-index: 200; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
         .toast {
             background: var(--bg-surface-raised); border: 1px solid var(--border-subtle);
@@ -1852,7 +2139,6 @@
         .toast.show { transform: translateX(0); }
         .toast svg { width: 15px; height: 15px; color: var(--gold); flex-shrink: 0; }
 
-        /* ─── Responsive ──────────────────────────────────────────────────── */
         @media (max-width: 900px) {
             nav { display: none; }
             .mobile-hamburger { display: flex; }
@@ -1877,20 +2163,79 @@
             .profile-nav-zone { top: 46px; }
         }
 
-        /* ─── Reveal animations (scroll-triggered via JS) ─────────────────── */
         .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s var(--transition-smooth), transform 0.6s var(--transition-smooth); }
         .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+        /* ─── Mobile performance & touch-target pass ────────────────────── */
+        @media (max-width: 768px) {
+            header, .liquid-glass, .lightbox-glass-frame, .profile-modal-content,
+            .export-modal-frame, .students-modal-frame, .controls-panel,
+            .card-skill-badge, .roll-badge, .card-favorite-btn, .card-interest-badge,
+            .profile-btn, .lightbox-icon-btn, .lightbox-nav, .icon-btn {
+                backdrop-filter: blur(12px) saturate(140%);
+                -webkit-backdrop-filter: blur(12px) saturate(140%);
+            }
+        }
+        @media (max-width: 480px) {
+            .icon-btn, .lightbox-icon-btn, .profile-action-btn { width: 40px; height: 40px; }
+            .roll-badge { width: 38px; height: 38px; }
+            .card-favorite-btn { width: 38px; height: 38px; left: 62px; }
+            .export-fields-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .search-suggestions { max-height: 42vh; }
+        }
+
+        /* ─── Recently Viewed strip ──────────────────────────────────────── */
+        .recently-viewed-wrap { max-width: 1200px; margin: 0 auto var(--space-6); display: none; }
+        .recently-viewed-title {
+            display: flex; align-items: center; gap: 6px;
+            font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 1.5px;
+            text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-3);
+        }
+        .recently-viewed-strip {
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin;
+        }
+        .recently-viewed-strip::-webkit-scrollbar { height: 5px; }
+        .recently-viewed-chip {
+            flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
+            background: var(--bg-surface); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer;
+            font-family: var(--font-body); color: var(--text-primary);
+            transition: border-color var(--speed-fast), transform var(--speed-fast) var(--transition-bounce), box-shadow var(--speed-fast);
+            min-width: 76px;
+        }
+        .recently-viewed-chip:hover { border-color: var(--violet); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .rv-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--gold-glow); color: var(--gold);
+            font-family: var(--font-display); font-weight: 700; font-size: 0.75rem;
+        }
+        .rv-name { font-size: 0.68rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
+
+        /* ─── Install App button (shown only when installable) ──────────── */
+        #installAppBtn { display: none; }
+        #installAppBtn.visible { display: flex; }
+
+        .connection-banner {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: #b45309; color: #fff9ec;
+            font-family: var(--font-mono); font-size: 0.75rem;
+            padding: 8px 16px; text-align: center;
+            transform: translateY(-100%); transition: transform 0.3s var(--transition-smooth);
+        }
+        .connection-banner.show { transform: translateY(0); }
+        .connection-banner svg { flex-shrink: 0; }
+        .connection-banner.is-online { background: #15803d; }
     </style>
 </head>
 <body>
     <a href="#mainContent" class="skip-link">Skip to main content</a>
 
-    <!-- Scroll Progress Bar -->
     <div class="scroll-progress" aria-hidden="true">
         <div class="scroll-progress-bar" id="scrollProgressBar"></div>
     </div>
 
-    <!-- Animated Gradient Mesh -->
     <div class="gradient-mesh" id="gradientMesh" aria-hidden="true">
         <div class="mesh-orb orb-1"></div>
         <div class="mesh-orb orb-2"></div>
@@ -1898,7 +2243,12 @@
     </div>
     <div class="grain" aria-hidden="true"></div>
 
-    <!-- ═══ NAVBAR ═══════════════════════════════════════════════════════ -->
+    <div class="connection-banner" id="connectionBanner" role="status" aria-live="polite">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        <span id="connectionBannerText">You're offline — showing your last cached version.</span>
+    </div>
+
+
     <header id="siteHeader">
         <a href="#home" class="brand" aria-label="CSE 7th Batch — Home">
             <img src="logo.png" alt="Netrokona University" class="logo-img" id="navLogo" width="36" height="36">
@@ -1933,13 +2283,15 @@
             <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle light and dark mode" title="Toggle Theme">
                 <svg id="themeSvgIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             </button>
+            <button class="icon-btn" id="installAppBtn" aria-label="Install this app" title="Install App">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
             <button class="mobile-hamburger" id="mobileHamburger" aria-label="Toggle mobile menu" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
         </div>
     </header>
 
-    <!-- Mobile Drawer -->
     <div class="mobile-nav-drawer" id="mobileDrawer" aria-hidden="true" role="dialog" aria-label="Mobile navigation">
         <button class="drawer-close" id="drawerClose" aria-label="Close navigation">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -1951,73 +2303,58 @@
         <a href="journey.html" class="drawer-link"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg> Our Journey</a>
     </div>
 
-    <!-- Toast container -->
     <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-    <!-- Main Content -->
     <main id="mainContent">
 
-        <!-- ═══ HERO ═══════════════════════════════════════════════════════ -->
         <section class="hero" id="home">
             <div class="hero-cover" aria-hidden="true">
                 <img src="images/department-cover.jpg" alt="" class="hero-cover-img" fetchpriority="high" width="1920" height="1080" decoding="async">
             </div>
             <div class="hero-overlay" aria-hidden="true"></div>
 
-            <!-- Programming Language Icons Background -->
             <div class="hero-lang-icons" aria-hidden="true">
 
-                <!-- Python — top-left -->
                 <div class="lang-icon" style="top:12%;left:6%;--dur:20s;--delay:0s;--drift-x:14px;--drift-y:-20px;--rot-start:-10deg;--rot-end:6deg;--max-opacity:0.42;--icon-glow:rgba(55,118,171,0.6);">
                     <svg width="80" height="80" viewBox="0 0 128 128"><path fill="#3776ab" d="M63.4 3C36.7 3 38.3 14.9 38.3 14.9l0 12.3h25.6v3.7H27.7S3 28.1 3 55.2s21.7 26.1 21.7 26.1h13v-12.6s-.7-21.7 21.3-21.7H84s20.6.3 20.6-19.9V22.3S107.9 3 63.4 3z"/><circle fill="#ffd43b" cx="52.1" cy="18.5" r="4.4"/><path fill="#ffd43b" d="M64.6 125c26.7 0 25.1-11.9 25.1-11.9l0-12.3H64.1v-3.7h36.2S125 99.9 125 72.8s-21.7-26.1-21.7-26.1h-13v12.6s.7 21.7-21.3 21.7H44s-20.6-.3-20.6 19.9v19.4S21.1 125 64.6 125z"/><circle fill="#3776ab" cx="75.9" cy="109.5" r="4.4"/></svg>
                 </div>
 
-                <!-- JavaScript — top-right -->
                 <div class="lang-icon" style="top:10%;right:7%;--dur:22s;--delay:-3s;--drift-x:-10px;--drift-y:-24px;--rot-start:8deg;--rot-end:-6deg;--max-opacity:0.40;--icon-glow:rgba(247,223,30,0.6);">
                     <svg width="76" height="76" viewBox="0 0 128 128"><rect fill="#f7df1e" width="128" height="128" rx="6"/><path fill="#323330" d="M69.8 98.7c2.3 3.7 5.2 6.4 10.4 6.4 4.4 0 7.1-2.2 7.1-5.2 0-3.6-2.9-4.9-7.7-7l-2.6-1.1c-7.7-3.3-12.8-7.4-12.8-16.1 0-8 6.1-14.1 15.6-14.1 6.8 0 11.6 2.3 15.1 8.4l-8.3 5.3c-1.8-3.2-3.7-4.5-6.8-4.5-3.1 0-5.1 2-5.1 4.5 0 3.1 2 4.4 6.5 6.3l2.6 1.1c9 3.9 14.2 7.8 14.2 16.7 0 9.6-7.5 14.9-17.6 14.9-9.9 0-16.2-4.7-19.3-10.9l8.7-5.7zM34.3 99.8c1.7 3 3.2 5.5 6.8 5.5 3.5 0 5.7-1.4 5.7-6.6V62.2h10.8v36.7c0 10.9-6.4 15.8-15.7 15.8-8.4 0-13.3-4.4-15.8-9.6l8.2-5.3z"/></svg>
                 </div>
 
-                <!-- C++ — mid-left -->
                 <div class="lang-icon" style="top:40%;left:4%;--dur:25s;--delay:-7s;--drift-x:18px;--drift-y:-14px;--rot-start:-5deg;--rot-end:12deg;--max-opacity:0.38;--icon-glow:rgba(0,89,156,0.6);">
                     <svg width="74" height="74" viewBox="0 0 128 128"><path fill="#00599c" d="M64 2L6.4 35v66L64 134l57.6-33V35L64 2z"/><path fill="#004482" d="M64 2v132l57.6-33V35L64 2z"/><path fill="#fff" d="M89.6 83.3l-3.4-2c-.4 1.3-1 2.5-1.7 3.5C82.2 88 77.5 90 72 90c-8.7 0-15.7-7-15.7-15.7 0-8.7 7-15.7 15.7-15.7 5.7 0 10.6 3.1 13.3 7.7l3.5-2c-3.3-5.7-9.4-9.5-16.8-9.5C60.3 54.8 50 65.1 50 77.8c0 12.7 10.3 23 23 23 7.8 0 14.6-4.1 18.4-10.2l-1.8-7.3zM95.9 67h4v4h-4v4h-4v-4h-4v-4h4v-4h4v4zM110 67h4v4h-4v4h-4v-4h-4v-4h4v-4h4v4z"/></svg>
                 </div>
 
-                <!-- Java — mid-right -->
                 <div class="lang-icon" style="top:36%;right:5%;--dur:19s;--delay:-11s;--drift-x:-16px;--drift-y:-10px;--rot-start:12deg;--rot-end:-5deg;--max-opacity:0.36;--icon-glow:rgba(248,152,29,0.6);">
                     <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#0074bd" d="M47.6 99.4s-4.3 2.5 3 3.3c8.7 1 13.2.9 22.8-.9 0 0 2.5 1.6 6.1 2.9-21.7 9.3-49.1-.5-31.9-5.3zM44.7 85.7s-4.8 3.5 2.5 4.3c9.4 1 16.8 1 29.6-1.4 0 0 1.8 1.8 4.6 2.8-26.2 7.6-55.4.7-36.7-5.7z"/><path fill="#ea2d2e" d="M69.3 59.8c5.3 6.1-1.4 11.6-1.4 11.6s13.5-7 7.3-15.7c-5.8-8.2-10.2-12.2 13.7-26.2 0 0-37.5 9.3-19.6 30.3z"/><path fill="#0074bd" d="M95.7 109.4s3.2 2.6-3.5 4.6c-12.6 3.8-52.4 5-63.4.1-4-1.7 3.5-4.1 5.8-4.6 2.5-.5 3.8-.4 3.8-.4-4.4-3.1-28.3 6.1-12.1 8.7 43.9 7.1 80.1-3.2 69.4-8.4zM49.8 71.9s-20.1 4.8-7.1 6.5c5.5.7 16.4.5 26.6-.3 8.3-.7 16.6-2.1 16.6-2.1s-2.9 1.3-5 2.7c-20.1 5.3-58.9 2.8-47.7-2.6 9.4-4.7 16.6-4.2 16.6-4.2zM86 93.1c20.5-10.6 11-20.8 4.4-19.5-1.6.3-2.4.6-2.4.6s.6-1 1.8-1.4c13.4-4.7 23.7 13.9-4.2 21.3 0 0 .3-.3.4-1z"/><path fill="#ea2d2e" d="M73.6 2s11.5 11.5-10.9 29.2c-18 14.2-4.1 22.3 0 31.5-10.5-9.5-18.1-17.8-12.9-25.6 7.5-11.2 28.2-16.6 23.8-35.1z"/><path fill="#0074bd" d="M52.1 126.2c19.7 1.3 49.9-.7 50.6-10.1 0 0-1.4 3.5-16.3 6.3-16.7 3.1-37.3 2.8-49.5.8 0 .1 2.5 2.1 15.2 3z"/></svg>
                 </div>
 
-                <!-- HTML5 — lower-left -->
                 <div class="lang-icon" style="top:63%;left:6%;--dur:23s;--delay:-15s;--drift-x:10px;--drift-y:-22px;--rot-start:6deg;--rot-end:-10deg;--max-opacity:0.40;--icon-glow:rgba(227,79,38,0.6);">
                     <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#e34f26" d="M9.4 2l10.8 121 43.8 12.2 43.8-12.2L118.6 2z"/><path fill="#ef652a" d="M64 120.9l35.5-9.8 9.2-103.5H64z"/><path fill="#fff" d="M64 52.4H45.1l-1.2-14.2H64V24.4H29.7l3.4 38.3H64zm0 35.5l-.1.1-16.9-4.6-1.1-12.4H31.7l2.2 24.2 30.1 8.4.1-.1z"/><path fill="#ebebeb" d="M63.9 52.4v13.8H81.3L79.7 87.8l-15.8 4.3v14.4l30.1-8.3.2-2.5 3.4-38.5.4-4.3H63.9zm0-28v13.8h34.4l.3-3.6.7-7.7.3-2.5H63.9z"/></svg>
                 </div>
 
-                <!-- CSS3 — lower-right -->
                 <div class="lang-icon" style="top:62%;right:6%;--dur:21s;--delay:-9s;--drift-x:-12px;--drift-y:-18px;--rot-start:-7deg;--rot-end:9deg;--max-opacity:0.38;--icon-glow:rgba(21,114,182,0.6);">
                     <svg width="72" height="72" viewBox="0 0 128 128"><path fill="#1572b6" d="M9.4 2l10.8 121 43.8 12.2 43.8-12.2L118.6 2z"/><path fill="#33a9dc" d="M64 120.9l35.5-9.8 9.2-103.5H64z"/><path fill="#fff" d="M64 52.4H29.7l1.2 13.8H64zm0-28H29.7l1.3 13.8H64zm0 66.6l-.1.1-16.9-4.6-1.1-12.4H31.7l2.2 24.2L64 116.8z"/><path fill="#ebebeb" d="M63.9 91l16-4.3 1.6-18H63.9V55.4h18.2l.4-4.1 1-10.9.3-2.4H63.9zm0-66.6v13.8h34.5l.3-2.5.7-7.7.3-3.6H63.9z"/></svg>
                 </div>
 
-                <!-- Git — top-center-ish -->
                 <div class="lang-icon" style="top:8%;left:30%;--dur:27s;--delay:-5s;--drift-x:8px;--drift-y:-15px;--rot-start:4deg;--rot-end:-8deg;--max-opacity:0.34;--icon-glow:rgba(240,80,51,0.6);">
                     <svg width="68" height="68" viewBox="0 0 128 128"><path fill="#f05133" d="M124.737 58.378L69.621 3.264c-3.172-3.174-8.32-3.174-11.497 0L46.68 14.71l14.518 14.518c3.375-1.139 7.243-.375 9.932 2.314 2.703 2.706 3.461 6.607 2.294 9.993l13.992 13.993c3.385-1.167 7.292-.413 9.994 2.295 3.78 3.777 3.78 9.9 0 13.679a9.667 9.667 0 01-13.683 0 9.677 9.677 0 01-2.105-10.521L68.574 47.933l-.001 32.527a9.708 9.708 0 012.559 1.828c3.778 3.777 3.778 9.9 0 13.679-3.779 3.778-9.904 3.778-13.679 0-3.778-3.779-3.778-9.902 0-13.679a9.665 9.665 0 013.167-2.11V47.333a9.609 9.609 0 01-3.167-2.11c-2.718-2.715-3.468-6.644-2.266-10.044L41.661 21.66 3.264 60.056c-3.172 3.173-3.172 8.32 0 11.497l55.115 55.118c3.174 3.174 8.32 3.174 11.499 0l54.858-54.858c3.174-3.176 3.174-8.327.001-11.435z"/></svg>
                 </div>
 
-                <!-- Terminal — bottom-center -->
                 <div class="lang-icon" style="top:74%;left:44%;--dur:24s;--delay:-18s;--drift-x:-8px;--drift-y:-16px;--rot-start:-4deg;--rot-end:7deg;--max-opacity:0.32;--icon-glow:rgba(148,163,184,0.5);">
                     <svg width="68" height="68" viewBox="0 0 128 128" fill="none" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="18" width="112" height="80" rx="8"/><polyline points="24,46 46,58 24,70"/><line x1="54" y1="70" x2="84" y2="70"/><line x1="32" y1="112" x2="96" y2="112"/><line x1="64" y1="98" x2="64" y2="112"/></svg>
                 </div>
 
-                <!-- React — upper-left area -->
                 <div class="lang-icon" style="top:24%;left:16%;--dur:30s;--delay:-22s;--drift-x:12px;--drift-y:-18px;--rot-start:5deg;--rot-end:-10deg;--max-opacity:0.36;--icon-glow:rgba(97,218,251,0.6);">
                     <svg width="70" height="70" viewBox="0 0 128 128"><circle cx="64" cy="64" r="11.4" fill="#61dafb"/><g fill="none" stroke="#61dafb" stroke-width="5"><ellipse rx="46" ry="18" cx="64" cy="64"/><ellipse rx="46" ry="18" cx="64" cy="64" transform="rotate(60 64 64)"/><ellipse rx="46" ry="18" cx="64" cy="64" transform="rotate(120 64 64)"/></g></svg>
                 </div>
 
-                <!-- Database/SQL — mid-far-right -->
                 <div class="lang-icon" style="top:50%;right:3%;--dur:26s;--delay:-13s;--drift-x:-14px;--drift-y:-12px;--rot-start:-9deg;--rot-end:5deg;--max-opacity:0.34;--icon-glow:rgba(0,117,143,0.6);">
                     <svg width="68" height="68" viewBox="0 0 128 128" fill="none" stroke="#00758f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="64" cy="32" rx="44" ry="16"/><path d="M20 32v64c0 8.8 19.7 16 44 16s44-7.2 44-16V32"/><path d="M20 64c0 8.8 19.7 16 44 16s44-7.2 44-16"/></svg>
                 </div>
 
-                <!-- Python again — bottom-right, smaller -->
                 <div class="lang-icon" style="top:79%;right:13%;--dur:22s;--delay:-6s;--drift-x:-10px;--drift-y:-20px;--rot-start:10deg;--rot-end:-6deg;--max-opacity:0.28;--icon-glow:rgba(55,118,171,0.5);">
                     <svg width="56" height="56" viewBox="0 0 128 128"><path fill="#3776ab" d="M63.4 3C36.7 3 38.3 14.9 38.3 14.9l0 12.3h25.6v3.7H27.7S3 28.1 3 55.2s21.7 26.1 21.7 26.1h13v-12.6s-.7-21.7 21.3-21.7H84s20.6.3 20.6-19.9V22.3S107.9 3 63.4 3z"/><circle fill="#ffd43b" cx="52.1" cy="18.5" r="4.4"/><path fill="#ffd43b" d="M64.6 125c26.7 0 25.1-11.9 25.1-11.9l0-12.3H64.1v-3.7h36.2S125 99.9 125 72.8s-21.7-26.1-21.7-26.1h-13v12.6s.7 21.7-21.3 21.7H44s-20.6-.3-20.6 19.9v19.4S21.1 125 64.6 125z"/><circle fill="#3776ab" cx="75.9" cy="109.5" r="4.4"/></svg>
                 </div>
@@ -2071,7 +2408,6 @@
             </div>
         </section>
 
-        <!-- ═══ STUDENTS ═══════════════════════════════════════════════════ -->
         <section id="students">
             <div class="section-head reveal">
                 <div class="eyebrow">The Roster</div>
@@ -2106,11 +2442,90 @@
                     View All Students <span class="view-all-count" id="viewAllCount">40</span>
                 </button>
             </div>
+
+            <div class="export-wrap reveal">
+                <button type="button" class="export-cta liquid-glass" id="openExportModalBtn" aria-haspopup="dialog" aria-controls="exportModal">
+                    <div class="export-cta-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <div class="export-cta-text">
+                        <div class="export-cta-title">Export Students Data <span class="export-cta-badge" id="exportCtaBadge">40 students</span></div>
+                        <div class="export-cta-sub">Choose a scope, pick exact fields, preview it live, then download as JSON, Excel, or PDF.</div>
+                    </div>
+                    <div class="export-cta-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                </button>
+            </div>
         </section>
 
-        <!-- All Students popup — same search/filter/grid as before, just relocated -->
+        <div class="export-modal" id="exportModal" role="dialog" aria-modal="true" aria-label="Export student data">
+            <div class="export-modal-frame" id="exportModalFrame">
+                <div class="export-modal-topbar">
+                    <div class="export-modal-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export Students Data
+                    </div>
+                    <button type="button" class="lightbox-icon-btn" id="exportModalClose" aria-label="Close export dialog">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="export-modal-scroll" id="exportModalScroll">
+                    <div class="export-panel" id="exportPanel">
+                        <div class="export-header">
+                            <div class="export-header-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            </div>
+                            <div>
+                                <div class="export-title">Build your file</div>
+                                <div class="export-sub">Pick a scope and the exact fields you need, preview the result, then download a clean, organized file — JSON, Excel, or PDF.</div>
+                            </div>
+                        </div>
+
+                        <div class="export-section-label"><span class="export-step-num">1</span>Scope</div>
+                        <div class="export-scope-row" id="exportScopeRow" role="group" aria-label="Export scope"></div>
+                        <div class="export-scope-desc" id="exportScopeDesc"></div>
+
+                        <div class="export-section-label"><span class="export-step-num">2</span>Fields to Include</div>
+                        <div class="export-fields-grid" id="exportFieldsGrid"></div>
+                        <div class="export-fields-actions">
+                            <button type="button" class="export-text-btn" id="exportSelectAllBtn">Select all</button>
+                            <button type="button" class="export-text-btn" id="exportSelectNoneBtn">Select none</button>
+                            <button type="button" class="export-text-btn" id="exportSelectRecommendedBtn">Recommended</button>
+                            <span class="export-fields-picked" id="exportFieldsPicked"></span>
+                        </div>
+
+                        <div class="export-section-label"><span class="export-step-num">3</span>Live Preview</div>
+                        <div class="export-preview-wrap">
+                            <div class="export-preview-scroll">
+                                <table class="export-preview-table" id="exportPreviewTable"></table>
+                            </div>
+                            <div class="export-preview-more" id="exportPreviewMore"></div>
+                        </div>
+
+                        <div class="export-section-label"><span class="export-step-num">4</span>Format &amp; Download</div>
+                        <div class="export-format-row">
+                            <button type="button" class="export-format-btn fmt-json" id="exportJsonBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H6a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2h2"/><path d="M16 3h2a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2h-2"/></svg>
+                                JSON
+                            </button>
+                            <button type="button" class="export-format-btn fmt-excel" id="exportExcelBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                                Excel
+                            </button>
+                            <button type="button" class="export-format-btn fmt-pdf" id="exportPdfBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="12" y2="11"/></svg>
+                                PDF
+                            </button>
+                        </div>
+                        <div class="export-status" id="exportStatus" role="status" aria-live="polite"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="students-modal" id="studentsModal" role="dialog" aria-modal="true" aria-label="All students">
-            <div class="students-modal-frame liquid-glass" id="studentsModalFrame">
+            <div class="students-modal-frame" id="studentsModalFrame">
                 <div class="students-modal-topbar">
                     <div class="students-modal-title">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -2121,11 +2536,15 @@
                     </button>
                 </div>
                 <div class="students-modal-scroll" id="studentsModalScroll">
+                    <div class="recently-viewed-wrap" id="recentlyViewedWrap"></div>
                     <div class="controls-panel">
                         <div class="search-row">
                             <div class="search-box-wrapper">
                                 <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                <input type="text" id="searchInput" class="search-input" placeholder="Search by name, roll, hometown or interest..." aria-label="Search students" autocomplete="off">
+                                <input type="text" id="searchInput" class="search-input" placeholder="Search name, roll, hometown, skill or interest…" aria-label="Search students" autocomplete="off">
+                                <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear search" tabindex="-1">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </button>
                                 <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Search suggestions"></div>
                             </div>
                             <select id="sortControl" class="sort-select" aria-label="Sort student list">
@@ -2139,8 +2558,9 @@
                             </button>
                         </div>
 
-                        <div class="chip-container" id="filterChipContainer">
-                            <span class="chip-label">Filter:</span>
+                        <div class="search-hint">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 0-4 12.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+                            Smart search — combine words like <code>dhaka ai</code>, or type <code>favorites</code> to see your bookmarks.
                         </div>
 
                         <div class="filter-meta">
@@ -2166,13 +2586,12 @@
                     <div class="no-results" id="noResults">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
                         No student matches your search. Try a different query.
-                        <button type="button" class="no-results-clear-btn" id="clearFiltersBtn">Clear search &amp; filters</button>
+                        <button type="button" class="no-results-clear-btn" id="clearFiltersBtn">Clear search</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ═══ MOMENTS / GALLERY ══════════════════════════════════════════ -->
         <section id="moments">
             <div class="section-head reveal">
                 <div class="eyebrow">The Gallery</div>
@@ -2200,7 +2619,6 @@
             </div>
         </section>
 
-        <!-- Gallery Album Viewer (Liquid Glass) -->
         <div class="lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Batch Moments album viewer">
             <div class="lightbox-glass-frame liquid-glass" id="lightboxFrame">
                 <div class="lightbox-topbar">
@@ -2230,16 +2648,13 @@
             </div>
         </div>
 
-        <!-- Student Profile Modal -->
         <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-label="Student profile">
             <div class="profile-modal-frame" id="profileModalFrame">
                 <div class="profile-modal-content" id="profileModalContent">
-                    <!-- Populated dynamically by JS via openProfileModal() -->
                 </div>
             </div>
         </div>
 
-        <!-- ═══ ABOUT ══════════════════════════════════════════════════════ -->
         <section id="about">
             <div class="about-wrapper reveal">
                 <div class="eyebrow">Who We Are</div>
@@ -2264,25 +2679,20 @@
                         <div class="counter-label">Dream</div>
                     </div>
                 </div>
+                <div class="insights-panel" id="insightsPanel" style="display:none;">
+                    <div class="insights-title">Batch Interests at a Glance</div>
+                    <div class="insights-bars" id="insightsBars"></div>
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
     <footer>
         <div class="footer-logo">
             <img src="logo.png" alt="Netrokona University" id="footerLogo" width="36" height="36" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
             <div class="brand-text">Netrokona University <span class="brand-accent">· CSE 7th Batch</span></div>
         </div>
         <div class="footer-motto" lang="bn">নতুন যাত্রার শুরু, একসাথে এগিয়ে চলা</div>
-        <!--
-            Batch-level social links: hrefs are populated at runtime from the
-            SITE_SOCIALS config near the top of the main <script> below, so
-            there's one place to edit them instead of hunting through markup.
-            Any platform left blank in that config is hidden automatically —
-            same "don't link to a generic homepage" rule the student cards
-            already follow.
-        -->
         <div class="footer-socials" id="footerSocials">
             <a href="#" data-social="facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -2305,13 +2715,11 @@
         <div class="footer-copy">© 2026 CSE 7th Batch, Netrokona University · Designed &amp; developed by <a href="https://urfa-hasan-fattah.vercel.app" target="_blank" rel="noopener noreferrer" style="color:var(--text-primary);text-decoration:none;border-bottom:1px solid var(--border-hover);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-hover)'">Urfa Hasan Fattah</a></div>
     </footer>
 
-    <!-- Back to Top -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
     </button>
 
     <script>
-        // ─── Lucide Icons Init ───────────────────────────────────────────
         function initLucide() { if (window.lucide) lucide.createIcons(); }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initLucide);
@@ -2323,7 +2731,6 @@
             }
         }
 
-        // ─── Icon Registry (icons.json, with built-in fallbacks) ──────────
         let ICONS = {};
         const ICON_FALLBACKS = {
             'home': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
@@ -2344,9 +2751,6 @@
             'chevron-right': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`,
             'star': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
             'share': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>`,
-            /* Interest-category icons — duplicated here (not just in
-               icons.json) so every card badge / filter chip / profile stat
-               still gets a real icon even if icons.json fails to fetch. */
             'ai-ml': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a13 13 0 0 0 0 17M20.5 3.5a13 13 0 0 1 0 17"/></svg>`,
             'machine-learning': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.4 2.1-1.1 2.8C17.3 10 20 13.1 20 17H4c0-3.9 2.7-7 6.1-8.2A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/></svg>`,
             'deep-learning': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="4" cy="7" r="1.7"/><circle cx="4" cy="17" r="1.7"/><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/><circle cx="20" cy="9" r="1.7"/><circle cx="20" cy="15" r="1.7"/></svg>`,
@@ -2377,10 +2781,6 @@
 
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        // ─── Dynamic student-count text (hero stat, Bangla copy, about
-        // paragraph, meta descriptions) — updated once students.json has
-        // loaded so every "40" on the page reflects the real dataset size,
-        // wherever the batch size changes in the future. ───────────────────
         const BN_DIGITS = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
         function toBanglaDigits(num) {
             return String(num).split('').map(ch => (BN_DIGITS[+ch] !== undefined ? BN_DIGITS[+ch] : ch)).join('');
@@ -2408,7 +2808,6 @@
             if (twitterDescMeta) twitterDescMeta.setAttribute('content', twitterDescMeta.getAttribute('content').replace(/\d+/, count));
         }
 
-        // ─── Student Album (auto-rotating card with manual prev/next) ─────
         let albumTimer = null;
         let albumIdx = 0;
         const ALBUM_INTERVAL = 3000;
@@ -2493,7 +2892,6 @@
             }
         }
 
-        // ─── All Students Popup ────────────────────────────────────────────
         const studentsModal = document.getElementById('studentsModal');
         const studentsModalFrame = document.getElementById('studentsModalFrame');
         let studentsModalTrigger = null;
@@ -2503,6 +2901,7 @@
             studentsModal.classList.add('active');
             document.body.style.overflow = 'hidden';
             stopAlbumTimer();
+            renderRecentlyViewed();
             requestAnimationFrame(() => {
                 const closeBtn = document.getElementById('studentsModalClose');
                 if (closeBtn) closeBtn.focus();
@@ -2524,6 +2923,35 @@
             else trapTabKey(e, studentsModalFrame);
         });
 
+        const exportModal = document.getElementById('exportModal');
+        const exportModalFrame = document.getElementById('exportModalFrame');
+        let exportModalTrigger = null;
+
+        function openExportModal() {
+            exportModalTrigger = document.activeElement;
+            exportModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            refreshExportPanel();
+            requestAnimationFrame(() => {
+                const closeBtn = document.getElementById('exportModalClose');
+                if (closeBtn) closeBtn.focus();
+            });
+        }
+        function closeExportModal() {
+            exportModal.classList.remove('active');
+            document.body.style.overflow = studentsModal.classList.contains('active') ? 'hidden' : '';
+            if (exportModalTrigger && document.body.contains(exportModalTrigger)) exportModalTrigger.focus();
+            exportModalTrigger = null;
+        }
+        document.getElementById('openExportModalBtn').addEventListener('click', openExportModal);
+        document.getElementById('exportModalClose').addEventListener('click', closeExportModal);
+        exportModal.addEventListener('click', e => { if (e.target === exportModal) closeExportModal(); });
+        document.addEventListener('keydown', e => {
+            if (!exportModal.classList.contains('active')) return;
+            if (e.key === 'Escape') closeExportModal();
+            else trapTabKey(e, exportModalFrame);
+        });
+
         function loadIcons() {
             return fetch('icons.json')
                 .then(r => { if (!r.ok) throw new Error('icons.json not found'); return r.json(); })
@@ -2534,7 +2962,6 @@
                 });
         }
 
-        // ─── Student Data ────────────────────────────────────────────────
         let BATCH_STUDENTS = [];
 
         const iconsReady = loadIcons();
@@ -2544,14 +2971,18 @@
             .then(data => Promise.all([data, iconsReady]))
             .then(([data]) => {
                 BATCH_STUDENTS = data;
-                buildFilterChips();
                 renderRoster();
                 const numStudentsEl = document.getElementById('numStudents');
                 if (numStudentsEl) numStudentsEl.textContent = data.length;
                 const viewAllCountEl = document.getElementById('viewAllCount');
                 if (viewAllCountEl) viewAllCountEl.textContent = data.length;
+                const exportCtaBadge = document.getElementById('exportCtaBadge');
+                if (exportCtaBadge) exportCtaBadge.textContent = `${data.length} student${data.length === 1 ? '' : 's'}`;
                 updateStudentCountEverywhere(data.length);
                 initStudentAlbum();
+                initExportPanel();
+                renderRecentlyViewed();
+                renderBatchInsights();
                 openProfileFromUrlIfPresent();
             })
             .catch(err => {
@@ -2559,9 +2990,6 @@
                 studentGrid.innerHTML = `<p style="color:var(--text-muted);font-family:var(--font-mono);grid-column:1/-1;text-align:center;padding:3rem 0;">⚠️ Could not load students.json — make sure the file is in the same directory.</p>`;
             });
 
-        // ─── Accent Registry (theme-aware) ────────────────────────────────
-        // Each accent key stores a "dark" and "light" variant so switching
-        // day/night mode never leaves a jarring, low-contrast color behind.
         const ACCENT_THEMES = {
             amber:  { dark: { accent:'#f59e0b', glow:'rgba(245,158,11,0.45)', v:'#f59e0b', g:'#fbbf24', t:'#b45309' },
                       light:{ accent:'#d97706', glow:'rgba(217,119,6,0.22)',  v:'#d97706', g:'#b45309', t:'#78350f' } },
@@ -2578,10 +3006,6 @@
         };
         const ACCENT_KEYS = ['amber','violet','teal','red','blue','pink'];
 
-        // ─── Batch-level social links (footer) ─────────────────────────
-        // Fill in real URLs here when the batch sets up its official pages.
-        // Anything left empty is hidden rather than linking to a generic
-        // facebook.com/instagram.com homepage.
         const SITE_SOCIALS = {
             facebook: '',
             instagram: '',
@@ -2597,9 +3021,6 @@
             });
         })();
 
-        // ─── Favorites (bookmark a student, persisted locally) ─────────────
-        // Stored as an array of roll numbers in localStorage so the list
-        // survives reloads but never leaves the person's own device.
         const FAVORITES_KEY = 'cse7-favorites';
         function loadFavorites() {
             try {
@@ -2612,29 +3033,82 @@
         function isFavorite(roll) { return favoriteRolls.has(String(roll)); }
         function toggleFavorite(roll) {
             roll = String(roll);
+            const wasEmpty = favoriteRolls.size === 0;
             if (favoriteRolls.has(roll)) favoriteRolls.delete(roll);
             else favoriteRolls.add(roll);
             try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favoriteRolls])); } catch (e) {}
-            updateFavoritesChipCount();
+            updateExportScopeCounts();
+            if (isFavoritesQuery(searchQuery)) renderRoster();
+            if (wasEmpty && favoriteRolls.size > 0) {
+                try {
+                    if (!localStorage.getItem('cse7-fav-hint-shown')) {
+                        localStorage.setItem('cse7-fav-hint-shown', '1');
+                        setTimeout(() => showToast('Saved privately on this device — no one else can see your favorites'), 900);
+                    }
+                } catch (e) {}
+            }
             return favoriteRolls.has(roll);
         }
-        // Keeps the "Favorites" filter chip's count badge in sync; also
-        // auto-clears the active filter back to "All" if the person is
-        // viewing Favorites and just unstarred their last one (otherwise
-        // they'd be stuck staring at a permanently-empty grid).
-        function updateFavoritesChipCount() {
-            const chip = document.querySelector('#filterChipContainer [data-tag="favorites"]');
-            if (chip) {
-                const countEl = chip.querySelector('.chip-count');
-                if (countEl) countEl.textContent = favoriteRolls.size ? ` (${favoriteRolls.size})` : '';
+
+        const RECENTLY_VIEWED_KEY = 'cse7-recently-viewed';
+        const RECENTLY_VIEWED_MAX = 8;
+        function loadRecentlyViewed() {
+            try {
+                const raw = localStorage.getItem(RECENTLY_VIEWED_KEY);
+                const arr = raw ? JSON.parse(raw) : [];
+                return Array.isArray(arr) ? arr.map(String) : [];
+            } catch (e) { return []; }
+        }
+        let recentlyViewedRolls = loadRecentlyViewed();
+        function recordRecentlyViewed(roll) {
+            roll = String(roll);
+            recentlyViewedRolls = [roll, ...recentlyViewedRolls.filter(r => r !== roll)].slice(0, RECENTLY_VIEWED_MAX);
+            try { localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(recentlyViewedRolls)); } catch (e) {}
+            renderRecentlyViewed();
+        }
+        function renderRecentlyViewed() {
+            const wrap = document.getElementById('recentlyViewedWrap');
+            if (!wrap || !BATCH_STUDENTS.length) return;
+            const students = recentlyViewedRolls.map(r => BATCH_STUDENTS.find(s => String(s.roll) === r)).filter(Boolean);
+            if (!students.length) {
+                wrap.style.display = 'none';
+                wrap.innerHTML = '';
+                return;
             }
-            if (activeTagFilter === 'favorites' && favoriteRolls.size === 0) {
-                activeTagFilter = 'all';
-                document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => c.classList.toggle('active', c.dataset.tag === 'all'));
-            }
+            wrap.style.display = '';
+            wrap.innerHTML = `<div class="recently-viewed-title">${iconMarkup('hash', 11)}Recently Viewed <span style="opacity:0.65;text-transform:none;letter-spacing:0;">· saved on this device only</span></div><div class="recently-viewed-strip">${students.map(s => `
+                <button type="button" class="recently-viewed-chip" data-roll="${escapeHtml(s.roll)}" title="${escapeHtml(s.nameEn)}">
+                    <span class="rv-avatar">${escapeHtml(s.nameEn.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase())}</span>
+                    <span class="rv-name">${escapeHtml(s.nameEn.split(' ')[0])}</span>
+                </button>`).join('')}</div>`;
+            wrap.querySelectorAll('.recently-viewed-chip').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const student = BATCH_STUDENTS.find(s => String(s.roll) === btn.dataset.roll);
+                    if (student) openProfileModal(student, ACCENT_KEYS[BATCH_STUDENTS.indexOf(student) % ACCENT_KEYS.length]);
+                });
+            });
         }
 
-        // ─── DOM Cache ───────────────────────────────────────────────────
+        function attachSpotlightDelegation(container) {
+            if (!container || container.dataset.spotlightWired) return;
+            container.dataset.spotlightWired = '1';
+            let rafPending = false;
+            let lastX = 0, lastY = 0, lastTarget = null;
+            container.addEventListener('mousemove', e => {
+                lastX = e.clientX; lastY = e.clientY; lastTarget = e.target;
+                if (rafPending) return;
+                rafPending = true;
+                requestAnimationFrame(() => {
+                    rafPending = false;
+                    const card = lastTarget && lastTarget.closest ? lastTarget.closest('.card') : null;
+                    if (!card) return;
+                    const rect = card.getBoundingClientRect();
+                    card.style.setProperty('--mx', `${lastX - rect.left}px`);
+                    card.style.setProperty('--my', `${lastY - rect.top}px`);
+                });
+            });
+        }
+
         const studentGrid   = document.getElementById('studentGrid');
         const searchInput   = document.getElementById('searchInput');
         const sortControl   = document.getElementById('sortControl');
@@ -2653,18 +3127,13 @@
         const scrollBar     = document.getElementById('scrollProgressBar');
         const toastContainer= document.getElementById('toastContainer');
 
-        // Activate transitions AFTER first paint — eliminates load-flash
         requestAnimationFrame(() => requestAnimationFrame(() => {
             document.body.classList.add('theme-ready');
         }));
+        attachSpotlightDelegation(studentGrid);
 
-        let activeTagFilter = 'all';
         let searchQuery = '';
-        // The early <head> script may already have set data-theme="light" before this ran.
         let currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-        // Tracks whatever roster is currently on screen (post search/filter/sort)
-        // so the profile modal's prev/next browsing always matches what the
-        // user is actually looking at.
         let currentRosterList = [];
         let currentProfileIndex = -1;
         let activeCardElement = null;
@@ -2674,7 +3143,6 @@
             if (meta) meta.setAttribute('content', theme === 'light' ? '#f8fafc' : '#060918');
         }
 
-        // Applies the theme-correct accent/glow to a single card's hover styling.
         function applyCardAccentVars(card) {
             const palette = ACCENT_THEMES[card.dataset.accentKey] && ACCENT_THEMES[card.dataset.accentKey][currentTheme];
             if (!palette) return;
@@ -2682,39 +3150,22 @@
             card.style.setProperty('--glow-color', palette.glow);
         }
 
-        // Converts a '#rrggbb' hex string to an 'r,g,b' triplet for use inside
-        // rgba(var(--x), alpha) — lets every glass layer keep its own authored
-        // alpha while swapping only the hue/tint underneath it.
         function hexToRgbTriplet(hex) {
             const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             if (!m) return '255,255,255';
             return `${parseInt(m[1], 16)},${parseInt(m[2], 16)},${parseInt(m[3], 16)}`;
         }
 
-        // Blends a colour toward white by a given amount (0–1) — used so the
-        // liquid-glass "sheen" layer reads as a tinted highlight rather than a
-        // flat, overly-saturated wash of the raw accent colour.
         function lightenRgbTriplet(triplet, amount) {
             return triplet.split(',').map(v => Math.round(Number(v) + (255 - Number(v)) * amount)).join(',');
         }
 
-        // Blends one 'r,g,b' triplet toward another by a given amount (0–1).
-        // Used to fold just a touch of the accent hue into the neutral glass
-        // base, so liquid-glass surfaces (nav, cards, the profile modal)
-        // pick up a subtle colour cue without turning into a solid,
-        // content-obscuring wash of the raw accent colour.
         function blendRgbTriplets(baseTriplet, targetTriplet, amount) {
             const base = baseTriplet.split(',').map(Number);
             const target = targetTriplet.split(',').map(Number);
             return base.map((v, i) => Math.round(v + (target[i] - v) * amount)).join(',');
         }
 
-        // Applies a theme-correct site-wide accent (used when a card is "active").
-        // Beyond the existing accent/violet/gold/teal tokens, this now also
-        // "stains" every liquid-glass surface on the page (nav, hero card,
-        // all-students modal, profile modal, gallery lightbox, footer, journey
-        // CTA) with the same colour — each layer keeps its own authored alpha,
-        // so only the hue shifts, never the glass's opacity/translucency.
         function applySiteAccent(accentKey) {
             const palette = ACCENT_THEMES[accentKey] && ACCENT_THEMES[accentKey][currentTheme];
             if (!palette) return;
@@ -2728,18 +3179,11 @@
             themeDot.style.boxShadow = `0 0 14px ${palette.glow}`;
 
             const accentRgb = hexToRgbTriplet(palette.accent);
-            // The glass "fade" layer sits behind almost every piece of text in
-            // the profile modal (and every other liquid-glass surface on the
-            // site), so it stays close to its neutral dark/light base with
-            // only a subtle hint of the accent folded in — keeping content
-            // readable. The separate "tint" layer (already lightened toward
-            // white) carries the more visible liquid-glass colour on top.
             const neutralFadeRgb = currentTheme === 'light' ? '255,255,255' : '8,11,24';
             root.style.setProperty('--glass-fade-rgb', blendRgbTriplets(neutralFadeRgb, accentRgb, currentTheme === 'light' ? 0.1 : 0.16));
             root.style.setProperty('--glass-tint-rgb', lightenRgbTriplet(accentRgb, currentTheme === 'light' ? 0.55 : 0.35));
         }
 
-        // ─── Toast Helper ────────────────────────────────────────────────
         const TOAST_ICON = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
         function showToast(message) {
             const toast = document.createElement('div');
@@ -2755,11 +3199,6 @@
             }, 2500);
         }
 
-        // ─── Focus Trapping (accessibility) ────────────────────────────────
-        // Shared by the profile modal, the gallery lightbox, and the mobile
-        // drawer: keeps Tab/Shift+Tab cycling *inside* whichever overlay is
-        // open (instead of leaking focus into the page behind it), and
-        // returns focus to whatever triggered the overlay once it closes.
         const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
         function getFocusable(container) {
             return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
@@ -2774,17 +3213,6 @@
             else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
         }
 
-        // ─── Interest Metadata (keyed by icon slug, not by exact display
-        //     text) ───────────────────────────────────────────────────────
-        // A student's `interest` field can be a single string, a comma /
-        // pipe / semicolon separated list, or an array — see
-        // getInterestList() below. Each individual interest is then run
-        // through slugifySkill() (defined further down, shared with the
-        // skill-chip system) so loosely-typed variants like "ai/ml",
-        // "Artificial Intelligence", "web dev" etc. all resolve to the
-        // SAME canonical entry here. That's what makes detection "smart":
-        // the exact wording in students.json doesn't have to match this
-        // list verbatim.
         const INTEREST_META = {
             'ai-ml':                   { label: 'AI / ML',               short: 'AI · ML',    side: 'right', color: '#a78bfa', glow: 'rgba(167,139,250,0.4)' },
             'machine-learning':        { label: 'Machine Learning',      short: 'ML',         side: 'right', color: '#8b5cf6', glow: 'rgba(139,92,246,0.4)' },
@@ -2811,27 +3239,13 @@
 
         function interestMeta(slug) { return INTEREST_META[slug] || DEFAULT_INTEREST_META; }
 
-        // One lookup path for interest-category icons: icons.json (if it
-        // loaded) takes priority, otherwise the built-in ICON_FALLBACKS
-        // copy above kicks in, so badges never render empty.
         function resolveInterestIcon(slug) {
             return (ICONS && ICONS[slug]) || ICON_FALLBACKS[slug] || ICON_FALLBACKS['code'];
         }
 
-        // Normalizes a student's `interest`/`interests` field (whatever
-        // shape it's in) into a clean, de-duplicated array of trimmed
-        // display strings. Supports:
-        //   • a single string             — "Web Development"
-        //   • a delimited list in a string — "Web Development, Cybersecurity"
-        //   • an array                     — ["Web Development", "Cybersecurity"]
-        // This is what lets a card show MULTIPLE interest icons: just list
-        // more than one interest in either field, in either shape.
         function getInterestList(student) {
             const raw = student.interests != null ? student.interests : student.interest;
             if (raw == null) return [];
-            // Only split on delimiters that can't appear inside a legitimate
-            // interest name — NOT "/" or "&", since existing tags like
-            // "AI / ML" and "UI/UX Design" rely on those characters.
             const parts = Array.isArray(raw) ? raw : String(raw).split(/\s*[,;|]\s*/);
             const seen = new Set();
             const out = [];
@@ -2846,8 +3260,6 @@
             return out;
         }
 
-        // Full badge data (text + resolved slug + metadata) for every
-        // interest a student has, ready for rendering.
         function getInterestBadges(student) {
             return getInterestList(student).map(text => {
                 const slug = slugifySkill(text);
@@ -2855,24 +3267,64 @@
             });
         }
 
-        // ─── Card Builder ────────────────────────────────────────────────
+        function getRoleLabel(roll) {
+            const n = parseInt(String(roll).trim(), 10);
+            if (n === 1) return 'CR';
+            if (n === 2) return 'Ass. CR';
+            return null;
+        }
+
+        function renderBatchInsights() {
+            const panel = document.getElementById('insightsPanel');
+            const barsWrap = document.getElementById('insightsBars');
+            if (!panel || !barsWrap || !BATCH_STUDENTS.length) return;
+            const counts = {};
+            BATCH_STUDENTS.forEach(s => {
+                getInterestList(s).forEach(text => {
+                    const slug = slugifySkill(text);
+                    if (!counts[slug]) counts[slug] = { count: 0, label: interestMeta(slug).label };
+                    counts[slug].count++;
+                });
+            });
+            const ranked = Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 6);
+            if (!ranked.length) { panel.style.display = 'none'; return; }
+            const maxCount = ranked[0].count;
+            barsWrap.innerHTML = ranked.map(r => `
+                <div class="insight-bar-row">
+                    <span class="insight-bar-label">${escapeHtml(r.label)}</span>
+                    <span class="insight-bar-track"><span class="insight-bar-fill" style="width:${Math.max(6, Math.round((r.count / maxCount) * 100))}%"></span></span>
+                    <span class="insight-bar-count">${r.count}</span>
+                </div>`).join('');
+            panel.style.display = '';
+        }
+
+        function getSimilarStudents(student, limit) {
+            limit = limit || 4;
+            const mySlugs = new Set(getInterestList(student).map(slugifySkill));
+            if (!mySlugs.size || !BATCH_STUDENTS.length) return [];
+            const scored = [];
+            BATCH_STUDENTS.forEach(other => {
+                if (other.roll === student.roll) return;
+                const theirSlugs = getInterestList(other).map(slugifySkill);
+                let shared = 0;
+                theirSlugs.forEach(s => { if (mySlugs.has(s)) shared++; });
+                if (shared > 0) scored.push({ student: other, shared });
+            });
+            scored.sort((a, b) => b.shared - a.shared || parseInt(a.student.roll) - parseInt(b.student.roll));
+            return scored.slice(0, limit).map(x => x.student);
+        }
+
         function createStudentCard(student, index) {
             const accentKey = ACCENT_KEYS[index % ACCENT_KEYS.length];
-            // Every interest this student has, each resolved to its own
-            // icon + color. A student can list one interest or many —
-            // everything below scales to however many are found.
             const interests = getInterestBadges(student);
             const primaryInterest = interests[0] || { text: 'CSE', slug: 'code', meta: DEFAULT_INTEREST_META };
 
-            // Use a <div> (not <button>) as the card root so it can legally contain
-            // the socials <a> links and the profile <button> without invalid nesting.
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('role', 'button');
             card.setAttribute('tabindex', '0');
             card.setAttribute('aria-pressed', 'false');
             card.setAttribute('aria-label', `${student.nameEn} — toggle accent theme`);
-            // Stagger entrance animation
             card.style.animationDelay = `${Math.min(index * 60, 600)}ms`;
             card.dataset.accentKey = accentKey;
             card.dataset.name = student.nameEn.toLowerCase();
@@ -2910,8 +3362,6 @@
             rollBadge.className = 'roll-badge';
             rollBadge.textContent = student.roll;
 
-            // Favorite (bookmark) toggle — persisted in localStorage so a
-            // student can keep a personal shortlist across visits.
             const favBtn = document.createElement('button');
             favBtn.type = 'button';
             favBtn.className = 'card-favorite-btn';
@@ -2931,11 +3381,8 @@
                 void favBtn.offsetWidth;
                 favBtn.classList.add('favorite-pop');
                 showToast(nowActive ? `Added ${student.nameEn} to favorites ★` : `Removed ${student.nameEn} from favorites`);
-                if (activeTagFilter === 'favorites') renderRoster();
             });
 
-            // Interest badge (top-right) — shows the primary interest, plus
-            // a "+N" count when the student has more than one.
             const interestBadge = document.createElement('div');
             interestBadge.className = 'card-interest-badge';
             if (interests.length > 1) {
@@ -2958,25 +3405,25 @@
             const nameEn = document.createElement('div');
             nameEn.className = 'stu-name';
             nameEn.textContent = student.nameEn;
+            const roleLabel = getRoleLabel(student.roll);
+            if (roleLabel) {
+                const roleTag = document.createElement('span');
+                roleTag.className = 'stu-role-tag';
+                roleTag.textContent = roleLabel;
+                nameEn.appendChild(roleTag);
+            }
 
             const nameBn = document.createElement('div');
             nameBn.className = 'stu-name-bn';
             nameBn.textContent = student.nameBn;
 
-            // Hometown — always visible under the name (not hidden behind
-            // hover like Interest/Focus below).
             const hometown = document.createElement('div');
             hometown.className = 'stu-hometown';
             hometown.innerHTML = `${iconMarkup('map-pin', 12)} ${escapeHtml(student.hometown)}`;
 
-            const bio = document.createElement('div');
-            bio.className = 'stu-bio';
-            bio.textContent = student.bio;
-
             const foot = document.createElement('div');
             foot.className = 'card-foot';
 
-            // "View Profile" button — opens the full profile modal (feature request #1)
             const profileBtn = document.createElement('button');
             profileBtn.type = 'button';
             profileBtn.className = 'profile-btn';
@@ -2987,21 +3434,13 @@
                 openProfileModal(student, accentKey);
             });
 
-            // Social links — only rendered when the student actually has that link,
-            // instead of silently falling back to a generic homepage URL.
             const socials = document.createElement('div');
             socials.className = 'card-socials';
             appendSocialLinks(socials, student, 14);
 
             foot.append(profileBtn, socials);
-            content.append(nameEn, nameBn, hometown, statsRows, bio, foot);
+            content.append(nameEn, nameBn, hometown, statsRows, foot);
 
-            // ─── Interest Icon Badges — one per interest, stacked ───────────
-            // Shows up to MAX_VISIBLE real icons; anything beyond that is
-            // summarized with a "+N" pill so the stack never overruns the
-            // card. Positioned on whichever side the primary interest
-            // prefers, fixed pixel top so it never collides with the
-            // roll-badge or the interest-text badge above it.
             const MAX_VISIBLE_INTEREST_BADGES = 3;
             const badgeStack = document.createElement('div');
             const stackSide = primaryInterest.meta.side === 'left' ? 'left' : 'right';
@@ -3034,25 +3473,12 @@
 
             card.append(cardBg, overlay, rollBadge, favBtn, interestBadge, badgeStack, content);
 
-            // Cursor-tracked spotlight sheen (skipped on touch devices via the
-            // `(hover: none)` media query in CSS, so this is harmless there).
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--my', `${e.clientY - rect.top}px`);
-            });
-
             const handleActivate = (e) => {
                 if (e.target.closest('.card-socials') || e.target.closest('.profile-btn') || e.target.closest('.card-favorite-btn')) return;
                 toggleCardTheme(card, accentKey);
             };
             card.addEventListener('click', handleActivate);
             card.addEventListener('keydown', (e) => {
-                // Bug fix: this used to call preventDefault() unconditionally,
-                // which silently ate the native Enter/Space "click" that the
-                // nested "Profile" button relies on for keyboard users —
-                // making the Profile button unreachable via keyboard. Now we
-                // bail out first for any click-through target.
                 if (e.target.closest('.card-socials') || e.target.closest('.profile-btn') || e.target.closest('.card-favorite-btn')) return;
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -3063,8 +3489,6 @@
             return card;
         }
 
-        // Builds <a> icons only for socials the student actually has, so we never
-        // link out to a generic facebook.com/github.com placeholder.
         function appendSocialLinks(container, student, size) {
             const platforms = [
                 { key: 'facebook', label: 'Facebook' },
@@ -3074,7 +3498,7 @@
             ];
             platforms.forEach(p => {
                 const url = student[p.key];
-                if (!url) return; // skip icons with no link supplied yet
+                if (!url) return;
                 const a = document.createElement('a');
                 a.href = p.key === 'email' && !/^mailto:/.test(url) ? `mailto:${url}` : url;
                 if (p.key !== 'email') { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
@@ -3096,9 +3520,6 @@
             return row;
         }
 
-        // ─── Theme Switching ─────────────────────────────────────────────
-        // (accentKey is a stable key like 'amber'/'violet' — NOT a hex string —
-        //  so the correct light/dark variant can always be looked up later.)
         function toggleCardTheme(cardElement, accentKey) {
             if (activeCardElement === cardElement) {
                 resetTheme();
@@ -3114,9 +3535,6 @@
             applySiteAccent(accentKey);
         }
 
-        // Removes the inline accent overrides entirely (instead of hardcoding
-        // dark-mode hex values) so the CSS cascade correctly falls back to
-        // whichever theme — light or dark — is currently active.
         function resetTheme(silent) {
             if (activeCardElement) {
                 activeCardElement.classList.remove('active-theme-host');
@@ -3130,32 +3548,36 @@
             if (!silent) showToast('Accent theme reset');
         }
 
-        // ─── Render Roster ───────────────────────────────────────────────
+        const FAVORITES_KEYWORDS = ['favorite', 'favorites', 'favourite', 'favourites', 'fav', 'favs', 'bookmarked', 'bookmarks', 'starred', '★'];
+
+        function studentSearchBlob(s) {
+            if (s.__searchBlob) return s.__searchBlob;
+            const interestTexts = getInterestList(s);
+            const skillTexts = Array.isArray(s.skills) ? s.skills : [];
+            const blob = [s.nameEn, s.nameBn, s.roll, s.hometown, s.subject, s.bio, ...interestTexts, ...skillTexts]
+                .filter(Boolean).join(' ').toLowerCase();
+            s.__searchBlob = blob;
+            return blob;
+        }
+
+        function isFavoritesQuery(query) {
+            const terms = String(query || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+            return terms.length > 0 && terms.every(t => FAVORITES_KEYWORDS.includes(t));
+        }
+
+        function matchesSearchQuery(s, query) {
+            const terms = String(query || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+            if (!terms.length) return true;
+            const blob = studentSearchBlob(s);
+            return terms.every(t => FAVORITES_KEYWORDS.includes(t) ? isFavorite(s.roll) : blob.includes(t));
+        }
+
         function renderRoster() {
             if (!BATCH_STUDENTS.length) return;
-            // Fix: the grid is about to be rebuilt from scratch, which would
-            // leave `activeCardElement` pointing at a detached DOM node while
-            // the root-level --active-accent etc. variables stay applied —
-            // a "stale theme" that never visually resets after search/filter/sort.
             resetTheme(true);
             studentGrid.innerHTML = '';
 
-            let filtered = BATCH_STUDENTS.filter(s => {
-                const q = searchQuery;
-                const interestTexts = getInterestList(s);
-                const skillTexts = Array.isArray(s.skills) ? s.skills : [];
-                const matchesSearch = !q ||
-                                      s.nameEn.toLowerCase().includes(q) ||
-                                      String(s.roll).includes(q) ||
-                                      s.hometown.toLowerCase().includes(q) ||
-                                      (s.subject || '').toLowerCase().includes(q) ||
-                                      interestTexts.some(t => t.toLowerCase().includes(q)) ||
-                                      skillTexts.some(t => t.toLowerCase().includes(q));
-                const matchesTag = (activeTagFilter === 'all') ||
-                                    (activeTagFilter === 'favorites' ? isFavorite(s.roll) :
-                                    interestTexts.some(t => slugifySkill(t) === activeTagFilter));
-                return matchesSearch && matchesTag;
-            });
+            let filtered = BATCH_STUDENTS.filter(s => matchesSearchQuery(s, searchQuery));
 
             const sortMode = sortControl.value;
             if (sortMode === 'rollAsc')  filtered.sort((a,b) => parseInt(a.roll) - parseInt(b.roll));
@@ -3171,66 +3593,9 @@
             resultCount.textContent = filtered.length;
             totalCount.textContent = BATCH_STUDENTS.length;
             noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+            updateExportScopeCounts();
         }
 
-        // ─── Build Filter Chips from JSON data ────────────────────────────
-        // Each chip is keyed by canonical icon SLUG (not raw display text),
-        // so "AI/ML", "ai & ml", "Artificial Intelligence" etc. all collapse
-        // into one "AI / ML" chip instead of appearing as separate tags —
-        // and a student with several interests shows up under every one of
-        // their chips.
-        function buildFilterChips() {
-            const container = document.getElementById('filterChipContainer');
-            const seenSlugs = new Set();
-            const tags = []; // { slug, label }
-            BATCH_STUDENTS.forEach(s => {
-                getInterestList(s).forEach(text => {
-                    const slug = slugifySkill(text);
-                    if (!seenSlugs.has(slug)) {
-                        seenSlugs.add(slug);
-                        const meta = interestMeta(slug);
-                        tags.push({ slug, label: meta.short || meta.label || text });
-                    }
-                });
-            });
-
-            // Clear any previous content (keeps the label span)
-            container.innerHTML = '<span class="chip-label">Filter:</span>';
-
-            // "All" chip always first
-            const allChip = document.createElement('button');
-            allChip.className = 'filter-chip active';
-            allChip.dataset.tag = 'all';
-            allChip.innerHTML = `${iconMarkup('grid', 13)} All`;
-            container.appendChild(allChip);
-
-            // "Favorites" chip — always present (not derived from JSON data)
-            // so bookmarking works even before any interests are tagged.
-            const favChip = document.createElement('button');
-            favChip.className = 'filter-chip';
-            favChip.dataset.tag = 'favorites';
-            favChip.innerHTML = `${iconMarkup('star', 13)} Favorites<span class="chip-count">${favoriteRolls.size ? ` (${favoriteRolls.size})` : ''}</span>`;
-            container.appendChild(favChip);
-
-            // One chip per unique interest category found in the JSON
-            tags.forEach(({ slug, label }) => {
-                const chip = document.createElement('button');
-                chip.className = 'filter-chip';
-                chip.dataset.tag = slug;
-                chip.innerHTML = `${iconMarkup(slug, 13)} ${label}`;
-                container.appendChild(chip);
-            });
-            // Note: click handling for these chips is delegated once, on the
-            // container itself (see near the bottom of this script) — so we
-            // deliberately do NOT attach a second listener per-chip here.
-        }
-
-        // ─── Skill icon resolution for the profile modal ──────────────────
-        // Normalizes any free-text skill string ("C++", "Node.js", "UI/UX",
-        // "Machine Learning", ...) into a slug and looks it up in ICONS
-        // (icons.json). Aliases map common spellings/variants onto the
-        // canonical slug so the same icon shows up regardless of how the
-        // skill was typed in students.json.
         const SKILL_ALIASES = {
             'c++': 'cpp', 'cpp': 'cpp', 'c': 'c',
             'c#': 'csharp', 'csharp': 'csharp',
@@ -3255,7 +3620,6 @@
             'numpy': 'numpy', 'pandas': 'pandas', 'tensorflow': 'tensorflow', 'pytorch': 'pytorch',
             'opencv': 'opencv',
             'redux': 'redux', 'graphql': 'graphql',
-            // ── Interest categories (kept in sync with INTEREST_META keys) ──
             'dsa': 'dsa', 'data structures': 'dsa', 'data structures & algorithms': 'dsa',
             'data structures and algorithms': 'dsa', 'algorithms': 'dsa',
             'oop': 'oop', 'object oriented programming': 'oop', 'object-oriented programming': 'oop',
@@ -3294,61 +3658,134 @@
             return `<span class="skill-icon-wrap" aria-hidden="true">${raw}</span>`;
         }
 
-        // ─── Quick Suggestions ────────────────────────────────────────────
         const suggestionsBox = document.getElementById('searchSuggestions');
+        const searchClearBtn = document.getElementById('searchClearBtn');
         const MAX_SUGGESTIONS = 6;
+        let suggestionActiveIndex = -1;
 
         function escapeRegex(str) {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
-        function highlightMatch(text, query) {
-            if (!query) return text;
-            return escapeHtml(text).replace(new RegExp(`(${escapeRegex(escapeHtml(query))})`, 'gi'), '<mark>$1</mark>');
+        function highlightMatch(text, terms) {
+            const safe = escapeHtml(text);
+            const clean = (terms || []).map(t => escapeRegex(escapeHtml(t))).filter(Boolean);
+            if (!clean.length) return safe;
+            return safe.replace(new RegExp(`(${clean.join('|')})`, 'gi'), '<mark>$1</mark>');
         }
+
+        function scoreStudent(s, terms) {
+            const name = s.nameEn.toLowerCase();
+            const roll = String(s.roll);
+            const hometown = (s.hometown || '').toLowerCase();
+            const subject = (s.subject || '').toLowerCase();
+            const interestTexts = getInterestList(s).map(t => t.toLowerCase());
+            const skillTexts = (Array.isArray(s.skills) ? s.skills : []).map(t => t.toLowerCase());
+            let score = 0;
+            terms.forEach(t => {
+                if (FAVORITES_KEYWORDS.includes(t)) { score += 20; return; }
+                if (name === t) score += 100;
+                else if (name.startsWith(t)) score += 70;
+                else if (name.includes(t)) score += 45;
+                if (roll === t) score += 90;
+                else if (roll.startsWith(t)) score += 40;
+                else if (roll.includes(t)) score += 20;
+                if (hometown.includes(t)) score += hometown.startsWith(t) ? 30 : 18;
+                if (subject.includes(t)) score += 14;
+                if (interestTexts.some(x => x.includes(t))) score += 12;
+                if (skillTexts.some(x => x.includes(t))) score += 12;
+            });
+            return score;
+        }
+
+        function matchedFieldLabel(s, terms) {
+            const name = s.nameEn.toLowerCase();
+            const meaningfulTerms = terms.filter(t => !FAVORITES_KEYWORDS.includes(t));
+            for (const t of meaningfulTerms) {
+                if (name.includes(t)) continue;
+                if (String(s.roll).includes(t)) return `Roll ${s.roll}`;
+                if ((s.hometown || '').toLowerCase().includes(t)) return s.hometown;
+                if ((s.subject || '').toLowerCase().includes(t)) return s.subject;
+                const interest = getInterestList(s).find(x => x.toLowerCase().includes(t));
+                if (interest) return interest;
+                const skill = (Array.isArray(s.skills) ? s.skills : []).find(x => x.toLowerCase().includes(t));
+                if (skill) return skill;
+            }
+            return getInterestList(s)[0] || s.subject || 'CSE';
+        }
+
+        function toggleSearchClearBtn() {
+            if (searchClearBtn) searchClearBtn.classList.toggle('visible', searchInput.value.trim().length > 0);
+        }
+
+        function applySuggestionActiveClass(items) {
+            items.forEach((item, i) => {
+                const active = i === suggestionActiveIndex;
+                item.classList.toggle('key-active', active);
+                item.setAttribute('aria-selected', String(active));
+                if (active) item.scrollIntoView({ block: 'nearest' });
+            });
+        }
+
+        function selectSuggestion(roll) {
+            const student = BATCH_STUDENTS.find(s => String(s.roll) === String(roll));
+            if (!student) return;
+            searchInput.value = student.nameEn;
+            searchQuery = student.nameEn.toLowerCase();
+            toggleSearchClearBtn();
+            hideSuggestions();
+            renderRoster();
+            searchInput.focus();
+        }
+
         function showSuggestions(query) {
-            const q = query.trim().toLowerCase();
-            if (!q || !BATCH_STUDENTS.length) {
+            const raw = query.trim();
+            if (!raw || !BATCH_STUDENTS.length) {
                 hideSuggestions();
                 return;
             }
-            const matches = BATCH_STUDENTS.filter(s =>
-                s.nameEn.toLowerCase().includes(q) ||
-                s.roll.includes(q) ||
-                s.hometown.toLowerCase().includes(q) ||
-                getInterestList(s).some(t => t.toLowerCase().includes(q))
-            ).slice(0, MAX_SUGGESTIONS);
+            const terms = raw.toLowerCase().split(/\s+/).filter(Boolean);
+            const favOnly = isFavoritesQuery(raw);
+            const pool = BATCH_STUDENTS.filter(s => matchesSearchQuery(s, raw));
 
-            if (!matches.length) {
-                suggestionsBox.innerHTML = `<div class="suggestion-no-results">No matches for "${escapeHtml(query)}"</div>`;
+            if (!pool.length) {
+                suggestionsBox.innerHTML = `<div class="suggestion-no-results">No matches for "${escapeHtml(raw)}"</div>`;
                 suggestionsBox.classList.add('visible');
+                suggestionActiveIndex = -1;
                 return;
             }
 
-            const header = `<div class="suggestions-header">Quick suggestions — ${matches.length} result${matches.length > 1 ? 's' : ''}</div>`;
-            const items = matches.map(s => {
-                const nameParts = highlightMatch(s.nameEn, q);
-                const primaryText = getInterestList(s)[0] || 'CSE';
-                return `<button class="suggestion-item" data-roll="${escapeHtml(s.roll)}" role="option" aria-selected="false">
+            const ranked = pool
+                .map(s => ({ s, score: scoreStudent(s, terms) }))
+                .sort((a, b) => b.score - a.score || parseInt(a.s.roll) - parseInt(b.s.roll))
+                .slice(0, MAX_SUGGESTIONS)
+                .map(x => x.s);
+
+            const headerText = favOnly
+                ? `Your favorites — ${pool.length} bookmarked`
+                : `Smart matches — ${pool.length} result${pool.length === 1 ? '' : 's'}`;
+            const highlightTerms = terms.filter(t => !FAVORITES_KEYWORDS.includes(t));
+
+            const items = ranked.map(s => {
+                const nameHtml = highlightMatch(s.nameEn, highlightTerms);
+                const tagText = matchedFieldLabel(s, terms);
+                const favFlag = isFavorite(s.roll)
+                    ? `<svg class="suggestion-fav-flag" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+                    : '';
+                return `<button type="button" class="suggestion-item" data-roll="${escapeHtml(s.roll)}" role="option" aria-selected="false">
                     <span class="suggestion-roll">${escapeHtml(s.roll)}</span>
-                    <span class="suggestion-name">${nameParts}</span>
-                    <span class="suggestion-tag">${escapeHtml(primaryText)}</span>
+                    <span class="suggestion-name">${nameHtml}</span>
+                    ${favFlag}
+                    <span class="suggestion-tag">${escapeHtml(tagText)}</span>
                 </button>`;
             }).join('');
 
-            suggestionsBox.innerHTML = header + items;
+            suggestionsBox.innerHTML = `<div class="suggestions-header">${headerText}</div>` + items;
+            suggestionActiveIndex = -1;
 
-            // Click on a suggestion: fill search, close dropdown, render
             suggestionsBox.querySelectorAll('.suggestion-item').forEach(item => {
                 item.addEventListener('mousedown', e => {
-                    e.preventDefault(); // prevent blur firing first
-                    const roll = item.dataset.roll;
-                    const student = BATCH_STUDENTS.find(s => s.roll === roll);
-                    if (student) {
-                        searchInput.value = student.nameEn;
-                        searchQuery = student.nameEn.toLowerCase();
-                        hideSuggestions();
-                        renderRoster();
-                    }
+                    e.preventDefault();
+                    selectSuggestion(item.dataset.roll);
                 });
             });
 
@@ -3356,20 +3793,18 @@
         }
         function hideSuggestions() {
             suggestionsBox.classList.remove('visible');
+            suggestionActiveIndex = -1;
         }
 
-        // ─── Theme Toggle ─────────────────────────────────────────────────
-        // Inline SVG paths — no Lucide needed
         const SVG_SUN = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
         const SVG_MOON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
 
-        // Sync the toggle icon + meta color with whatever theme was resolved on load
         themeSvgIcon.innerHTML = currentTheme === 'light' ? SVG_MOON : SVG_SUN;
         updateThemeColorMeta(currentTheme);
 
         themeToggleBtn.addEventListener('click', () => {
             themeSvgIcon.classList.remove('icon-swap');
-            void themeSvgIcon.offsetWidth; // restart animation
+            void themeSvgIcon.offsetWidth;
             themeSvgIcon.classList.add('icon-swap');
             if (currentTheme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'light');
@@ -3385,9 +3820,6 @@
             try { localStorage.setItem('cse7-theme', currentTheme); } catch (e) {}
             updateThemeColorMeta(currentTheme);
 
-            // Re-apply theme-correct accent colors to every card, and to the
-            // site-wide accent if a card is currently "active" — this is what
-            // fixes the old bug where switching theme left mismatched colors.
             document.querySelectorAll('.card').forEach(applyCardAccentVars);
             if (activeCardElement) {
                 applySiteAccent(activeCardElement.dataset.accentKey);
@@ -3396,10 +3828,10 @@
             }
         });
 
-        // ─── Search (debounced) + Quick Suggestions ───────────────────────
         let searchTimeout;
         searchInput.addEventListener('input', e => {
             const val = e.target.value;
+            toggleSearchClearBtn();
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 searchQuery = val.trim().toLowerCase();
@@ -3408,31 +3840,50 @@
             }, 120);
         });
 
-        // Hide suggestions when focus leaves the search area
         searchInput.addEventListener('blur', () => {
-            // small delay so mousedown on a suggestion fires first
             setTimeout(hideSuggestions, 180);
         });
         searchInput.addEventListener('focus', e => {
             if (e.target.value.trim().length > 0) showSuggestions(e.target.value);
         });
-        // Hide on Escape
         searchInput.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { hideSuggestions(); searchInput.blur(); }
+            if (e.key === 'Escape') { hideSuggestions(); searchInput.blur(); return; }
+            if (!suggestionsBox.classList.contains('visible')) return;
+            const items = suggestionsBox.querySelectorAll('.suggestion-item');
+            if (!items.length) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                suggestionActiveIndex = (suggestionActiveIndex + 1) % items.length;
+                applySuggestionActiveClass(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                suggestionActiveIndex = (suggestionActiveIndex - 1 + items.length) % items.length;
+                applySuggestionActiveClass(items);
+            } else if (e.key === 'Enter' && suggestionActiveIndex >= 0 && items[suggestionActiveIndex]) {
+                e.preventDefault();
+                selectSuggestion(items[suggestionActiveIndex].dataset.roll);
+            }
         });
+
+        if (searchClearBtn) {
+            searchClearBtn.addEventListener('mousedown', e => e.preventDefault());
+            searchClearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                searchQuery = '';
+                toggleSearchClearBtn();
+                hideSuggestions();
+                renderRoster();
+                searchInput.focus();
+            });
+        }
 
         sortControl.addEventListener('change', renderRoster);
 
-        // Search toggle (scrolls to search & focuses input)
         document.getElementById('searchToggleBtn').addEventListener('click', () => {
             document.getElementById('students').scrollIntoView({ behavior: 'smooth' });
             setTimeout(() => searchInput.focus(), 600);
         });
 
-        // "/" jumps straight to search — a common shortcut on content-heavy
-        // sites. Ignored while typing in a field, or while any overlay
-        // (profile modal / lightbox / drawer) is open, so it never steals
-        // a literal "/" character from another input.
         document.addEventListener('keydown', e => {
             if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
             const tag = document.activeElement.tagName;
@@ -3443,33 +3894,18 @@
             setTimeout(() => searchInput.focus(), 400);
         });
 
-        // ─── Filter Chips ─── (built dynamically by buildFilterChips() after fetch)
-        // Static "All" chip listener as fallback (dynamic chips get listeners inside buildFilterChips)
-        document.getElementById('filterChipContainer').addEventListener('click', e => {
-            const chip = e.target.closest('.filter-chip');
-            if (!chip) return;
-            document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            activeTagFilter = chip.dataset.tag;
-            renderRoster();
-        });
-
-        // "Clear search & filters" button inside the empty (no-results) state
         const clearFiltersBtn = document.getElementById('clearFiltersBtn');
         if (clearFiltersBtn) {
             clearFiltersBtn.addEventListener('click', () => {
                 searchQuery = '';
                 searchInput.value = '';
-                activeTagFilter = 'all';
-                document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => c.classList.toggle('active', c.dataset.tag === 'all'));
+                toggleSearchClearBtn();
+                hideSuggestions();
                 renderRoster();
                 searchInput.focus();
             });
         }
 
-        // ─── Gallery Album (dynamic — loaded from gallery.json) ────────────
-        // A single "album" tile opens a full liquid-glass viewer with
-        // prev/next navigation, a thumbnail filmstrip, and per-image download.
         const lightbox = document.getElementById('galleryLightbox');
         const lightboxImg = document.getElementById('lightboxTargetImage');
         const lightboxCounter = document.getElementById('lightboxCounter');
@@ -3548,7 +3984,6 @@
             else if (e.key === 'ArrowRight') showAlbumPhoto(albumIndex + 1);
             else trapTabKey(e, lightbox);
         });
-        // Swipe left/right on the main image to change photos on touch devices
         (function enableSwipe() {
             let startX = 0, startY = 0, tracking = false;
             lightboxImageWrap.addEventListener('touchstart', e => {
@@ -3598,7 +4033,6 @@
                 albumCoverCount.textContent = 'Could not load gallery.json';
             });
 
-        // ─── Scroll Effects ───────────────────────────────────────────────
         let ticking = false;
         window.addEventListener('scroll', () => {
             if (!ticking) {
@@ -3608,8 +4042,6 @@
                     scrollBar.style.width = (docH > 0 ? (scrollY / docH) * 100 : 0) + '%';
                     const isScrolled = scrollY > 40;
                     siteHeader.classList.toggle('scrolled', isScrolled);
-                    // Keep the root --nav-h in sync too, since scroll-padding-top on
-                    // <html> reads the root variable, not the header's local override.
                     document.documentElement.style.setProperty('--nav-h', isScrolled ? '58px' : '68px');
                     backToTop.classList.toggle('show', scrollY > 600);
                     updateActiveNavLink();
@@ -3622,7 +4054,6 @@
         backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         resetThemeBtn.addEventListener('click', () => resetTheme(false));
 
-        // ─── Active Nav Link Highlight ────────────────────────────────────
         function updateActiveNavLink() {
             const sections = ['home','students','moments','about'];
             const scrollY = window.scrollY + 120;
@@ -3637,7 +4068,6 @@
         }
         updateActiveNavLink();
 
-        // ─── Mobile Drawer ────────────────────────────────────────────────
         function openDrawer() {
             mobileDrawer.classList.add('open');
             mobileHamburger.setAttribute('aria-expanded', 'true');
@@ -3664,7 +4094,6 @@
             else trapTabKey(e, mobileDrawer);
         });
 
-        // ─── Scroll Reveal ────────────────────────────────────────────────
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -3675,11 +4104,6 @@
         }, { threshold: 0.12 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // ─── Pause ambient animations when the tab isn't visible ──────────
-        // (Replaces a previous IntersectionObserver that paused the background
-        // orbs based on the Students section's visibility — which was backwards,
-        // since .gradient-mesh is fixed/full-page decoration, not hero-only.
-        // Pausing on tab-hide is the version that actually saves battery/CPU.)
         document.addEventListener('visibilitychange', () => {
             const playState = document.hidden ? 'paused' : 'running';
             document.querySelectorAll('.mesh-orb, .lang-icon').forEach(el => {
@@ -3687,7 +4111,6 @@
             });
         });
 
-        // ─── Logo fallback (nav + footer) ──────────────────────────────────
         const FALLBACK_LOGO_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>'
         );
@@ -3698,17 +4121,84 @@
             });
         });
 
-        // ─── Random Student ─────────────────────────────────────────────── (feature #3)
+        let deferredInstallPrompt = null;
+        const installAppBtn = document.getElementById('installAppBtn');
+        const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            if (installAppBtn) installAppBtn.classList.add('visible');
+        });
+        if (isIos && !isStandalone && installAppBtn) {
+            installAppBtn.classList.add('visible');
+        }
+        if (installAppBtn) {
+            installAppBtn.addEventListener('click', async () => {
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const choice = await deferredInstallPrompt.userChoice.catch(() => null);
+                    deferredInstallPrompt = null;
+                    installAppBtn.classList.remove('visible');
+                    if (choice && choice.outcome === 'accepted') showToast('App installed — find it on your home screen');
+                    return;
+                }
+                if (isIos) {
+                    showToast('Tap the Share icon, then "Add to Home Screen"');
+                    return;
+                }
+                showToast('Your browser doesn\u2019t support one-tap install here');
+            });
+        }
+        window.addEventListener('appinstalled', () => {
+            if (installAppBtn) installAppBtn.classList.remove('visible');
+            showToast('App installed successfully');
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            });
+        }
+
+        const connectionBanner = document.getElementById('connectionBanner');
+        const connectionBannerText = document.getElementById('connectionBannerText');
+        let onlineBannerTimer = null;
+        function updateConnectionBanner() {
+            if (!connectionBanner) return;
+            clearTimeout(onlineBannerTimer);
+            if (!navigator.onLine) {
+                connectionBanner.classList.remove('is-online');
+                connectionBannerText.textContent = "You're offline — showing your last cached version.";
+                connectionBanner.classList.add('show');
+            } else if (connectionBanner.classList.contains('show')) {
+                connectionBanner.classList.add('is-online');
+                connectionBannerText.textContent = 'Back online.';
+                onlineBannerTimer = setTimeout(() => connectionBanner.classList.remove('show'), 2200);
+            }
+        }
+        window.addEventListener('online', updateConnectionBanner);
+        window.addEventListener('offline', updateConnectionBanner);
+        if (!navigator.onLine) updateConnectionBanner();
+
+        const netInfo = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const isDataSaverMode = !!(netInfo && (netInfo.saveData || /^(slow-2g|2g)$/.test(netInfo.effectiveType || '')));
+        if (isDataSaverMode) {
+            const heroCoverImg = document.querySelector('.hero-cover-img');
+            if (heroCoverImg) heroCoverImg.remove();
+            const langIconsWrap = document.querySelector('.hero-lang-icons');
+            if (langIconsWrap) langIconsWrap.remove();
+            const gradientMeshEl = document.getElementById('gradientMesh');
+            if (gradientMeshEl) gradientMeshEl.remove();
+        }
+
         const randomStudentBtn = document.getElementById('randomStudentBtn');
         randomStudentBtn.addEventListener('click', () => {
             if (!BATCH_STUDENTS.length) return;
-            // Clear any active filter/search so the picked student is guaranteed visible
             searchQuery = '';
             searchInput.value = '';
-            activeTagFilter = 'all';
-            document.querySelectorAll('#filterChipContainer .filter-chip').forEach(c => {
-                c.classList.toggle('active', c.dataset.tag === 'all');
-            });
+            toggleSearchClearBtn();
+            hideSuggestions();
             renderRoster();
 
             const randomStudent = BATCH_STUDENTS[Math.floor(Math.random() * BATCH_STUDENTS.length)];
@@ -3723,7 +4213,6 @@
             });
         });
 
-        // ─── Student Profile Modal ────────────────────────────────────────── (feature #1)
         const profileModal = document.getElementById('profileModal');
         const profileModalContent = document.getElementById('profileModalContent');
         let profileModalTrigger = null;
@@ -3737,18 +4226,12 @@
         const profileModalFrame = document.getElementById('profileModalFrame');
 
         function openProfileModal(student, accentKey) {
-            // Remember whatever had focus before the FIRST open so we can
-            // return it there on close — but not while browsing prev/next,
-            // since that would overwrite it with the nav-zone button itself.
             if (!profileModal.classList.contains('active')) {
                 profileModalTrigger = document.activeElement;
             }
+            recordRecentlyViewed(student.roll);
             const key = accentKey || 'violet';
             const palette = ACCENT_THEMES[key] && ACCENT_THEMES[key][currentTheme];
-            // Set on the FRAME (not the content) so the animated glow-ring
-            // pseudo-elements — which live on the frame — pick up the same
-            // accent color; CSS variables inherit downward, so the content
-            // and everything inside it still sees the same values too.
             profileModalFrame.style.setProperty('--accent-color', palette ? palette.accent : '');
             profileModalFrame.style.setProperty('--glow-color', palette ? palette.glow : '');
 
@@ -3763,13 +4246,19 @@
                 ? `<div class="profile-section-label">Skills</div><div class="profile-skills">${student.skills.map(s => `<span class="profile-skill-chip">${getSkillIconHtml(s, 14)}${escapeHtml(s)}</span>`).join('')}</div>`
                 : '';
 
+            const similarStudents = getSimilarStudents(student);
+            const similarHtml = similarStudents.length
+                ? `<div class="profile-section-label">Similar Interests</div><div class="profile-similar-grid">${similarStudents.map(s => `
+                    <button type="button" class="profile-similar-chip" data-roll="${escapeHtml(s.roll)}">
+                        <span class="rv-avatar">${escapeHtml(s.nameEn.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase())}</span>
+                        <span class="profile-similar-name">${escapeHtml(s.nameEn.split(' ')[0])}</span>
+                    </button>`).join('')}</div>`
+                : '';
+
             const factHtml = student.fact
                 ? `<div class="profile-fact">${escapeHtml(student.fact)}</div>`
                 : '';
 
-            // Where does this student sit in whatever roster the person is
-            // currently browsing (post search/filter/sort)? Powers the
-            // prev/next tap zones + "3 / 42" position pill below.
             currentProfileIndex = currentRosterList.findIndex(s => s.roll === student.roll);
             const total = currentRosterList.length;
             const showNav = total > 1;
@@ -3781,10 +4270,9 @@
                    <button type="button" class="profile-nav-zone profile-nav-zone-next" aria-label="Next student">${iconMarkup('chevron-right', 22)}</button>`
                 : '';
 
-            // Cover renders the FULL photo uncropped (object-fit:contain) over
-            // a blurred backdrop made from the same image, inside a taller
-            // frame — never cropping faces/torsos on portrait shots.
             const profileFavActive = isFavorite(student.roll);
+            const profileRoleLabel = getRoleLabel(student.roll);
+            const profileRoleTagHtml = profileRoleLabel ? `<span class="stu-role-tag" style="margin-left:8px;">${profileRoleLabel}</span>` : '';
             profileModalContent.innerHTML = `
                 <div class="profile-cover">
                     <img src="${escapeHtml(student.img)}" alt="" aria-hidden="true" class="profile-cover-bg" id="profileCoverBg">
@@ -3805,7 +4293,7 @@
                 </div>
                 <div class="profile-body">
                     <div class="profile-eyebrow">${iconMarkup('hash', 11)}CSE 7th Batch · Netrokona University</div>
-                    <div class="profile-name-en">${escapeHtml(student.nameEn)}</div>
+                    <div class="profile-name-en">${escapeHtml(student.nameEn)}${profileRoleTagHtml}</div>
                     <div class="profile-name-bn">${escapeHtml(student.nameBn)}</div>
                     <div class="profile-stats-grid">
                         <div class="profile-stat-box"><span class="profile-stat-icon">${iconMarkup('map-pin', 15)}</span><div><div class="profile-stat-label">Hometown</div><div class="profile-stat-value">${escapeHtml(student.hometown)}</div></div></div>
@@ -3816,6 +4304,7 @@
                     <div class="profile-bio">${escapeHtml(student.bio)}</div>
                     ${factHtml}
                     ${skillsHtml}
+                    ${similarHtml}
                     ${buildProfileSocialsHtml(student)}
                 </div>
             `;
@@ -3830,7 +4319,6 @@
                     favBtnEl.setAttribute('aria-label', `${nowActive ? 'Remove from' : 'Add to'} favorites`);
                     favBtnEl.querySelector('svg').setAttribute('fill', nowActive ? 'currentColor' : 'none');
                     showToast(nowActive ? `Added ${student.nameEn} to favorites ★` : `Removed ${student.nameEn} from favorites`);
-                    // Keep the grid's own star button (if this card is on screen) in sync
                     const gridCard = studentGrid.querySelector(`[data-roll="${CSS.escape(String(student.roll))}"] .card-favorite-btn`);
                     if (gridCard) {
                         gridCard.classList.toggle('is-favorite', nowActive);
@@ -3847,6 +4335,12 @@
             const nextZone = profileModalContent.querySelector('.profile-nav-zone-next');
             if (prevZone) prevZone.addEventListener('click', () => navigateProfile(-1));
             if (nextZone) nextZone.addEventListener('click', () => navigateProfile(1));
+            profileModalContent.querySelectorAll('.profile-similar-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const target = BATCH_STUDENTS.find(s => String(s.roll) === chip.dataset.roll);
+                    if (target) openProfileModal(target, ACCENT_KEYS[BATCH_STUDENTS.indexOf(target) % ACCENT_KEYS.length]);
+                });
+            });
             const coverImg = profileModalContent.querySelector('#profileCoverImg');
             const coverBg = profileModalContent.querySelector('#profileCoverBg');
             if (coverImg) {
@@ -3871,8 +4365,6 @@
             });
         }
 
-        // Browse to the previous/next student in whatever roster is
-        // currently on screen. Loops around at either end.
         function navigateProfile(delta) {
             const total = currentRosterList.length;
             if (!total) return;
@@ -3893,9 +4385,6 @@
             return wrapper.outerHTML;
         }
 
-        // Share a student's profile via the native share sheet where
-        // available (mostly mobile), falling back to copying a deep link
-        // (page URL + ?roll=xx) to the clipboard on desktop browsers.
         function studentProfileUrl(student) {
             const url = new URL(window.location.href);
             url.hash = '';
@@ -3922,8 +4411,6 @@
             }
         }
 
-        // If the page was opened via a shared deep link (?roll=xx), jump
-        // straight to that student's profile once the roster has loaded.
         function openProfileFromUrlIfPresent() {
             const params = new URLSearchParams(window.location.search);
             const roll = params.get('roll');
@@ -3949,6 +4436,443 @@
             else if (e.key === 'ArrowLeft' && document.activeElement.tagName !== 'INPUT') navigateProfile(-1);
             else trapTabKey(e, profileModalContent);
         });
+
+        const EXPORT_FIELDS = [
+            { key: 'roll',      label: 'Roll No.',        default: true,  get: s => s.roll,      width: 10, pdfWidth: 34  },
+            { key: 'nameEn',    label: 'Name (English)',  default: true,  get: s => s.nameEn,    width: 24, pdfWidth: 110 },
+            { key: 'nameBn',    label: 'Name (বাংলা)',     default: true,  get: s => s.nameBn,    width: 22, pdfWidth: 96  },
+            { key: 'hometown',  label: 'Hometown',        default: true,  get: s => s.hometown,  width: 18, pdfWidth: 80  },
+            { key: 'subject',   label: 'Focus / Subject', default: true,  get: s => s.subject,   width: 22, pdfWidth: 90  },
+            { key: 'interests', label: 'Interests',       default: true,  get: s => getInterestList(s), isList: true, width: 32, pdfWidth: 130 },
+            { key: 'skills',    label: 'Skills',          default: true,  get: s => Array.isArray(s.skills) ? s.skills : [], isList: true, width: 32, pdfWidth: 130 },
+            { key: 'bio',       label: 'Bio',             default: false, get: s => s.bio || '', width: 42, pdfWidth: 170 },
+            { key: 'fact',      label: 'Fun Fact',        default: false, get: s => s.fact || '', width: 34, pdfWidth: 140 },
+            { key: 'facebook',  label: 'Facebook',        default: false, get: s => s.facebook || '', width: 30, pdfWidth: 120 },
+            { key: 'github',    label: 'GitHub',          default: false, get: s => s.github || '', width: 26, pdfWidth: 110 },
+            { key: 'linkedin',  label: 'LinkedIn',        default: false, get: s => s.linkedin || '', width: 30, pdfWidth: 120 },
+            { key: 'email',     label: 'Email',           default: false, get: s => s.email || '', width: 28, pdfWidth: 120 },
+            { key: 'img',       label: 'Photo URL',       default: false, get: s => s.img || '', width: 34, pdfWidth: 140 }
+        ];
+        const EXPORT_SCOPES = [
+            { key: 'all', label: 'All Students', icon: 'users', desc: 'Every student in the batch, sorted by roll number.' },
+            { key: 'filtered', label: 'Current Search Results', icon: 'grid', desc: 'Only the students currently matching your search in the roster below.' },
+            { key: 'favorites', label: 'Favorites', icon: 'star', desc: 'Just the students you\u2019ve bookmarked with the \u2605 button on their card — stored privately in this browser only.' }
+        ];
+        let exportScope = 'all';
+        let exportSelectedFields = new Set(EXPORT_FIELDS.filter(f => f.default).map(f => f.key));
+
+        function getExportDataset(scope) {
+            if (scope === 'favorites') {
+                return BATCH_STUDENTS.filter(s => isFavorite(s.roll)).sort((a, b) => parseInt(a.roll) - parseInt(b.roll));
+            }
+            if (scope === 'filtered') {
+                return currentRosterList.length ? currentRosterList.slice() : BATCH_STUDENTS.slice();
+            }
+            return BATCH_STUDENTS.slice().sort((a, b) => parseInt(a.roll) - parseInt(b.roll));
+        }
+        function getSelectedFieldDefs() {
+            return EXPORT_FIELDS.filter(f => exportSelectedFields.has(f.key));
+        }
+        function exportScopeCount(scope) {
+            if (scope === 'favorites') return favoriteRolls.size;
+            if (scope === 'filtered') return currentRosterList.length || BATCH_STUDENTS.length;
+            return BATCH_STUDENTS.length;
+        }
+        function exportFilename(ext, scope) {
+            const date = new Date().toISOString().slice(0, 10);
+            return `cse7-students-${scope}-${date}.${ext}`;
+        }
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1500);
+        }
+        function setExportStatus(msg) {
+            const el = document.getElementById('exportStatus');
+            if (el) el.textContent = msg || '';
+        }
+        const _loadedScripts = {};
+        function loadScriptOnce(src) {
+            if (_loadedScripts[src]) return _loadedScripts[src];
+            _loadedScripts[src] = new Promise((resolve, reject) => {
+                const existing = document.querySelector(`script[data-src="${src}"]`);
+                if (existing) { existing.addEventListener('load', () => resolve()); if (existing.dataset.loaded) resolve(); return; }
+                const s = document.createElement('script');
+                s.src = src; s.async = true; s.dataset.src = src;
+                s.onload = () => { s.dataset.loaded = '1'; resolve(); };
+                s.onerror = () => { delete _loadedScripts[src]; reject(new Error('Failed to load ' + src)); };
+                document.head.appendChild(s);
+            });
+            return _loadedScripts[src];
+        }
+
+        const EXPORT_PREVIEW_ROWS = 4;
+
+        function renderExportPreview() {
+            const table = document.getElementById('exportPreviewTable');
+            const more = document.getElementById('exportPreviewMore');
+            if (!table || !more) return;
+
+            const fields = getSelectedFieldDefs();
+            const students = getExportDataset(exportScope);
+
+            if (!fields.length) {
+                table.innerHTML = `<tbody><tr><td class="export-preview-empty">Select at least one field to see a preview.</td></tr></tbody>`;
+                more.textContent = '';
+                return;
+            }
+            if (!students.length) {
+                const emptyMsg = exportScope === 'favorites'
+                    ? 'No favorites yet — tap the ★ on any student card to bookmark them, then come back here.'
+                    : 'No students in this scope yet.';
+                table.innerHTML = `<tbody><tr><td class="export-preview-empty">${emptyMsg}</td></tr></tbody>`;
+                more.textContent = '';
+                return;
+            }
+
+            const rows = students.slice(0, EXPORT_PREVIEW_ROWS);
+            const thead = `<thead><tr>${fields.map(f => `<th>${escapeHtml(f.label)}</th>`).join('')}</tr></thead>`;
+            const tbody = `<tbody>${rows.map(s => `<tr>${fields.map(f => {
+                const v = f.get(s);
+                const text = Array.isArray(v) ? (v.length ? v.join(', ') : '—') : ((v == null || v === '') ? '—' : String(v));
+                return `<td title="${escapeHtml(text)}">${escapeHtml(text)}</td>`;
+            }).join('')}</tr>`).join('')}</tbody>`;
+
+            table.innerHTML = thead + tbody;
+            const remaining = students.length - rows.length;
+            more.textContent = remaining > 0
+                ? `+ ${remaining} more student${remaining === 1 ? '' : 's'} in the full file`
+                : `Showing all ${students.length} student${students.length === 1 ? '' : 's'}`;
+        }
+
+        function updateExportFieldsSummary() {
+            const el = document.getElementById('exportFieldsPicked');
+            if (el) el.innerHTML = `<strong>${exportSelectedFields.size}</strong> of ${EXPORT_FIELDS.length} fields selected`;
+            renderExportPreview();
+        }
+
+        function updateExportScopeDesc() {
+            const el = document.getElementById('exportScopeDesc');
+            const scope = EXPORT_SCOPES.find(s => s.key === exportScope);
+            if (el && scope) el.textContent = scope.desc;
+            renderExportPreview();
+        }
+
+        function initExportPanel() {
+            const scopeRow = document.getElementById('exportScopeRow');
+            const fieldsGrid = document.getElementById('exportFieldsGrid');
+            if (!scopeRow || !fieldsGrid) return;
+
+            scopeRow.innerHTML = EXPORT_SCOPES.map(s => `
+                <button type="button" class="export-scope-chip${s.key === exportScope ? ' active' : ''}" data-scope="${s.key}">
+                    ${iconMarkup(s.icon, 14)}${s.label}
+                    <span class="export-scope-count" data-count-for="${s.key}">${exportScopeCount(s.key)}</span>
+                </button>
+            `).join('');
+            scopeRow.addEventListener('click', e => {
+                const chip = e.target.closest('.export-scope-chip');
+                if (!chip) return;
+                exportScope = chip.dataset.scope;
+                scopeRow.querySelectorAll('.export-scope-chip').forEach(c => c.classList.toggle('active', c === chip));
+                updateExportScopeDesc();
+            });
+
+            fieldsGrid.innerHTML = EXPORT_FIELDS.map(f => `
+                <label class="export-field-pill${exportSelectedFields.has(f.key) ? ' checked' : ''}" data-field="${f.key}">
+                    <input type="checkbox" value="${f.key}" ${exportSelectedFields.has(f.key) ? 'checked' : ''}>
+                    <span>${escapeHtml(f.label)}</span>
+                </label>
+            `).join('');
+            fieldsGrid.addEventListener('change', e => {
+                const checkbox = e.target.closest('input[type="checkbox"]');
+                if (!checkbox) return;
+                const pill = checkbox.closest('.export-field-pill');
+                if (checkbox.checked) exportSelectedFields.add(checkbox.value);
+                else exportSelectedFields.delete(checkbox.value);
+                if (pill) pill.classList.toggle('checked', checkbox.checked);
+                updateExportFieldsSummary();
+            });
+
+            const selectAllBtn = document.getElementById('exportSelectAllBtn');
+            const selectNoneBtn = document.getElementById('exportSelectNoneBtn');
+            const selectRecommendedBtn = document.getElementById('exportSelectRecommendedBtn');
+            function syncFieldPillsUI() {
+                fieldsGrid.querySelectorAll('.export-field-pill').forEach(pill => {
+                    const key = pill.dataset.field;
+                    const checked = exportSelectedFields.has(key);
+                    pill.classList.toggle('checked', checked);
+                    const input = pill.querySelector('input');
+                    if (input) input.checked = checked;
+                });
+                updateExportFieldsSummary();
+            }
+            if (selectAllBtn) selectAllBtn.addEventListener('click', () => {
+                exportSelectedFields = new Set(EXPORT_FIELDS.map(f => f.key));
+                syncFieldPillsUI();
+            });
+            if (selectNoneBtn) selectNoneBtn.addEventListener('click', () => {
+                exportSelectedFields = new Set();
+                syncFieldPillsUI();
+            });
+            if (selectRecommendedBtn) selectRecommendedBtn.addEventListener('click', () => {
+                exportSelectedFields = new Set(EXPORT_FIELDS.filter(f => f.default).map(f => f.key));
+                syncFieldPillsUI();
+            });
+
+            document.getElementById('exportJsonBtn').addEventListener('click', exportAsJSON);
+            document.getElementById('exportExcelBtn').addEventListener('click', exportAsExcel);
+            document.getElementById('exportPdfBtn').addEventListener('click', exportAsPDF);
+
+            updateExportScopeCounts();
+            updateExportScopeDesc();
+            updateExportFieldsSummary();
+        }
+
+        function updateExportScopeCounts() {
+            EXPORT_SCOPES.forEach(s => {
+                const el = document.querySelector(`.export-scope-count[data-count-for="${s.key}"]`);
+                if (el) el.textContent = exportScopeCount(s.key);
+            });
+            const badge = document.getElementById('exportCtaBadge');
+            if (badge && BATCH_STUDENTS.length) badge.textContent = `${BATCH_STUDENTS.length} student${BATCH_STUDENTS.length === 1 ? '' : 's'}`;
+            renderExportPreview();
+        }
+
+        function refreshExportPanel() {
+            updateExportScopeCounts();
+            updateExportScopeDesc();
+            updateExportFieldsSummary();
+        }
+
+        function withExportButtonBusy(btn, busyLabel, fn) {
+            if (!btn || btn.disabled) return;
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="fmt-spinner" aria-hidden="true"></span> ${busyLabel}`;
+            Promise.resolve().then(fn).finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
+        }
+
+        function exportAsJSON() {
+            const fields = getSelectedFieldDefs();
+            if (!fields.length) { showToast('Select at least one field to export'); return; }
+            const btn = document.getElementById('exportJsonBtn');
+            withExportButtonBusy(btn, 'Preparing…', () => {
+                setExportStatus('Building JSON file…');
+                const students = getExportDataset(exportScope);
+                const records = students.map(s => {
+                    const obj = {};
+                    fields.forEach(f => { obj[f.key] = f.get(s); });
+                    return obj;
+                });
+                const payload = {
+                    meta: {
+                        organization: 'CSE 7th Batch, Netrokona University',
+                        exportedAt: new Date().toISOString(),
+                        scope: exportScope,
+                        totalRecords: records.length,
+                        fields: fields.map(f => ({ key: f.key, label: f.label }))
+                    },
+                    students: records
+                };
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                downloadBlob(blob, exportFilename('json', exportScope));
+                setExportStatus(`Exported ${records.length} student${records.length === 1 ? '' : 's'} as JSON.`);
+                showToast(`Exported ${records.length} student${records.length === 1 ? '' : 's'} as JSON`);
+            });
+        }
+
+        let _xlsxEnginePromise = null;
+        function loadXLSXEngine() {
+            if (_xlsxEnginePromise) return _xlsxEnginePromise;
+            _xlsxEnginePromise = loadScriptOnce('https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js')
+                .then(() => true)
+                .catch(() => loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js').then(() => false));
+            return _xlsxEnginePromise;
+        }
+
+        const XLSX_BORDER_THIN = { style: 'thin', color: { rgb: 'D9DCE3' } };
+        const XLSX_CELL_BORDER = { top: XLSX_BORDER_THIN, bottom: XLSX_BORDER_THIN, left: XLSX_BORDER_THIN, right: XLSX_BORDER_THIN };
+
+        async function exportAsExcel() {
+            const fields = getSelectedFieldDefs();
+            if (!fields.length) { showToast('Select at least one field to export'); return; }
+            const btn = document.getElementById('exportExcelBtn');
+            withExportButtonBusy(btn, 'Preparing…', async () => {
+                try {
+                    setExportStatus('Loading Excel engine…');
+                    const styled = await loadXLSXEngine();
+                    setExportStatus('Building Excel file…');
+
+                    const students = getExportDataset(exportScope);
+                    const scopeLabel = (EXPORT_SCOPES.find(s => s.key === exportScope) || {}).label || exportScope;
+                    const colCount = fields.length;
+                    const lastColLetter = XLSX.utils.encode_col(colCount - 1);
+
+                    const TITLE_ROW = 0, SUBTITLE_ROW = 1, HEADER_ROW = 3, FIRST_DATA_ROW = 4;
+                    const aoa = [
+                        ['CSE 7th Batch — Netrokona University'],
+                        [`${scopeLabel} · ${students.length} student${students.length === 1 ? '' : 's'} · Generated ${new Date().toLocaleString()}`],
+                        [],
+                        fields.map(f => f.label),
+                        ...students.map(s => fields.map(f => {
+                            const v = f.get(s);
+                            if (Array.isArray(v)) return v.length ? v.join(', ') : '';
+                            return v == null ? '' : v;
+                        }))
+                    ];
+
+                    const ws = XLSX.utils.aoa_to_sheet(aoa);
+                    ws['!cols'] = fields.map(f => ({ wch: Math.max(f.label.length + 2, f.width || 16) }));
+                    ws['!rows'] = [{ hpt: 26 }, { hpt: 18 }, { hpt: 6 }, { hpt: 20 }];
+                    ws['!merges'] = [
+                        { s: { r: TITLE_ROW, c: 0 }, e: { r: TITLE_ROW, c: colCount - 1 } },
+                        { s: { r: SUBTITLE_ROW, c: 0 }, e: { r: SUBTITLE_ROW, c: colCount - 1 } }
+                    ];
+                    ws['!freeze'] = { xSplit: 0, ySplit: FIRST_DATA_ROW, topLeftCell: `A${FIRST_DATA_ROW + 1}`, activePane: 'bottomLeft', state: 'frozen' };
+
+                    const titleCell = ws[XLSX.utils.encode_cell({ r: TITLE_ROW, c: 0 })];
+                    if (titleCell) titleCell.s = { font: { bold: true, sz: 14, color: { rgb: '14141E' } }, alignment: { vertical: 'center' } };
+                    const subtitleCell = ws[XLSX.utils.encode_cell({ r: SUBTITLE_ROW, c: 0 })];
+                    if (subtitleCell) subtitleCell.s = { font: { italic: true, sz: 10, color: { rgb: '6E6E78' } }, alignment: { vertical: 'center' } };
+
+                    for (let c = 0; c < colCount; c++) {
+                        const headCell = ws[XLSX.utils.encode_cell({ r: HEADER_ROW, c })];
+                        if (headCell) headCell.s = {
+                            font: { bold: true, sz: 10.5, color: { rgb: '1A1207' } },
+                            fill: { fgColor: { rgb: 'F59E0B' } },
+                            alignment: { vertical: 'center', horizontal: 'left', wrapText: true },
+                            border: XLSX_CELL_BORDER
+                        };
+                        for (let r = 0; r < students.length; r++) {
+                            const cell = ws[XLSX.utils.encode_cell({ r: FIRST_DATA_ROW + r, c })];
+                            if (!cell) continue;
+                            cell.s = {
+                                font: { sz: 10.5, color: { rgb: '22222C' } },
+                                fill: r % 2 === 1 ? { fgColor: { rgb: 'F8FAFC' } } : undefined,
+                                alignment: { vertical: 'top', wrapText: fields[c].isList || ['bio', 'fact'].includes(fields[c].key) },
+                                border: XLSX_CELL_BORDER
+                            };
+                        }
+                    }
+
+                    ws['!ref'] = `A1:${lastColLetter}${FIRST_DATA_ROW + students.length}`;
+
+                    const wb = XLSX.utils.book_new();
+                    wb.Props = { Title: 'CSE 7th Batch Student Directory', Subject: scopeLabel, Author: 'CSE 7th Batch, Netrokona University' };
+                    XLSX.utils.book_append_sheet(wb, ws, 'Students');
+                    XLSX.writeFile(wb, exportFilename('xlsx', exportScope));
+
+                    setExportStatus(`Exported ${students.length} student${students.length === 1 ? '' : 's'} as ${styled ? 'a styled ' : 'an '}Excel workbook.`);
+                    showToast(`Exported ${students.length} student${students.length === 1 ? '' : 's'} as Excel`);
+                } catch (err) {
+                    console.error('Excel export error:', err);
+                    setExportStatus('Could not generate the Excel file.');
+                    showToast('Could not generate Excel file — check your connection');
+                }
+            });
+        }
+
+        async function exportAsPDF() {
+            const allFields = getSelectedFieldDefs();
+            if (!allFields.length) { showToast('Select at least one field to export'); return; }
+
+            const bengaliExcluded = allFields.some(f => f.key === 'nameBn');
+            const fields = allFields.filter(f => f.key !== 'nameBn');
+            if (!fields.length) { showToast('Add at least one non-Bangla field for the PDF'); return; }
+
+            const btn = document.getElementById('exportPdfBtn');
+            withExportButtonBusy(btn, 'Preparing…', async () => {
+                try {
+                    setExportStatus('Loading PDF engine…');
+                    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+                    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js');
+                    setExportStatus('Building PDF file…');
+                    const students = getExportDataset(exportScope);
+                    const { jsPDF } = window.jspdf;
+                    const landscape = fields.length > 4;
+                    const doc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format: 'a4' });
+                    const marginX = 40;
+                    const pageWidth = doc.internal.pageSize.getWidth();
+
+                    const scopeLabel = (EXPORT_SCOPES.find(s => s.key === exportScope) || {}).label || exportScope;
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(15);
+                    doc.setTextColor(20, 20, 30);
+                    doc.text('CSE 7th Batch — Netrokona University', marginX, 38);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(9.5);
+                    doc.setTextColor(90, 90, 100);
+                    const subtitleText = `${scopeLabel} · ${students.length} student${students.length === 1 ? '' : 's'} · ${fields.length} field${fields.length === 1 ? '' : 's'} · Generated ${new Date().toLocaleString()}`;
+                    const subtitleLines = doc.splitTextToSize(subtitleText, pageWidth - marginX * 2);
+                    doc.text(subtitleLines, marginX, 54);
+
+                    let startY = 54 + subtitleLines.length * 12 + 10;
+                    if (bengaliExcluded) {
+                        doc.setFontSize(8);
+                        doc.setTextColor(180, 120, 20);
+                        const noteLines = doc.splitTextToSize('The Bangla name column is not included in this PDF because this format cannot render Bangla script. Use the Excel or JSON export for full Bangla text.', pageWidth - marginX * 2);
+                        doc.text(noteLines, marginX, startY);
+                        startY += noteLines.length * 10 + 8;
+                    }
+
+                    const head = [fields.map(f => f.label)];
+                    const body = students.map(s => fields.map(f => {
+                        const v = f.get(s);
+                        if (Array.isArray(v)) return v.length ? v.join(', ') : '—';
+                        return (v == null || v === '') ? '—' : String(v);
+                    }));
+
+                    const columnStyles = {};
+                    const nameEnIndex = fields.findIndex(f => f.key === 'nameEn');
+                    fields.forEach((f, i) => {
+                        if (f.pdfWidth) columnStyles[i] = { cellWidth: f.pdfWidth };
+                    });
+                    if (nameEnIndex >= 0) columnStyles[nameEnIndex] = { ...columnStyles[nameEnIndex], fontStyle: 'bold' };
+
+                    const bodyFontSize = fields.length > 9 ? 7 : fields.length > 6 ? 7.75 : 8.75;
+
+                    doc.autoTable({
+                        head, body,
+                        startY,
+                        styles: {
+                            font: 'helvetica', fontSize: bodyFontSize, cellPadding: 5.5,
+                            overflow: 'linebreak', valign: 'top', textColor: [30, 32, 40],
+                            lineColor: [222, 226, 234], lineWidth: 0.6
+                        },
+                        headStyles: { fillColor: [245, 158, 11], textColor: [26, 18, 5], fontStyle: 'bold', fontSize: bodyFontSize + 0.5, halign: 'left', valign: 'middle' },
+                        alternateRowStyles: { fillColor: [248, 250, 252] },
+                        columnStyles,
+                        margin: { top: startY, left: marginX, right: marginX, bottom: 44 },
+                        didDrawPage: () => {
+                            const pageSize = doc.internal.pageSize;
+                            const pageNum = doc.internal.getCurrentPageInfo().pageNumber;
+                            const pageCount = doc.internal.getNumberOfPages();
+                            doc.setFont('helvetica', 'normal');
+                            doc.setFontSize(8);
+                            doc.setTextColor(140, 140, 152);
+                            doc.text(`Page ${pageNum} of ${pageCount}`, pageSize.getWidth() - marginX, pageSize.getHeight() - 18, { align: 'right' });
+                            doc.text('CSE 7th Batch, Netrokona University', marginX, pageSize.getHeight() - 18);
+                        }
+                    });
+
+                    doc.save(exportFilename('pdf', exportScope));
+                    const skippedNote = bengaliExcluded ? ' (Bangla name column skipped — use Excel/JSON for that)' : '';
+                    setExportStatus(`Exported ${students.length} student${students.length === 1 ? '' : 's'} as PDF.${skippedNote}`);
+                    showToast(`Exported ${students.length} student${students.length === 1 ? '' : 's'} as PDF`);
+                } catch (err) {
+                    console.error('PDF export error:', err);
+                    setExportStatus('Could not generate the PDF file.');
+                    showToast('Could not generate PDF file — check your connection');
+                }
+            });
+        }
     </script>
 </body>
 </html>
